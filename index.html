@@ -20,6 +20,33 @@ input[type=number]{-moz-appearance:textfield}
 @keyframes finnFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 </style>
 </head>
+  <script>
+if(!localStorage.getItem('installed')){
+  localStorage.setItem('installed','true');
+  document.getElementById('installModal').style.display='flex';
+}
+</script>
+
+<div id="installModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:300;align-items:flex-end;justify-content:center">
+  <div style="background:#141414;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:28px 24px 40px;border-top:1px solid #1C1C1C">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <div style="font-size:20px;font-weight:900">Installeer de app</div>
+      <button onclick="document.getElementById('installModal').style.display='none'" style="width:36px;height:36px;border-radius:50%;background:#1C1C1C;border:none;color:#fff;font-size:18px;cursor:pointer">×</button>
+    </div>
+    <div style="background:#1C1C1C;border-radius:16px;padding:20px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:800;color:#C8F138;margin-bottom:14px;letter-spacing:1px;text-transform:uppercase">iPhone / iPad</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">1</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Open in <strong style="color:#fff">Safari</strong></div></div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">2</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Tik op het <strong style="color:#fff">deel-icoontje</strong> (vierkantje met pijltje)</div></div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">3</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Kies <strong style="color:#fff">"Zet op beginscherm"</strong></div></div>
+      </div>
+    </div>
+    <div style="background:#1C1C1C;border-radius:16px;padding:20px;margin-bottom:24px">
+      <div style="font-size:13px;font-weight:800;color:#FF6B2B;margin-bottom:14px;letter-spacing:1px;text-transform:uppercase">Android</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(255,107,43,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#FF6B2B;flex-shrink:0">1</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Open in <strong style="color:#fff">Chrome</strong></div></div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(255,107,43,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#FF6B2B;flex-shrink:0">2</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Tik op de <strong style="color:#fff">3 puntjes</strong> rechtsboven</div></div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radi
 <body>
 <div id="root"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
