@@ -72,7 +72,34 @@ async function resizeImg(file){return new Promise(res=>{const r=new FileReader()
 
 async function ai(prompt){try{const r=await fetch(WORKER,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:prompt}]})});const d=await r.json();return d.content?.[0]?.text||"";}catch(e){return"Verbindingsfout.";}}
 
-const FASE_OPTIES=[{v:"zwaar bulken",l:"Zwaar bulken",d:"Maximale spiergroei",mul:38,c:"#f59e0b"},{v:"licht bulken",l:"Licht bulken",d:"Lean bulk",mul:35,c:"#10b981"},{v:"onderhoud",l:"Onderhoud",d:"Gewicht vasthouden",mul:32,c:LIME},{v:"licht cutten",l:"Licht cutten",d:"Vetverbranding",mul:28,c:"#60a5fa"},{v:"zwaar cutten",l:"Zwaar cutten",d:"Snel afvallen",mul:24,c:"#ef4444"}];
+// ── SPRAAK ──────────────────────────────────────────────────
+function speak(txt){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang="nl-NL";u.rate=1.0;u.pitch=1.0;
+  // probeer Nederlandse stem
+  const voices=window.speechSynthesis.getVoices();
+  const nl=voices.find(v=>v.lang.startsWith("nl"))||voices[0];
+  if(nl)u.voice=nl;
+  window.speechSynthesis.speak(u);
+}
+
+function startListening(onResult,onEnd){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return null;
+  const r=new SR();
+  r.lang="nl-NL";r.continuous=false;r.interimResults=false;
+  r.onresult=e=>{const t=e.results[0][0].transcript.toLowerCase().trim();onResult(t);};
+  r.onend=()=>{if(onEnd)onEnd();};
+  r.onerror=()=>{if(onEnd)onEnd();};
+  r.start();
+  return r;
+}
+// ────────────────────────────────────────────────────────────
+
+const REST_OPTS=[15,30,45,60,90];
+const FASE_OPTIES=[{v:"zwaar bulken",d:"Maximale spiergroei",mul:38,c:"#f59e0b"},{v:"licht bulken",l:"Licht bulken",d:"Lean bulk",mul:35,c:"#10b981"},{v:"onderhoud",l:"Onderhoud",d:"Gewicht vasthouden",mul:32,c:LIME},{v:"licht cutten",l:"Licht cutten",d:"Vetverbranding",mul:28,c:"#60a5fa"},{v:"zwaar cutten",l:"Zwaar cutten",d:"Snel afvallen",mul:24,c:"#ef4444"}];
 const MUSCLE_META={benen:{label:"Benen",sub:"Quads · Hamstrings · Calves"},borst:{label:"Borst",sub:"Pecs · Serratus · Deltoids"},rug:{label:"Rug",sub:"Lats · Traps · Rhomboids"},schouders:{label:"Schouders",sub:"Delts · Rotator Cuff"},armen:{label:"Armen",sub:"Biceps · Triceps · Forearms"},billen:{label:"Billen",sub:"Glutes · Hip Flexors"},buik:{label:"Core",sub:"Abs · Obliques · TVA"},"full body":{label:"Full Body",sub:"Complete Compound"}};
 const MUSCLE_GROUPS=Object.keys(MUSCLE_META);
 const MEALS=["Ochtend","Middag","Avond","Snack"];
@@ -82,57 +109,134 @@ const REPS_OPT=[0,1,2,3,4,5,6,7,8,9,10,12,15,20,25,30,40,50];
 const SEC_OPT=[0,10,15,20,30,45,60,90,120,150,180,240,300,600,900,1200,1500,1800];
 const QUICK_FOODS={Ochtend:["Havermout met banaan","2 eieren + toast","Griekse yoghurt","Proteïneshake","Boterham pindakaas"],Middag:["Kipfilet + rijst","Tonijnsalade","Wrap kip","Cottage cheese","Soep + brood"],Avond:["Zalm + groenten","Kip + zoete aardappel","Pasta kipgehakt","Omelet + salade","Biefstuk + broccoli"],Snack:["Banaan","Appel + amandelen","Rijstwafels","Proteïnereep","Kwark"]};
 const FOOD_PHOTOS={Ochtend:"https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=500&q=80",Middag:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80",Avond:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&q=80",Snack:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&q=80"};
-const P={hero:"https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=800&q=85",onboard:"https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=85",benen:"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=80",borst:"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&q=80",rug:"https://images.unsplash.com/photo-1530822847156-5df684ec5ee1?w=600&q=80",schouders:"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",armen:"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80",billen:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=80",buik:"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80","full body":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&q=80",hiit:"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=600&q=80",cardio:"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=600&q=80"};
+// ============================================================
+// 🎨 DESIGNER FOTO'S — alleen hier aanpassen
+// Vervang een URL door jouw eigen afbeeldingslink.
+// Tip: gebruik afbeeldingen van minimaal 600x400px voor beste kwaliteit.
+//
+//   hero        → Grote achtergrond op de Home pagina
+//   onboard     → Achtergrond van het welkomstscherm
+//   benen       → Kaart: Benen training
+//   borst       → Kaart: Borst training
+//   rug         → Kaart: Rug training
+//   schouders   → Kaart: Schouders training
+//   armen       → Kaart: Armen training
+//   billen      → Kaart: Billen training
+//   buik        → Kaart: Core/Buik training
+//   full body   → Kaart: Full Body training
+//   hiit        → Kaart: HIIT training
+//   cardio      → Kaart: Cardio training
+// ============================================================
+const P_DEFAULT={
+  hero:       "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=800&q=85",
+  onboard:    "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=85",
+  benen:      "https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=80",
+  borst:      "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&q=80",
+  rug:        "https://images.unsplash.com/photo-1530822847156-5df684ec5ee1?w=600&q=80",
+  schouders:  "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
+  armen:      "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80",
+  billen:     "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=80",
+  buik:       "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80",
+  "full body":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&q=80",
+  hiit:       "https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=600&q=80",
+  cardio:     "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=600&q=80",
+};
+// ============================================================
+function getP(){const ov=LS.get("fitcoach_photo_overrides")||{};return{...P_DEFAULT,...ov};}
+const P=getP();
 
 const SPLITS_KRACHT=[{label:"Push",muscles:["borst","schouders","armen"],pk:"borst",desc:"Borst · Schouders · Triceps"},{label:"Pull",muscles:["rug","armen"],pk:"rug",desc:"Rug · Biceps"},{label:"Legs",muscles:["benen","billen"],pk:"benen",desc:"Quads · Hamstrings · Billen"},{label:"Borst & Triceps",muscles:["borst","armen"],pk:"borst",desc:"Borst · Triceps"},{label:"Rug & Biceps",muscles:["rug","armen"],pk:"rug",desc:"Rug · Biceps"},{label:"Full Body",muscles:["full body"],pk:"full body",desc:"Alles in één"}];
-const SPLITS_HIIT=[{label:"HIIT Full Body",muscles:["hiit_full"],pk:"hiit",desc:"Volledig lichaam"},{label:"HIIT Benen",muscles:["hiit_benen"],pk:"benen",desc:"Explosieve benentraining"},{label:"HIIT Core",muscles:["hiit_core"],pk:"buik",desc:"Core & conditie"}];
-const SPLITS_CARDIO=[{label:"Cardio Run",muscles:["cardio_full"],pk:"cardio",desc:"Hardlopen sessie"},{label:"Cardio Bike",muscles:["cardio_bike"],pk:"benen",desc:"Fiets & cardio"},{label:"Cardio Mix",muscles:["cardio_full"],pk:"cardio",desc:"Gemixte cardio"}];
+const SPLITS_HIIT=[
+  {label:"HIIT Full Body",muscles:["hiit_full"],pk:"hiit",desc:"Volledig lichaam"},
+  {label:"HIIT Benen",muscles:["hiit_benen"],pk:"benen",desc:"Explosieve benentraining"},
+  {label:"HIIT Core",muscles:["hiit_core"],pk:"buik",desc:"Core & conditie"},
+  {label:"HIIT Upper",muscles:["hiit_upper"],pk:"borst",desc:"Borst, schouders & armen"},
+];
+const SPLITS_CARDIO=[
+  {label:"Hardlopen",muscles:["cardio_full"],pk:"cardio",desc:"Run, interval of wandeling"},
+  {label:"Spinning",muscles:["cardio_bike"],pk:"cardio",desc:"Fiets & spin"},
+  {label:"Stair Climber",muscles:["cardio_stairs"],pk:"benen",desc:"Trap & helling"},
+  {label:"Zwemmen",muscles:["cardio_swim"],pk:"cardio",desc:"Low impact, full body"},
+  {label:"Crosstrainer",muscles:["cardio_cross"],pk:"cardio",desc:"Elliptical & roeien"},
+];
+
+const MUSCLE_LABEL={
+  hiit_full:"HIIT Full Body",hiit_benen:"HIIT Benen",hiit_core:"HIIT Core",hiit_upper:"HIIT Upper",
+  cardio_full:"Hardlopen",cardio_bike:"Spinning",cardio_stairs:"Stair Climber",cardio_swim:"Zwemmen",cardio_cross:"Crosstrainer",
+};
+function muscleLabel(m){return MUSCLE_META[m]?.label||MUSCLE_LABEL[m]||m;}
 
 const EX_DB={
-  "Squat":{muscle:"benen",unit:"kg",info:"Voeten schouderbreedte. Zak neer tot heupen onder kniehoogte.",yt:"squat+techniek"},
-  "Leg Press":{muscle:"benen",unit:"kg",info:"Voeten op platform. Duw volledig uit.",yt:"leg+press"},
-  "Romanian Deadlift":{muscle:"benen",unit:"kg",info:"Stang langs benen omlaag. Voel de rek.",yt:"romanian+deadlift"},
-  "Leg Extension":{muscle:"benen",unit:"kg",info:"Volledig strekken bovenaan.",yt:"leg+extension"},
-  "Leg Curl":{muscle:"benen",unit:"kg",info:"Trek hielen naar billen. Langzaam zakken.",yt:"leg+curl"},
-  "Calf Raises":{muscle:"benen",unit:"kg",info:"Volledig omhoog op bal van je voet.",yt:"calf+raises"},
-  "Bulgarian Split Squat":{muscle:"benen",unit:"kg",info:"Achterste voet op bank. Zak recht omlaag.",yt:"bulgarian+split+squat"},
-  "Bench Press":{muscle:"borst",unit:"kg",info:"Stang laten zakken tot borst. Ellebogen 45-75 graden.",yt:"bench+press+techniek"},
-  "Incline Dumbbell Press":{muscle:"borst",unit:"kg",info:"Bank 30 graden. Druk schuin omhoog.",yt:"incline+dumbbell+press"},
-  "Cable Fly":{muscle:"borst",unit:"kg",info:"Armen licht gebogen. Breng samen voor borst.",yt:"cable+fly"},
-  "Push-up":{muscle:"borst",unit:"reps",info:"Handen schouderbreedte. Lichaam als plank.",yt:"push+up"},
-  "Dips":{muscle:"armen",unit:"reps",info:"Volledig zakken tot 90 graden.",yt:"dips"},
-  "Shoulder Press":{muscle:"schouders",unit:"kg",info:"Dumbells recht boven het hoofd.",yt:"shoulder+press"},
-  "Lateral Raises":{muscle:"schouders",unit:"kg",info:"Hef tot schouderhoogte. Duimen licht omlaag.",yt:"lateral+raises"},
-  "Deadlift":{muscle:"rug",unit:"kg",info:"Stang boven middenvoet. Heupen laag. Rug recht.",yt:"deadlift"},
-  "Bent-over Row":{muscle:"rug",unit:"kg",info:"Romp 45 graden. Trek naar navel.",yt:"bent+over+row"},
-  "Lat Pulldown":{muscle:"rug",unit:"kg",info:"Greep breder dan schouders. Trek naar bovenborst.",yt:"lat+pulldown"},
-  "Pull-ups":{muscle:"rug",unit:"reps",info:"Overhandse greep. Trek kin over de stang.",yt:"pull+ups"},
-  "Seated Cable Row":{muscle:"rug",unit:"kg",info:"Recht zitten. Trek naar navel.",yt:"seated+cable+row"},
-  "Barbell Curl":{muscle:"armen",unit:"kg",info:"Ellebogen vast langs je lijf. Curl volledig omhoog.",yt:"barbell+curl"},
-  "Hammer Curl":{muscle:"armen",unit:"kg",info:"Neutrale grip, duimen omhoog.",yt:"hammer+curl"},
-  "Triceps Pushdown":{muscle:"armen",unit:"kg",info:"Ellebogen vast langs lijf. Duw volledig uit.",yt:"triceps+pushdown"},
-  "Skull Crushers":{muscle:"armen",unit:"kg",info:"Laat stang zakken naar voorhoofd.",yt:"skull+crushers"},
-  "Incline Dumbbell Curl":{muscle:"armen",unit:"kg",info:"Bank schuin. Armen hangen volledig.",yt:"incline+dumbbell+curl"},
-  "Concentration Curl":{muscle:"armen",unit:"kg",info:"Elleboog op binnenknie. Volledige curl.",yt:"concentration+curl"},
-  "Hip Thrust":{muscle:"billen",unit:"kg",info:"Rug op bank. Duw omhoog en knijp billen.",yt:"hip+thrust"},
-  "Glute Bridge":{muscle:"billen",unit:"reps",info:"Lig op rug. Duw heupen omhoog.",yt:"glute+bridge"},
-  "Plank":{muscle:"buik",unit:"sec",info:"Steun op onderarmen en tenen. Lichaam recht.",yt:"plank"},
-  "Crunches":{muscle:"buik",unit:"reps",info:"Lage rug op grond. Kroel omhoog.",yt:"crunches"},
-  "Leg Raises":{muscle:"buik",unit:"reps",info:"Benen gestrekt. Hef tot 90 graden.",yt:"leg+raises"},
-  "Mountain Climber":{muscle:"buik",unit:"sec",info:"Plank positie. Breng knie naar borst snel.",yt:"mountain+climbers"},
-  "Arnold Press":{muscle:"schouders",unit:"kg",info:"Start palmen naar jou. Roteer naar buiten.",yt:"arnold+press"},
-  "Face Pulls":{muscle:"schouders",unit:"kg",info:"Kabel op ooghoogte. Trek naar gezicht.",yt:"face+pulls"},
-  "Burpee":{muscle:"full body",unit:"reps",info:"Squat neer, plank, push-up, spring omhoog.",yt:"burpee"},
-  "Jump Squat":{muscle:"benen",unit:"reps",info:"Squat, spring explosief, land zacht.",yt:"jump+squat"},
-  "High Knees":{muscle:"full body",unit:"sec",info:"Knieën hoog in sneltempo. Armen mee.",yt:"high+knees"},
-  "Box Jump":{muscle:"benen",unit:"reps",info:"Spring op box. Land zacht met gebogen knieën.",yt:"box+jump"},
-  "Jumping Jacks":{muscle:"full body",unit:"reps",info:"Armen en benen synchroon.",yt:"jumping+jacks"},
-  "Kettlebell Swing":{muscle:"full body",unit:"reps",info:"Heupkracht drijft de swing. Rug recht.",yt:"kettlebell+swing"},
-  "Battle Ropes":{muscle:"schouders",unit:"sec",info:"Golven maken. Core strak.",yt:"battle+ropes"},
-  "Skipping":{muscle:"full body",unit:"sec",info:"Springtouw. Polsen draaien, niet armen.",yt:"skipping+rope"},
-  "Hardlopen":{muscle:"full body",unit:"sec",info:"Rustig begin, vlak tempo.",yt:"running+technique"},
-  "Roeien (machine)":{muscle:"rug",unit:"sec",info:"Benen eerst, dan romp, dan armen.",yt:"rowing+machine"},
-  "Stationary Bike":{muscle:"benen",unit:"sec",info:"Wissel tempo en weerstand af.",yt:"stationary+bike+workout"}
+  "Squat":{muscle:"benen",unit:"kg",rest:90,info:"Voeten schouderbreedte uit elkaar, tenen licht naar buiten. Zak gecontroleerd neer tot heupen onder kniehoogte. Knieën volgen de richting van je tenen. Rug recht houden, borst omhoog. Duw vanuit de hielen omhoog.",yt:"squat+techniek"},
+  "Leg Press":{muscle:"benen",unit:"kg",rest:90,info:"Voeten schouderbreedte op het platform. Duw volledig uit zonder knieën te vergrendelen. Buig terug tot 90 graden of dieper. Lage rug altijd tegen de rugleuning houden.",yt:"leg+press"},
+  "Romanian Deadlift":{muscle:"benen",unit:"kg",rest:75,info:"Sta rechtop met stang voor je. Schuif de stang langs je benen omlaag door je heupen naar achteren te duwen. Houd je rug recht en voel de rek in je hamstrings. Stop als je de rek voelt, niet op basis van diepte.",yt:"romanian+deadlift"},
+  "Leg Extension":{muscle:"benen",unit:"kg",rest:60,info:"Zit rechtop in de machine. Strek de benen volledig uit en houd 1 seconde vast bovenaan. Laat langzaam zakken — de negatieve fase is net zo belangrijk als omhoog.",yt:"leg+extension"},
+  "Leg Curl":{muscle:"benen",unit:"kg",rest:60,info:"Lig plat op de machine. Trek je hielen naar je billen in een vloeiende beweging. Knijp bovenaan even samen. Laat langzaam zakken voor maximale spieractivatie.",yt:"leg+curl"},
+  "Calf Raises":{muscle:"benen",unit:"kg",rest:45,info:"Sta op de bal van je voet op een verhoging. Zak volledig naar beneden voor een goede rek. Duw explosief omhoog en houd 1 seconde vast bovenaan. Doe langzaam voor beste effect.",yt:"calf+raises"},
+  "Bulgarian Split Squat":{muscle:"benen",unit:"kg",rest:90,info:"Achterste voet op bank of verhoging. Zak recht omlaag — het gaat om verticale beweging, niet voorwaarts. Voorste knie niet over je teen laten komen. Moeilijke maar zeer effectieve oefening.",yt:"bulgarian+split+squat"},
+  "Bench Press":{muscle:"borst",unit:"kg",rest:120,info:"Lig op de bank met voeten plat op de grond. Grip iets breder dan schouderbreedte. Laat de stang zakken naar je borst met ellebogen op 45-75 graden — niet volledig naar buiten. Duw explosief omhoog.",yt:"bench+press+techniek"},
+  "Incline Dumbbell Press":{muscle:"borst",unit:"kg",rest:90,info:"Bank op 30-45 graden. Dumbells ter hoogte van je borst. Druk schuin omhoog en breng ze licht naar elkaar toe bovenaan. Focus op het samentrekken van de bovenste borst.",yt:"incline+dumbbell+press"},
+  "Cable Fly":{muscle:"borst",unit:"kg",rest:60,info:"Armen licht gebogen houden gedurende de hele beweging. Breng de handgrepen samen voor je borst in een omhelzingsbeweging. Voel de rek in de borst onderaan. Langzaam laten zakken.",yt:"cable+fly"},
+  "Push-up":{muscle:"borst",unit:"reps",rest:45,info:"Handen iets breder dan schouderbreedte. Lichaam als een rechte plank van hoofd tot hiel. Zak totdat je borst bijna de grond raakt. Ellebogen 45 graden van je lichaam, niet volledig uit.",yt:"push+up"},
+  "Dips":{muscle:"armen",unit:"reps",rest:60,info:"Houd je lichaam recht of leun licht voorover voor meer borst-activatie. Zak tot je ellebogen 90 graden zijn. Duw volledig uit bovenaan. Voeg gewicht toe als het te makkelijk wordt.",yt:"dips"},
+  "Shoulder Press":{muscle:"schouders",unit:"kg",rest:90,info:"Zit of sta rechtop. Dumbells op ooghoogte, ellebogen 90 graden. Duw recht omhoog boven je hoofd zonder door te vergrendelen. Gecontroleerd terug naar beginpositie.",yt:"shoulder+press"},
+  "Lateral Raises":{muscle:"schouders",unit:"kg",rest:45,info:"Sta met lichte dumbbells naast je. Hef je armen zijwaarts tot schouderhoogte met licht gebogen ellebogen. Duimen licht omlaag voor betere deltoid-activatie. Laat langzaam zakken.",yt:"lateral+raises"},
+  "Deadlift":{muscle:"rug",unit:"kg",rest:120,info:"Voeten heupbreedte. Stang boven het midden van je voet. Pak de stang vast, adem in, span je core aan. Duw de grond weg met je benen terwijl je de stang langs je lichaam trekt. Heupen en schouders omhoog tegelijk.",yt:"deadlift"},
+  "Bent-over Row":{muscle:"rug",unit:"kg",rest:90,info:"Romp 45 graden voorovergebogen, knieën licht gebogen. Trek de stang naar je navel — niet naar je borst. Knijp je schouderbladen samen bovenaan. Core gespannen houden voor lage rugbescherming.",yt:"bent+over+row"},
+  "Lat Pulldown":{muscle:"rug",unit:"kg",rest:75,info:"Greep iets breder dan schouderbreedte. Leun licht achterover. Trek de stang naar je bovenborst terwijl je je ellebogen naar beneden en achteren trekt. Voel je lats samentrekken.",yt:"lat+pulldown"},
+  "Pull-ups":{muscle:"rug",unit:"reps",rest:90,info:"Overhandse greep, iets breder dan schouders. Hang volledig uit onderaan. Trek jezelf omhoog tot je kin over de stang komt. Gecontroleerd terug laten zakken voor volledige bewegingsuitslag.",yt:"pull+ups"},
+  "Seated Cable Row":{muscle:"rug",unit:"kg",rest:75,info:"Zit recht met lichte knie-buiging. Trek de kabel naar je navel. Houd je romp stabiel — geen schommelende beweging. Knijp schouderbladen samen en laat langzaam terug.",yt:"seated+cable+row"},
+  "Barbell Curl":{muscle:"armen",unit:"kg",rest:60,info:"Sta recht, ellebogen vast langs je lichaam. Curl de stang omhoog naar je schouders in een vloeiende boog. Knijp de biceps bovenaan samen. Laat gecontroleerd zakken — de negatieve fase traint ook!",yt:"barbell+curl"},
+  "Hammer Curl":{muscle:"armen",unit:"kg",rest:60,info:"Neutrale grip met duimen omhoog. Curl de dumbbells omhoog terwijl je de polsen recht houdt. Werkt zowel biceps als brachialis voor dikkere armen. Afwisselend of tegelijk.",yt:"hammer+curl"},
+  "Triceps Pushdown":{muscle:"armen",unit:"kg",rest:60,info:"Ellebogen vast langs je ribben. Duw de stang volledig uit naar beneden. Knijp de triceps samen onderaan. Laat langzaam terug omhoog — niet laten schieten.",yt:"triceps+pushdown"},
+  "Skull Crushers":{muscle:"armen",unit:"kg",rest:60,info:"Lig op de bank. Houd ellebogen op schouderbreedte. Laat de stang zakken naar je voorhoofd of net eronder. Strek explosief uit. Ellebogen mogen licht naar voren bewegen onderaan.",yt:"skull+crushers"},
+  "Incline Dumbbell Curl":{muscle:"armen",unit:"kg",rest:60,info:"Bank schuin achterover op 45-60 graden. Laat armen volledig hangen. Door de schuine hoek krijg je een grotere bewegingsuitslag en meer rek op de biceps. Langzaam omhoog en omlaag.",yt:"incline+dumbbell+curl"},
+  "Concentration Curl":{muscle:"armen",unit:"kg",rest:45,info:"Zit, elleboog steunend op binnenkant van je knie. Curl de dumbbell omhoog. Isolatie-oefening voor maximale bicep-piek. Draai je pols aan het einde voor extra activatie.",yt:"concentration+curl"},
+  "Hip Thrust":{muscle:"billen",unit:"kg",rest:75,info:"Bovenrug op een bank, stang over je heupen (gebruik een pad). Voeten plat, knieën 90 graden. Duw heupen explosief omhoog en knijp je billen zo hard mogelijk samen bovenaan. Even vasthouden.",yt:"hip+thrust"},
+  "Glute Bridge":{muscle:"billen",unit:"reps",rest:45,info:"Lig op je rug met knieën gebogen, voeten plat. Duw je heupen omhoog tot je lichaam een rechte lijn vormt. Knijp billen samen bovenaan. Makkelijker variant van de hip thrust.",yt:"glute+bridge"},
+  "Plank":{muscle:"buik",unit:"sec",rest:30,info:"Steun op onderarmen en tenen. Lichaam als een rechte plank — geen hangende heupen, geen omhoog gestoken billen. Span je core, billen en benen aan. Adem rustig door. Kijk naar de grond.",yt:"plank"},
+  "Crunches":{muscle:"buik",unit:"reps",rest:30,info:"Lig op je rug, knieën gebogen. Kroel je bovenlichaam omhoog door je core samen te trekken — niet door je nek te trekken. Stop halverwege, je lage rug blijft op de grond. Langzaam terug.",yt:"crunches"},
+  "Leg Raises":{muscle:"buik",unit:"reps",rest:30,info:"Lig plat. Benen gestrekt omhoog heffen tot 90 graden. Laat langzaam zakken tot net boven de grond — raak niet helemaal neer. Houd je lage rug op de grond voor maximale core-activatie.",yt:"leg+raises"},
+  "Mountain Climber":{muscle:"buik",unit:"sec",rest:20,info:"Plank positie op gestrekte armen. Breng beurtelings je knie explosief naar je borst alsof je heuvel oprent. Heupen laag houden. Hoe sneller, hoe hoger de hartslag. Core altijd gespannen.",yt:"mountain+climbers"},
+  "Arnold Press":{muscle:"schouders",unit:"kg",rest:75,info:"Begin met palmen naar jou gericht op ooghoogte. Terwijl je omhoog drukt roteer je je handen naar buiten. Bovenaan wijzen je palmen naar voren. Omgekeerd terug. Werkt alle drie de deltoid-koppen.",yt:"arnold+press"},
+  "Face Pulls":{muscle:"schouders",unit:"kg",rest:45,info:"Kabel op ooghoogte of iets erboven. Trek naar je gezicht met ellebogen omhoog. Externe rotatie aan het einde — duimen naar achteren. Essentieel voor gezonde schouders en houding.",yt:"face+pulls"},
+  "Burpee":{muscle:"full body",unit:"reps",rest:30,info:"Vanuit staande positie: squat neer, handen op grond, spring naar plank, doe een push-up (optioneel), spring terug naar squat, spring omhoog met armen overhead. Intense totaallichaams-oefening.",yt:"burpee"},
+  "Jump Squat":{muscle:"benen",unit:"reps",rest:30,info:"Doe een normale squat. Vanuit de onderste positie spring je explosief omhoog. Armen gebruiken voor vaart. Land zacht met gebogen knieën om de schok op te vangen. Direct door naar de volgende rep.",yt:"jump+squat"},
+  "High Knees":{muscle:"full body",unit:"sec",rest:20,info:"Sta recht en ren op de plaats met knieën zo hoog mogelijk — idealiter tot heuphoogte. Armen meebewegen alsof je echt rent. Hoge intensiteit, verhoogt hartslag snel. Heel de grond niet raken.",yt:"high+knees"},
+  "Box Jump":{muscle:"benen",unit:"reps",rest:45,info:"Sta voor de box. Buig licht door je knieën. Spring explosief omhoog met je armen als hulp. Land met beide voeten tegelijk op de box, zacht met gebogen knieën. Stap voorzichtig naar beneden.",yt:"box+jump"},
+  "Jumping Jacks":{muscle:"full body",unit:"reps",rest:15,info:"Sta rechtop. Spring je benen uit elkaar terwijl je armen boven je hoofd brengt. Spring terug naar de startpositie. Goede warming-up of actieve rust-oefening tussen zwaardere sets.",yt:"jumping+jacks"},
+  "Kettlebell Swing":{muscle:"full body",unit:"reps",rest:30,info:"Voeten schouderbreedte. Kettlebell tussen je benen. Heupen explosief naar voren duwen — de swing komt van je heupen, niet van je armen! Rug recht, core strak. Laat de kettlebell terug zwaaien tot tussen de knieën.",yt:"kettlebell+swing"},
+  "Battle Ropes":{muscle:"schouders",unit:"sec",rest:30,info:"Houd beide touwen vast, licht door de knieën. Maak alternerend golfbewegingen. Hoe groter de golven, hoe zwaarder. Varieer met beide tegelijk, circels of zij-aan-zij bewegen.",yt:"battle+ropes"},
+  "Skipping":{muscle:"full body",unit:"sec",rest:30,info:"Houd de handgrepen op heuphoogte. Draai met je polsen — niet je armen. Spring op de bal van je voet. Begin rustig met beide voeten tegelijk en bouw op naar single-leg of dubbel-slagen.",yt:"skipping+rope"},
+  "Hardlopen":{muscle:"full body",unit:"sec",rest:60,info:"Goede loopschoenen zijn essentieel. Begin rustig, bouw je tempo op. Adem in door de neus, uit door de mond. Armen meebewegen voor efficiëntie. Landingspatroon: middenvoet, niet op je hiel.",yt:"running+technique+beginners"},
+  "Roeien (machine)":{muscle:"rug",unit:"sec",rest:60,info:"Trek in volgorde: benen — romp achterover — armen. Duw terug in omgekeerde volgorde: armen — romp voorover — benen buigen. Volle bewegingsuitslag voor maximale efficiency. Weerstand aanpassen.",yt:"rowing+machine+technique"},
+  "Stationary Bike":{muscle:"benen",unit:"sec",rest:30,info:"Zadel op heuphoogte zodat je been bijna gestrekt is onderaan. Trap in cirkels, niet op en neer. Wissel tussen hoge cadans (makkelijk) en lage cadans (zwaar) voor intervallen.",yt:"stationary+bike+workout"},
+  "Spinning":{muscle:"benen",unit:"sec",rest:30,info:"Zit rechtop of leun iets voorover. Weerstand opbouwen voor klimmen. Sta op de pedalen voor sprints. Wissel tussen zitten en staan. Cadans controleren met je ademhaling.",yt:"spinning+workout+beginners"},
+  "Stair Climber":{muscle:"benen",unit:"sec",rest:45,info:"Sta rechtop, minimaal leunen op de handgrepen — dat vermindert de intensiteit. Volle stap nemen voor maximale billen- en beenactivatie. Tempo aanpassen voor cardio of kracht.",yt:"stair+climber+workout"},
+  "Treadmill Walk":{muscle:"full body",unit:"sec",rest:30,info:"Loop op een helling van 5-10% voor maximale calorieverbranding zonder rennen. Handen niet vasthouden aan de leuning. Opgerichte houding. Combineer met intervallen voor extra resultaat.",yt:"treadmill+incline+walking"},
+  "Elliptical":{muscle:"full body",unit:"sec",rest:30,info:"Laag impact — goed voor gewrichten. Gebruik de armen actief mee voor een totaallichaams-workout. Wissel van richting (achteruit trappen) voor andere spieren. Helling aanpassen voor meer weerstand.",yt:"elliptical+machine+workout"},
+  "Lopen op helling":{muscle:"benen",unit:"sec",rest:30,info:"Loop buiten of op de loopband op 8-15% helling. Lager tempo dan normaal hardlopen maar veel hogere calorieverbranding. Goede knievervanging voor mensen die niet goed kunnen rennen.",yt:"incline+walking+workout"},
+  "Touwtjespringen":{muscle:"full body",unit:"sec",rest:30,info:"Begin met beide voeten tegelijk. Polsen draaien, niet de armen. Spring op de bal van je voet voor zachte landingen. 10 minuten touwtjespringen = ±130 calorieën. Goede HIIT optie.",yt:"jump+rope+workout"},
+  "Bear Crawl":{muscle:"full body",unit:"sec",rest:30,info:"Handen en knieën, knieën net boven de grond. Beweeg diagonaal: rechterhand met linkervoet tegelijk. Heupen laag houden. Uitstekende core- en schouderstabiliteit oefening.",yt:"bear+crawl+exercise"},
+  "Tuck Jump":{muscle:"benen",unit:"reps",rest:30,info:"Spring omhoog en trek je knieën naar je borst op het hoogste punt. Land zacht met gebogen knieën. Explosieve oefening die quad, billen en core activeert. Intensief — bouw langzaam op.",yt:"tuck+jump"},
+  "Lateral Shuffle":{muscle:"benen",unit:"sec",rest:20,info:"Ga licht door je knieën in atletische positie. Schuif zijwaarts — voeten niet kruisen. Raak de grond aan bij elke richting wissel. Werkt de buitenkant van je benen en billen.",yt:"lateral+shuffle+exercise"},
+  "Inchworm":{muscle:"full body",unit:"reps",rest:20,info:"Sta recht. Loop met je handen naar voren tot plank-positie. Doe een push-up (optioneel). Loop handen terug naar je voeten. Oprekken en warming-up beweging maar ook een goede full-body oefening.",yt:"inchworm+exercise"},
+  "Ski Jumps":{muscle:"benen",unit:"reps",rest:30,info:"Spring zijwaarts van been naar been alsof je ski slalom rijdt. Land op één been en buig door je knie voor een zachte landing. Ploeg kracht en coördinatie. Doe 10 per kant.",yt:"skater+jumps+exercise"},
+  "Sprint op de plaats":{muscle:"full body",unit:"sec",rest:20,info:"Ren zo snel mogelijk op de plaats. Knieën omhoog, armen hard meebewegen. Volle inspanning. Ideaal als afsluiter van een interval of als opwarmer.",yt:"running+in+place+fast"},
+  "Power Jack":{muscle:"full body",unit:"reps",rest:20,info:"Jumping jack maar dan met een squat onderaan. Sla benen uit, zak in squat, duw omhoog en breng benen samen. Combineert plyometrie met kracht.",yt:"power+jack+exercise"},
+  "Plank Jack":{muscle:"buik",unit:"reps",rest:20,info:"Begin in plankpositie op gestrekte armen. Spring benen uit elkaar en terug samen — zoals een jumping jack maar horizontaal. Core strak, heupen laag.",yt:"plank+jack+exercise"},
+  "Sumo Squat Jump":{muscle:"benen",unit:"reps",rest:30,info:"Brede squat met tenen naar buiten. Zak diep, spring explosief omhoog. Land zacht terug in brede stand. Werkt binnenste dijen en billen extra.",yt:"sumo+squat+jump"},
+  "Speed Rope":{muscle:"full body",unit:"sec",rest:20,info:"Springtouw op maximale snelheid. Probeer zo weinig mogelijk tijd op de grond te zijn. Polsen klein houden. Na 30 seconden maximale hartslag.",yt:"speed+rope+workout"},
+  "Plyo Push-up":{muscle:"borst",unit:"reps",rest:30,info:"Normale push-up maar explosief omhoog zodat handen van de grond komen. Land zacht en direct in volgende. Geavanceerd — bouw langzaam op.",yt:"plyometric+push+up"},
+  "Broad Jump":{muscle:"benen",unit:"reps",rest:30,info:"Sta met voeten schouderbreedte. Buig door knieën, zwaai armen terug en spring zo ver mogelijk vooruit. Land zacht met gebogen knieën. Meet je afstand.",yt:"broad+jump+exercise"},
+  "Donkey Kick":{muscle:"billen",unit:"reps",rest:15,info:"Begin op handen en knieën. Schop één been omhoog naar het plafond terwijl je knie gebogen blijft. Knijp bil samen bovenaan. Afwisselend per been.",yt:"donkey+kick+exercise"},
+  "Frog Jump":{muscle:"benen",unit:"reps",rest:30,info:"Diepe squat met handen op de grond tussen je voeten. Spring explosief omhoog en laat armen meebewegen. Land terug in diepe squat. Kikker-achtig.",yt:"frog+jump+exercise"},
+  "Interval Hardlopen":{muscle:"full body",unit:"sec",rest:60,info:"Wissel 30 seconden sprinten af met 30 seconden rustig joggen. Verhoogt conditie sneller dan steady-state cardio. Bouw intervallen op per week.",yt:"interval+running+workout"},
+  "Zwemmen":{muscle:"full body",unit:"sec",rest:30,info:"Laag impact, hoge calorieverbranding. Wissel slagen af voor verschillende spiergroepen. Crawl voor snelheid, schoolslag voor duur. Goed voor herstel.",yt:"swimming+workout+beginners"},
+  "Roeien buiten":{muscle:"rug",unit:"sec",rest:60,info:"Buiten roeien geeft extra weerstand door wind en stroom. Trek met heupen en rug, niet alleen armen. Goede houding voorkomt rugklachten.",yt:"rowing+outdoor+technique"},
+  "Crosstrainer":{muscle:"full body",unit:"sec",rest:30,info:"Elliptical met armbeweging. Laag impact, hoge calorieverbranding. Stel weerstand in op een niveau dat je nog net kunt praten maar niet zingen.",yt:"cross+trainer+workout"},
+  "Wandelen":{muscle:"benen",unit:"sec",rest:0,info:"Onderschat wandelen niet — 30 minuten op tempo verbrandt net zoveel vet als joggen. Houd een flink tempo aan. Goed voor herstel en vetverbranding.",yt:"power+walking+workout"},
+  "Treadmill Sprint":{muscle:"full body",unit:"sec",rest:60,info:"Zet de band op maximale snelheid voor korte sprints van 15-30 seconden. Houd je vast bij opstap en neerstap. Niet langer dan 30 seconden per sprint.",yt:"treadmill+sprint+interval"}
 };
 const EX_PHOTOS={"Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Bench Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80","Pull-ups":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80","Shoulder Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80","Barbell Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Bent-over Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80","Leg Press":"https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?w=500&q=80","Plank":"https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=500&q=80","Dips":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80","Hip Thrust":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80","Lateral Raises":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Romanian Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80","Leg Extension":"https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?w=500&q=80","Leg Curl":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Calf Raises":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Bulgarian Split Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Incline Dumbbell Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Cable Fly":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Push-up":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Lat Pulldown":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80","Seated Cable Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80","Hammer Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Triceps Pushdown":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Skull Crushers":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Incline Dumbbell Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Concentration Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Glute Bridge":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80","Crunches":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Leg Raises":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Mountain Climber":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Arnold Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80","Face Pulls":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Burpee":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Jump Squat":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","High Knees":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Box Jump":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Jumping Jacks":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Kettlebell Swing":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Battle Ropes":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Skipping":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80","Hardlopen":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80","Roeien (machine)":"https://images.unsplash.com/photo-1530822847156-5df684ec5ee1?w=500&q=80","Stationary Bike":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80"};
 const WV={
@@ -146,13 +250,46 @@ buik:[[{name:"Plank",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Crunches",s
 "full body":[[{name:"Squat",sets:3,reps:"10",weights:[70,70,70]},{name:"Bench Press",sets:3,reps:"10",weights:[60,60,60]},{name:"Bent-over Row",sets:3,reps:"10",weights:[50,50,50]},{name:"Shoulder Press",sets:3,reps:"10",weights:[16,16,16]},{name:"Plank",sets:3,reps:"45s",weights:[45,45,45]}],[{name:"Deadlift",sets:3,reps:"8",weights:[80,80,80]},{name:"Push-up",sets:3,reps:"15",weights:[0,0,0]},{name:"Pull-ups",sets:3,reps:"8",weights:[0,0,0]},{name:"Arnold Press",sets:3,reps:"12",weights:[12,12,12]},{name:"Burpee",sets:3,reps:"10",weights:[0,0,0]}]]
 };
 const HIIT_WV={
-hiit_full:[[{name:"Burpee",sets:4,reps:"10",weights:[0,0,0,0]},{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"High Knees",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Mountain Climber",sets:3,reps:"30s",weights:[30,30,30]},{name:"Jumping Jacks",sets:3,reps:"30",weights:[0,0,0]}],[{name:"Kettlebell Swing",sets:4,reps:"20",weights:[16,16,16,16]},{name:"Box Jump",sets:4,reps:"10",weights:[0,0,0,0]},{name:"Skipping",sets:4,reps:"60s",weights:[60,60,60,60]},{name:"Burpee",sets:3,reps:"8",weights:[0,0,0]},{name:"High Knees",sets:3,reps:"45s",weights:[45,45,45]}]],
-hiit_benen:[[{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"Box Jump",sets:3,reps:"10",weights:[0,0,0]},{name:"High Knees",sets:3,reps:"45s",weights:[45,45,45]},{name:"Burpee",sets:3,reps:"8",weights:[0,0,0]}]],
-hiit_core:[[{name:"Mountain Climber",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Burpee",sets:3,reps:"10",weights:[0,0,0]},{name:"High Knees",sets:3,reps:"30s",weights:[30,30,30]},{name:"Jumping Jacks",sets:3,reps:"30",weights:[0,0,0]}]]
+hiit_full:[
+  [{name:"Burpee",sets:4,reps:"10",weights:[0,0,0,0]},{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"High Knees",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Mountain Climber",sets:3,reps:"30s",weights:[30,30,30]},{name:"Tuck Jump",sets:3,reps:"10",weights:[0,0,0]}],
+  [{name:"Kettlebell Swing",sets:4,reps:"20",weights:[16,16,16,16]},{name:"Box Jump",sets:4,reps:"10",weights:[0,0,0,0]},{name:"Bear Crawl",sets:4,reps:"30s",weights:[30,30,30,30]},{name:"Burpee",sets:3,reps:"8",weights:[0,0,0]},{name:"Lateral Shuffle",sets:3,reps:"30s",weights:[30,30,30]}],
+  [{name:"Power Jack",sets:4,reps:"20",weights:[0,0,0,0]},{name:"Sprint op de plaats",sets:4,reps:"30s",weights:[30,30,30,30]},{name:"Plank Jack",sets:3,reps:"20",weights:[0,0,0]},{name:"Sumo Squat Jump",sets:3,reps:"15",weights:[0,0,0]},{name:"Frog Jump",sets:3,reps:"10",weights:[0,0,0]}],
+  [{name:"Plyo Push-up",sets:3,reps:"8",weights:[0,0,0]},{name:"Broad Jump",sets:4,reps:"8",weights:[0,0,0,0]},{name:"Speed Rope",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Mountain Climber",sets:3,reps:"40s",weights:[40,40,40]},{name:"Burpee",sets:3,reps:"10",weights:[0,0,0]}]
+],
+hiit_benen:[
+  [{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"Box Jump",sets:3,reps:"10",weights:[0,0,0]},{name:"Lateral Shuffle",sets:3,reps:"30s",weights:[30,30,30]},{name:"Ski Jumps",sets:3,reps:"20",weights:[0,0,0]}],
+  [{name:"Sumo Squat Jump",sets:4,reps:"15",weights:[0,0,0,0]},{name:"Broad Jump",sets:4,reps:"8",weights:[0,0,0,0]},{name:"Donkey Kick",sets:3,reps:"15",weights:[0,0,0]},{name:"Frog Jump",sets:3,reps:"10",weights:[0,0,0]}]
+],
+hiit_core:[
+  [{name:"Mountain Climber",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Plank Jack",sets:3,reps:"20",weights:[0,0,0]},{name:"Bear Crawl",sets:3,reps:"30s",weights:[30,30,30]},{name:"Inchworm",sets:3,reps:"8",weights:[0,0,0]}],
+  [{name:"Plank",sets:4,reps:"60s",weights:[60,60,60,60]},{name:"Mountain Climber",sets:3,reps:"30s",weights:[30,30,30]},{name:"Burpee",sets:3,reps:"8",weights:[0,0,0]},{name:"Sprint op de plaats",sets:3,reps:"20s",weights:[20,20,20]}]
+],
+hiit_upper:[
+  [{name:"Plyo Push-up",sets:4,reps:"8",weights:[0,0,0,0]},{name:"Battle Ropes",sets:4,reps:"30s",weights:[30,30,30,30]},{name:"Burpee",sets:3,reps:"10",weights:[0,0,0]},{name:"Mountain Climber",sets:3,reps:"30s",weights:[30,30,30]}]
+]
 };
 const CARDIO_WV={
-cardio_full:[[{name:"Hardlopen",sets:1,reps:"20 min",weights:[1200]},{name:"Skipping",sets:4,reps:"3 min",weights:[180,180,180,180]},{name:"High Knees",sets:3,reps:"60s",weights:[60,60,60]}],[{name:"Hardlopen",sets:1,reps:"30 min",weights:[1800]},{name:"Jumping Jacks",sets:4,reps:"60s",weights:[60,60,60,60]}]],
-cardio_bike:[[{name:"Stationary Bike",sets:1,reps:"30 min",weights:[1800]},{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"High Knees",sets:3,reps:"60s",weights:[60,60,60]}]]
+cardio_full:[
+  [{name:"Hardlopen",sets:1,reps:"20 min",weights:[1200]},{name:"Touwtjespringen",sets:4,reps:"3 min",weights:[180,180,180,180]},{name:"High Knees",sets:3,reps:"60s",weights:[60,60,60]}],
+  [{name:"Interval Hardlopen",sets:6,reps:"30s sprint",weights:[30,30,30,30,30,30]},{name:"Jumping Jacks",sets:3,reps:"60s",weights:[60,60,60]}],
+  [{name:"Wandelen",sets:1,reps:"45 min",weights:[2700]},{name:"Lopen op helling",sets:3,reps:"5 min",weights:[300,300,300]}]
+],
+cardio_bike:[
+  [{name:"Spinning",sets:1,reps:"30 min",weights:[1800]},{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"High Knees",sets:3,reps:"60s",weights:[60,60,60]}],
+  [{name:"Stationary Bike",sets:4,reps:"5 min",weights:[300,300,300,300]},{name:"Lateral Shuffle",sets:3,reps:"30s",weights:[30,30,30]}]
+],
+cardio_stairs:[
+  [{name:"Stair Climber",sets:1,reps:"20 min",weights:[1200]},{name:"Lopen op helling",sets:1,reps:"10 min",weights:[600]},{name:"Jumping Jacks",sets:3,reps:"40",weights:[0,0,0]}],
+  [{name:"Stair Climber",sets:3,reps:"5 min",weights:[300,300,300]},{name:"Treadmill Walk",sets:1,reps:"15 min",weights:[900]},{name:"High Knees",sets:3,reps:"45s",weights:[45,45,45]}]
+],
+cardio_swim:[
+  [{name:"Zwemmen",sets:4,reps:"5 min",weights:[300,300,300,300]}],
+  [{name:"Zwemmen",sets:1,reps:"30 min",weights:[1800]}]
+],
+cardio_cross:[
+  [{name:"Crosstrainer",sets:1,reps:"30 min",weights:[1800]},{name:"Roeien (machine)",sets:3,reps:"5 min",weights:[300,300,300]}],
+  [{name:"Crosstrainer",sets:2,reps:"15 min",weights:[900,900]},{name:"Touwtjespringen",sets:3,reps:"2 min",weights:[120,120,120]}]
+]
 };
 const ALL_WV={...WV,...HIIT_WV,...CARDIO_WV};
 
@@ -177,6 +314,220 @@ function fmtVal(v,unit){
   if(unit==="reps")return`${v}x`;
   return`${v>0?v+"kg":"–"}`;
 }
+
+// ── RUST TIMER (kracht — stil, strak) ────────────────────────
+function RestTimer({seconds,onDone}){
+  const [left,setLeft]=useState(seconds);
+  const ref=useRef(null);
+  useEffect(()=>{
+    if(left>0){ref.current=setTimeout(()=>setLeft(l=>l-1),1000);}
+    else{if(onDone)onDone();}
+    return()=>clearTimeout(ref.current);
+  },[left]);
+  const pct=(left/seconds)*100;
+  const w=pct/100*240;
+  return(
+    <div style={{background:"#0D0D0D",border:"1px solid #1C1C1C",borderRadius:14,padding:"14px 16px",marginBottom:10}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+        <div>
+          <div style={{fontSize:10,letterSpacing:3,color:"#444",fontWeight:700,textTransform:"uppercase",marginBottom:2}}>Rust</div>
+          <div style={{fontSize:28,fontWeight:900,letterSpacing:-1,color:LIME,lineHeight:1}}>{left}<span style={{fontSize:13,color:"#444",fontWeight:400,marginLeft:2}}>sec</span></div>
+        </div>
+        <button onClick={()=>{clearTimeout(ref.current);if(onDone)onDone();}} style={{padding:"8px 16px",borderRadius:8,border:"1px solid #222",background:"none",color:"#555",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:1}}>SKIP</button>
+      </div>
+      <div style={{background:"#1A1A1A",borderRadius:2,height:2,overflow:"hidden"}}>
+        <div style={{width:`${pct}%`,height:2,background:LIME,transition:"width .9s linear"}}/>
+      </div>
+    </div>
+  );
+}
+
+// ── HIIT WORKOUT — modern, raw, geen emoji ────────────────────
+function HiitWorkout({exercises,onDone,voiceOn}){
+  const WORK_OPTS=[20,30,40,45];
+  const REST_HIIT_OPTS=[10,15,20,30];
+  const DUR_OPTS=[10,15,20];
+  const [configured,setConfigured]=useState(false);
+  const [workSec,setWorkSec]=useState(40);
+  const [restSec,setRestSec]=useState(20);
+  const [durMin,setDurMin]=useState(15);
+  const [phase,setPhase]=useState("work");
+  const [left,setLeft]=useState(workSec);
+  const [exIdx,setExIdx]=useState(0);
+  const [totalLeft,setTotalLeft]=useState(durMin*60);
+  const [running,setRunning]=useState(false);
+  const ref=useRef(null);
+  const totalRef=useRef(null);
+  const ex=exercises[exIdx%exercises.length];
+  const nextEx=exercises[(exIdx+1)%exercises.length];
+
+  function say(txt){if(voiceOn)speak(txt);}
+
+  useEffect(()=>{
+    if(!configured||!running)return;
+    if(left>0){
+      ref.current=setTimeout(()=>{
+        const nl=left-1;setLeft(nl);
+        if(nl===3&&phase==="work")say("Drie. Twee. Één.");
+        if(nl===3&&phase==="rest")say("Drie. Twee. Één. Go!");
+      },1000);
+    } else {
+      if(phase==="work"){
+        say("Rust.");
+        setPhase("rest");setLeft(restSec);
+      } else {
+        const ni=exIdx+1;
+        say(`${exercises[ni%exercises.length].name}.`);
+        setExIdx(ni);setPhase("work");setLeft(workSec);
+      }
+    }
+    return()=>clearTimeout(ref.current);
+  },[configured,running,left,phase]);
+
+  useEffect(()=>{
+    if(!configured||!running)return;
+    totalRef.current=setTimeout(()=>{
+      const nt=totalLeft-1;setTotalLeft(nt);
+      if(nt<=0){say("Training voltooid.");setRunning(false);setPhase("done");}
+    },1000);
+    return()=>clearTimeout(totalRef.current);
+  },[configured,running,totalLeft]);
+
+  // Config scherm
+  if(!configured) return(
+    <div>
+      <div style={{marginBottom:24}}>
+        <div style={{fontSize:11,letterSpacing:3,color:"#444",fontWeight:700,textTransform:"uppercase",marginBottom:16}}>Stel jouw circuit in</div>
+        <div style={{marginBottom:20}}>
+          <div style={{fontSize:13,color:"#888",marginBottom:10,fontWeight:600}}>Work tijd per oefening</div>
+          <div style={{display:"flex",gap:8}}>
+            {WORK_OPTS.map(s=>(
+              <button key={s} onClick={()=>setWorkSec(s)} style={{flex:1,padding:"14px 4px",borderRadius:12,border:`1px solid ${workSec===s?ORANGE:"#1C1C1C"}`,background:workSec===s?"rgba(255,107,43,0.1)":"#111",color:workSec===s?ORANGE:"#444",fontWeight:900,fontSize:16,cursor:"pointer",letterSpacing:-0.5}}>
+                {s}<span style={{fontSize:10,fontWeight:400,marginLeft:1}}>s</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div style={{marginBottom:20}}>
+          <div style={{fontSize:13,color:"#888",marginBottom:10,fontWeight:600}}>Rust tussen oefeningen</div>
+          <div style={{display:"flex",gap:8}}>
+            {REST_HIIT_OPTS.map(s=>(
+              <button key={s} onClick={()=>setRestSec(s)} style={{flex:1,padding:"14px 4px",borderRadius:12,border:`1px solid ${restSec===s?LIME:"#1C1C1C"}`,background:restSec===s?"rgba(200,241,56,0.08)":"#111",color:restSec===s?LIME:"#444",fontWeight:900,fontSize:16,cursor:"pointer"}}>
+                {s}<span style={{fontSize:10,fontWeight:400,marginLeft:1}}>s</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div style={{marginBottom:24}}>
+          <div style={{fontSize:13,color:"#888",marginBottom:10,fontWeight:600}}>Totale duur</div>
+          <div style={{display:"flex",gap:8}}>
+            {DUR_OPTS.map(m=>(
+              <button key={m} onClick={()=>setDurMin(m)} style={{flex:1,padding:"14px 4px",borderRadius:12,border:`1px solid ${durMin===m?"#fff":"#1C1C1C"}`,background:durMin===m?"rgba(255,255,255,0.06)":"#111",color:durMin===m?"#fff":"#444",fontWeight:900,fontSize:16,cursor:"pointer"}}>
+                {m}<span style={{fontSize:10,fontWeight:400,marginLeft:1}}>min</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div style={{background:"#0D0D0D",borderRadius:14,padding:16,marginBottom:20}}>
+        <div style={{fontSize:10,letterSpacing:3,color:"#333",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Circuit</div>
+        {exercises.map((e,i)=>(
+          <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:10,marginBottom:10,borderBottom:i<exercises.length-1?"1px solid #111":"none"}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#ccc"}}>{e.name}</div>
+            <div style={{fontSize:11,color:"#333",letterSpacing:1}}>{workSec}s · {restSec}s rust</div>
+          </div>
+        ))}
+      </div>
+
+      <button onClick={()=>{
+        setConfigured(true);setLeft(workSec);setTotalLeft(durMin*60);
+        say(`${durMin} minuten. ${exercises[0].name}. Start.`);
+        setRunning(true);
+      }} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:"pointer",background:ORANGE,color:"#fff",fontSize:16,fontWeight:900,letterSpacing:-0.5}}>
+        Start circuit
+      </button>
+    </div>
+  );
+
+  // Klaar scherm
+  if(phase==="done") return(
+    <div style={{padding:"60px 0",textAlign:"center"}}>
+      <div style={{fontSize:11,letterSpacing:4,color:"#444",fontWeight:700,textTransform:"uppercase",marginBottom:16}}>Voltooid</div>
+      <div style={{fontSize:52,fontWeight:900,letterSpacing:-2,color:LIME,marginBottom:8,lineHeight:1}}>{durMin} min</div>
+      <div style={{fontSize:14,color:"#555",marginBottom:40}}>HIIT circuit afgerond</div>
+      <button onClick={onDone} style={{padding:"16px 40px",borderRadius:14,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:900,letterSpacing:-0.5}}>Opslaan</button>
+    </div>
+  );
+
+  // Workout scherm
+  const isWork=phase==="work";
+  const curSec=isWork?workSec:restSec;
+  const pct=(left/curSec)*100;
+  const totalPct=((durMin*60-totalLeft)/(durMin*60))*100;
+  const isAlert=left<=3&&running;
+
+  return(
+    <div>
+      {/* Tijdbalk bovenaan */}
+      <div style={{marginBottom:20}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,letterSpacing:2,color:"#333",fontWeight:700,textTransform:"uppercase",marginBottom:6}}>
+          <span>Circuit</span>
+          <span>{Math.floor(totalLeft/60)}:{String(totalLeft%60).padStart(2,'0')}</span>
+        </div>
+        <div style={{background:"#111",borderRadius:2,height:2}}>
+          <div style={{width:`${totalPct}%`,height:2,background:"#333",transition:"width 1s linear"}}/>
+        </div>
+      </div>
+
+      {/* Hoofd timer blok */}
+      <div style={{background:"#0D0D0D",borderRadius:20,padding:"32px 24px",marginBottom:12,textAlign:"center",border:`1px solid ${isWork?"#1C1C1C":"rgba(200,241,56,0.1)"}`}}>
+        <div style={{fontSize:10,letterSpacing:4,fontWeight:700,textTransform:"uppercase",color:isWork?ORANGE:LIME,marginBottom:24}}>
+          {isWork?"Work":"Rust"}
+        </div>
+
+        {isWork&&(
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,lineHeight:1,marginBottom:6}}>{ex.name}</div>
+            <div style={{fontSize:12,color:"#444",lineHeight:1.6,maxWidth:280,margin:"0 auto"}}>{ex.info?.slice(0,80)}</div>
+          </div>
+        )}
+        {!isWork&&(
+          <div style={{marginBottom:20}}>
+            <div style={{fontSize:13,color:"#444",marginBottom:4}}>Volgende</div>
+            <div style={{fontSize:24,fontWeight:900,color:"#888"}}>{nextEx.name}</div>
+          </div>
+        )}
+
+        {/* Grote teller */}
+        <div style={{fontSize:isAlert?96:80,fontWeight:900,letterSpacing:-4,lineHeight:1,color:isAlert?"#ef4444":isWork?ORANGE:LIME,transition:"color .3s",marginBottom:8}}>{left}</div>
+        <div style={{fontSize:10,letterSpacing:3,color:"#333",textTransform:"uppercase"}}>seconden</div>
+
+        {/* Progress lijn */}
+        <div style={{background:"#111",borderRadius:2,height:2,marginTop:24,overflow:"hidden"}}>
+          <div style={{width:`${pct}%`,height:2,background:isWork?ORANGE:LIME,transition:"width .9s linear"}}/>
+        </div>
+      </div>
+
+      {/* Volgende in lijst */}
+      {isWork&&(
+        <div style={{background:"#0D0D0D",border:"1px solid #111",borderRadius:12,padding:"10px 16px",marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div style={{fontSize:10,letterSpacing:2,color:"#333",fontWeight:700,textTransform:"uppercase"}}>Daarna</div>
+          <div style={{fontSize:13,color:"#555",fontWeight:600}}>{nextEx.name}</div>
+        </div>
+      )}
+
+      {/* Controls */}
+      <div style={{display:"flex",gap:8}}>
+        <button onClick={()=>setRunning(r=>!r)} style={{flex:1,padding:"16px",borderRadius:14,border:"none",cursor:"pointer",background:running?"#1C1C1C":ORANGE,color:running?"#555":"#fff",fontSize:13,fontWeight:900,letterSpacing:1,textTransform:"uppercase"}}>
+          {running?"Pauze":"Hervat"}
+        </button>
+        <button onClick={()=>setLeft(0)} style={{padding:"16px 20px",borderRadius:14,border:"1px solid #1C1C1C",background:"none",color:"#444",fontSize:11,fontWeight:700,cursor:"pointer",letterSpacing:1,textTransform:"uppercase"}}>Skip</button>
+      </div>
+    </div>
+  );
+}
+// ─────────────────────────────────────────────────────────────
 
 function buildSession(muscles,log,profile){
   const stype=profile?.sportType||"kracht";
@@ -392,9 +743,14 @@ function SettingsModal({profile,onSave,onClose}){
         </div>
         <div style={{...S.card,padding:16,marginBottom:16}}>
           <div style={{...S.lbl,marginBottom:12}}>Gegevens</div>
-          <input style={inp} placeholder="Naam" value={p.name||""} onChange={e=>u("name",e.target.value)}/>
-          <input style={inp} type="number" placeholder="Huidig gewicht (kg)" value={p.weight||""} onChange={e=>u("weight",e.target.value)}/>
-          <input style={inp} type="number" placeholder="Doelgewicht (kg)" value={p.goalWeight||""} onChange={e=>u("goalWeight",e.target.value)}/>
+          <div style={{...S.lbl,marginBottom:6}}>Naam</div>
+          <input style={inp} placeholder="Voornaam" value={p.name||""} onChange={e=>u("name",e.target.value)}/>
+          <div style={{...S.lbl,marginBottom:6}}>Huidig gewicht</div>
+          <input style={{...inp,marginBottom:4}} type="number" placeholder="bijv. 80" value={p.weight||""} onChange={e=>u("weight",e.target.value)}/>
+          <div style={{fontSize:10,color:"#444",marginBottom:12}}>kg</div>
+          <div style={{...S.lbl,marginBottom:6}}>Doelgewicht</div>
+          <input style={{...inp,marginBottom:4}} type="number" placeholder="bijv. 75" value={p.goalWeight||""} onChange={e=>u("goalWeight",e.target.value)}/>
+          <div style={{fontSize:10,color:"#444",marginBottom:12}}>kg</div>
           <div style={{...S.lbl,marginBottom:8}}>Doel</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
             {[{v:"afvallen",l:"Afvallen"},{v:"spiermassa",l:"Spiermassa"},{v:"fitter",l:"Fitter worden"},{v:"gezonder",l:"Gezonder leven"}].map(g=>(
@@ -482,6 +838,7 @@ function App(){
   const [newW,setNewW]=useState("");
   const [food,setFood]=useState(()=>LS.get("fitcoach_food")||{});
   const [foodDate,setFoodDate]=useState(TODAY_KEY);
+  const [trainDate,setTrainDate]=useState(TODAY_KEY);
   const [foodInput,setFoodInput]=useState({Ochtend:"",Middag:"",Avond:"",Snack:""});
   const [foodLoading,setFoodLoading]=useState({Ochtend:false,Middag:false,Avond:false,Snack:false});
   const [foodAdvice,setFoodAdvice]=useState("");
@@ -501,6 +858,7 @@ function App(){
   const [customName,setCustomName]=useState("");
   const [customExercises,setCustomExercises]=useState([{name:"",sets:"3",reps:"10",weights:""}]);
   const [wisselIndex,setWisselIndex]=useState(null);
+  const [voiceOn,setVoiceOn]=useState(()=>LS.get("fitcoach_voice")!==false);
 
   useEffect(()=>{if(profile)LS.set("fitcoach_profile",profile);},[profile]);
   useEffect(()=>{LS.set("fitcoach_log",log);},[log]);
@@ -524,7 +882,12 @@ function App(){
   const selFood=food[foodDate]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};
   const selTotals=MEALS.reduce((a,m)=>{(selFood[m]||[]).forEach(i=>{a.kcal+=(i.kcal||0);a.prot+=(i.prot||0);a.carbs+=(i.carbs||0);a.fat+=(i.fat||0);});return a;},{kcal:0,prot:0,carbs:0,fat:0});
   const sportType=profile?.sportType||"kracht";
-  const splits=sportType==="hiit"?SPLITS_HIIT:sportType==="cardio"?SPLITS_CARDIO:SPLITS_KRACHT;
+  const splits=sportType==="hiit"?SPLITS_HIIT
+    :sportType==="cardio"?SPLITS_CARDIO
+    :sportType==="gemixed"?[...SPLITS_KRACHT,...SPLITS_HIIT,...SPLITS_CARDIO]
+    :SPLITS_KRACHT;
+  // Spiergroepen: kracht/gemixed tonen alles, hiit/cardio niet
+  const showMuscleGroups=sportType==="kracht"||sportType==="gemixed";
 
   const weekNum=Math.floor(TODAY.getTime()/(7*24*60*60*1000));
   const dayPool=FINN_MSGS[TODAY.getDay()]||FINN_MSGS[1];
@@ -561,7 +924,10 @@ function App(){
   }
   function saveWorkout(){
     if(!session?.length)return;
-    const entry={date:TODAY_KEY,day:DAY_NL,workout:targetMuscles.map(m=>MUSCLE_META[m]?.label||m).join(" + "),exercises:session.map(e=>({name:e.name,weights:[...e.weights],reps:e.reps,note:e.note,unit:e.unit||"kg"})),targetMuscles,id:Date.now()};
+    const dateToUse=trainDate;
+    const dateObj=parseDate(dateToUse);
+    const dayName=DAYS[dateObj.getDay()];
+    const entry={date:dateToUse,day:dayName,workout:targetMuscles.map(m=>muscleLabel(m)).join(" + "),exercises:session.map(e=>({name:e.name,weights:[...e.weights],reps:e.reps,note:e.note,unit:e.unit||"kg"})),targetMuscles,id:Date.now()};
     const updated=[entry,...log].slice(0,100);
     setLog(updated);LS.set("fitcoach_log",updated);
     setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);
@@ -585,7 +951,7 @@ function App(){
   return(
     <div style={{background:"#0D0D0D",minHeight:"100vh",maxWidth:480,margin:"0 auto",paddingBottom:80}}>
       {infoEx&&<ExInfo ex={infoEx} onClose={()=>setInfoEx(null)}/>}
-      {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)}/>}
+      {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);if(p.photoOverrides){LS.set("fitcoach_photo_overrides",p.photoOverrides);Object.assign(P,P_DEFAULT,...[LS.get("fitcoach_photo_overrides")||{}]);}setShowSettings(false);}} onClose={()=>setShowSettings(false)}/>}
       {showFinn&&<FinnPopup onClose={()=>{setShowFinn(false);setPendingMsg(null);}} pendingMsg={pendingMsg} profile={profile} log={log} food={food}/>}
       {savedBanner&&<div style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",zIndex:100,background:LIME,color:"#000",padding:"14px 28px",borderRadius:"0 0 20px 20px",fontWeight:800,fontSize:14,maxWidth:480,width:"100%",textAlign:"center"}}>Training opgeslagen! 💪</div>}
       {tab==="Home"&&(
@@ -644,7 +1010,23 @@ function App(){
       {tab==="Training"&&(
         <div style={{padding:"24px 16px"}}>
           <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.5,marginBottom:2}}>Training</div>
-          <div style={{fontSize:13,color:"#555",marginBottom:4}}>{DAY_NL} · <span style={{color:sportType==="hiit"?ORANGE:sportType==="cardio"?"#60a5fa":LIME,fontWeight:700,textTransform:"capitalize"}}>{sportType}</span> · {profile.level||"beginner"}</div>
+          <div style={{fontSize:13,color:"#555",marginBottom:12}}><span style={{color:sportType==="hiit"?ORANGE:sportType==="cardio"?"#60a5fa":LIME,fontWeight:700,textTransform:"capitalize"}}>{sportType}</span> · {profile.level||"beginner"}</div>
+
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+            <div style={{display:"flex",gap:8,flex:1,alignItems:"center"}}>
+              <button onClick={()=>{setTrainDate(d=>fmtDate(new Date(parseDate(d).getTime()-86400000)));}} style={{width:36,height:36,borderRadius:10,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+              <div style={{flex:1,textAlign:"center"}}>
+                <div style={{fontSize:13,fontWeight:700,color:trainDate===TODAY_KEY?LIME:"#888"}}>{trainDate===TODAY_KEY?"Vandaag":trainDate}</div>
+                <div style={{fontSize:10,color:"#555"}}>{DAYS[parseDate(trainDate).getDay()]}</div>
+              </div>
+              <button onClick={()=>{if(trainDate!==TODAY_KEY)setTrainDate(d=>fmtDate(new Date(parseDate(d).getTime()+86400000)));}} disabled={trainDate===TODAY_KEY} style={{width:36,height:36,borderRadius:10,border:"1px solid #222",background:trainDate===TODAY_KEY?"#111":"#141414",color:trainDate===TODAY_KEY?"#333":"#fff",fontSize:18,cursor:trainDate===TODAY_KEY?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>›</button>
+            </div>
+            {sportType==="hiit"&&(
+              <button onClick={()=>{const nv=!voiceOn;setVoiceOn(nv);LS.set("fitcoach_voice",nv);}} style={{marginLeft:10,padding:"8px 12px",borderRadius:10,border:`1px solid ${voiceOn?"rgba(200,241,56,0.3)":"#222"}`,background:voiceOn?"rgba(200,241,56,0.06)":"#111",color:voiceOn?LIME:"#444",fontSize:11,fontWeight:700,cursor:"pointer",letterSpacing:1,textTransform:"uppercase",flexShrink:0,whiteSpace:"nowrap"}}>
+                {voiceOn?"Stem aan":"Stem uit"}
+              </button>
+            )}
+          </div>
           {selectingMuscles?(
             <div>
               <div style={{...S.lbl,marginBottom:12}}>Splits</div>
@@ -660,6 +1042,7 @@ function App(){
                   </button>
                 ))}
               </div>
+              {showMuscleGroups&&<>
               <button onClick={()=>setShowCustom(!showCustom)} style={{width:"100%",padding:"12px",borderRadius:14,border:`1px solid ${showCustom?LIME:"#222"}`,background:showCustom?"rgba(200,241,56,0.07)":"#141414",color:showCustom?LIME:"#888",fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:16}}>+ Eigen workout</button>
               {showCustom&&(
                 <div style={{...S.card,padding:16,marginBottom:16}}>
@@ -692,75 +1075,112 @@ function App(){
                 ))}
               </div>
               <button onClick={()=>startSess(targetMuscles)} disabled={!targetMuscles.length} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:targetMuscles.length?"pointer":"default",background:targetMuscles.length?LIME:"#1C1C1C",color:targetMuscles.length?"#000":"#444",fontSize:15,fontWeight:800}}>
-                {targetMuscles.length?`Start ${targetMuscles.map(m=>MUSCLE_META[m]?.label||m).join(" + ")}`:"Kies een spiergroep"}
+                {targetMuscles.length?`Start ${targetMuscles.map(m=>muscleLabel(m)).join(" + ")}`:"Kies een spiergroep"}
               </button>
+              </>}
             </div>
           ):session&&(
             <div>
               <div style={{...S.card,padding:16,marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                <div><div style={{...S.lbl,color:LIME,marginBottom:4}}>Vandaag</div><div style={{fontSize:16,fontWeight:800}}>{targetMuscles.map(m=>MUSCLE_META[m]?.label||m).join(" + ")}</div></div>
+                <div><div style={{...S.lbl,color:sportType==="hiit"?ORANGE:LIME,marginBottom:4}}>Vandaag</div><div style={{fontSize:16,fontWeight:800}}>{targetMuscles.map(m=>muscleLabel(m)).join(" + ")}</div></div>
                 <button onClick={()=>{setSelectingMuscles(true);setSession(null);setTargetMuscles([]);}} style={{padding:"7px 14px",borderRadius:10,border:"1px solid #222",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Wijzig</button>
               </div>
-              {session.map((ex,ei)=>{
-                const unit=ex.unit||"kg";
-                const opts=getSetValueOptions(unit);
-                const maxNow=Math.max(0,...ex.weights.filter(w=>w>0));
-                const maxPrev=ex.prevWeights?Math.max(0,...ex.prevWeights.filter(w=>w>0)):0;
-                const isPR=maxNow>0&&maxPrev>0&&maxNow>maxPrev;
-                const photo=EX_PHOTOS[ex.name];
-                const exMuscle=EX_DB[ex.name]?.muscle||"";
-                const alts=Object.entries(EX_DB).filter(([n,db])=>db.muscle===exMuscle&&n!==ex.name).map(([n])=>n);
-                return(
-                  <div key={ex.name+ei} style={{...S.card,marginBottom:12,overflow:"hidden",border:`1px solid ${ex.saved?"rgba(200,241,56,0.25)":"#1C1C1C"}`}}>
-                    <div style={{height:160,position:"relative",background:"#1C1C1C"}}>
-                      {photo&&<img src={photo} alt={ex.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 30%"}} onError={e=>e.target.style.display="none"}/>}
-                      <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 40%,#141414)"}}/>
-                      <div style={{position:"absolute",bottom:12,left:16,right:12,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
-                        <div><div style={{fontSize:17,fontWeight:900}}>{ex.name}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginTop:2}}>{ex.weights.length} sets · {ex.reps} {unit==="sec"?"sec":unit==="reps"?"reps":"reps"}</div></div>
-                        <div style={{display:"flex",gap:6}}>
-                          <button onClick={()=>setInfoEx(ex)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#fff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:13,fontWeight:700}}>i</button>
-                          <button onClick={()=>setWisselIndex(wisselIndex===ei?null:ei)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#fff",padding:"6px 10px",borderRadius:20,cursor:"pointer",fontSize:11,fontWeight:700}}>↕</button>
-                          <button onClick={()=>removeExercise(ei)} style={{background:"rgba(239,68,68,0.7)",border:"none",color:"#fff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:14,fontWeight:700}}>×</button>
-                          <button onClick={()=>markSave(ei)} style={{background:savedFlash===ei||ex.saved?LIME:"rgba(0,0,0,0.55)",border:"none",color:savedFlash===ei||ex.saved?"#000":"#fff",padding:"6px 10px",borderRadius:20,cursor:"pointer",fontSize:11,fontWeight:700}}>{ex.saved?"✓":"Save"}</button>
-                        </div>
-                      </div>
-                    </div>
-                    <div style={{padding:16}}>
-                      {isPR&&<div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🏆 PR!</div>}
-                      {ex.prevWeights&&<div style={{background:"#1C1C1C",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>Vorige training</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:"#444",marginBottom:3}}>Set {i+1}</div><div style={{fontSize:13,fontWeight:700,color:"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
-                      <div style={{...S.lbl,marginBottom:8}}>{unit==="sec"?"Tijd":unit==="reps"?"Herhalingen":"Gewicht"}</div>
-                      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
-                        {ex.weights.map((w,si)=>{
-                          const pv=ex.prevWeights?.[si];const up=w>0&&pv>0&&w>pv;
-                          return(<div key={si} style={{textAlign:"center"}}>
-                            <div style={{...S.lbl,marginBottom:4}}>Set {si+1}</div>
-                            {pv>0&&<div style={{fontSize:9,color:"#444",marginBottom:3}}>{fmtVal(pv,unit)}</div>}
-                            <select value={w} onChange={e=>setW2(ei,si,Number(e.target.value))} style={{width:64,padding:"10px 4px",borderRadius:12,border:`1px solid ${up?"rgba(200,241,56,0.3)":w>0?"#333":"#1C1C1C"}`,background:up?"rgba(200,241,56,0.06)":w>0?"#1C1C1C":"#111",color:up?LIME:w>0?"#fff":"#444",fontSize:13,fontWeight:800,cursor:"pointer",textAlign:"center"}}>
-                              {opts.map(o=><option key={o} value={o}>{o>0?fmtVal(o,unit):"–"}</option>)}
-                            </select>
-                            {up&&<div style={{fontSize:9,color:LIME,marginTop:3,fontWeight:700}}>↑PR</div>}
-                          </div>);
-                        })}
-                      </div>
-                      <div style={{display:"flex",gap:8}}>
-                        <input value={ex.note} onChange={e=>setN(ei,e.target.value)} placeholder="Notitie..." style={{flex:1,padding:"10px 12px",borderRadius:12,border:"1px solid #1C1C1C",background:"#111",color:"#fff",fontSize:12,outline:"none",minWidth:0}}/>
-                        <button onClick={()=>submitNote(ei)} disabled={!ex.note.trim()||noteLoading[ei]} style={{padding:"10px 14px",borderRadius:12,border:"none",fontWeight:700,fontSize:11,cursor:ex.note.trim()?"pointer":"default",background:ex.note.trim()?ORANGE:"#1C1C1C",color:ex.note.trim()?"#fff":"#444",opacity:noteLoading[ei]?0.5:1,flexShrink:0}}>{noteLoading[ei]?"...":"Finn"}</button>
-                      </div>
-                      {noteAdvice[ei]&&<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:12,marginTop:8,fontSize:12,lineHeight:1.7,color:"#bbb"}}>{noteAdvice[ei].text}</div>}
-                      {wisselIndex===ei&&alts.length>0&&(
-                        <div style={{marginTop:12,background:"#1C1C1C",borderRadius:14,padding:14}}>
-                          <div style={{...S.lbl,marginBottom:10}}>Wissel oefening</div>
-                          <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                            {alts.map(name=><button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:"1px solid #333",background:"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:"#555"}}>{EX_DB[name]?.muscle}</span></button>)}
+
+              {/* HIIT = volledig interactief circuit scherm */}
+              {sportType==="hiit"?(
+                <HiitWorkout exercises={session} voiceOn={voiceOn} onDone={saveWorkout}/>
+              ):(
+                /* KRACHT = normale sets met rust ertussen */
+                <div>
+                  {session.map((ex,ei)=>{
+                    const unit=ex.unit||"kg";
+                    const opts=getSetValueOptions(unit);
+                    const maxNow=Math.max(0,...ex.weights.filter(w=>w>0));
+                    const maxPrev=ex.prevWeights?Math.max(0,...ex.prevWeights.filter(w=>w>0)):0;
+                    const isPR=maxNow>0&&maxPrev>0&&maxNow>maxPrev;
+                    const photo=EX_PHOTOS[ex.name];
+                    const exMuscle=EX_DB[ex.name]?.muscle||"";
+                    const alts=Object.entries(EX_DB).filter(([n,db])=>db.muscle===exMuscle&&n!==ex.name).map(([n])=>n);
+                    const defaultRest=Math.min(90,EX_DB[ex.name]?.rest||60);
+                    const restSecs=ex.restSecs!=null?ex.restSecs:defaultRest;
+                    return(
+                      <div key={ex.name+ei} style={{...S.card,marginBottom:12,overflow:"hidden",border:`1px solid ${ex.saved?"rgba(200,241,56,0.25)":"#1C1C1C"}`}}>
+                        <div style={{height:160,position:"relative",background:"#1C1C1C"}}>
+                          {photo&&<img src={photo} alt={ex.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 30%"}} onError={e=>e.target.style.display="none"}/>}
+                          <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 40%,#141414)"}}/>
+                          <div style={{position:"absolute",bottom:12,left:16,right:12,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
+                            <div><div style={{fontSize:17,fontWeight:900}}>{ex.name}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginTop:2}}>{ex.weights.length} sets · {ex.reps}</div></div>
+                            <div style={{display:"flex",gap:6}}>
+                              <button onClick={()=>setInfoEx(ex)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#fff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:13,fontWeight:700}}>i</button>
+                              <button onClick={()=>setWisselIndex(wisselIndex===ei?null:ei)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#fff",padding:"6px 10px",borderRadius:20,cursor:"pointer",fontSize:11,fontWeight:700}}>↕</button>
+                              <button onClick={()=>removeExercise(ei)} style={{background:"rgba(239,68,68,0.7)",border:"none",color:"#fff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:14,fontWeight:700}}>×</button>
+                            </div>
                           </div>
-                          <button onClick={()=>setWisselIndex(null)} style={{width:"100%",marginTop:10,padding:"9px",borderRadius:10,border:"1px solid #333",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Annuleren</button>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-              <button onClick={saveWorkout} style={{width:"100%",padding:18,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>Training opslaan</button>
+                        <div style={{padding:16}}>
+                          {isPR&&<div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🏆 PR!</div>}
+                          {ex.prevWeights&&<div style={{background:"#1C1C1C",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>Vorige training</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:"#444",marginBottom:3}}>Set {i+1}</div><div style={{fontSize:13,fontWeight:700,color:"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
+
+                          <div style={{...S.lbl,marginBottom:8}}>{unit==="reps"?"Herhalingen":"Gewicht"}</div>
+                          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:4}}>
+                            {ex.weights.map((w,si)=>{
+                              const pv=ex.prevWeights?.[si];const up=w>0&&pv>0&&w>pv;
+                              const setDone=ex.setsDone&&ex.setsDone[si];
+                              return(<div key={si} style={{textAlign:"center"}}>
+                                <div style={{...S.lbl,marginBottom:4,color:setDone?LIME:"#555"}}>Set {si+1}{setDone?" ✓":""}</div>
+                                {pv>0&&<div style={{fontSize:9,color:"#444",marginBottom:3}}>{fmtVal(pv,unit)}</div>}
+                                <select value={w} onChange={e=>setW2(ei,si,Number(e.target.value))} style={{width:64,padding:"10px 4px",borderRadius:12,border:`1px solid ${up?"rgba(200,241,56,0.3)":w>0?"#333":"#1C1C1C"}`,background:up?"rgba(200,241,56,0.06)":w>0?"#1C1C1C":"#111",color:up?LIME:w>0?"#fff":"#444",fontSize:13,fontWeight:800,cursor:"pointer",textAlign:"center"}}>
+                                  {opts.map(o=><option key={o} value={o}>{o>0?fmtVal(o,unit):"–"}</option>)}
+                                </select>
+                                {up&&<div style={{fontSize:9,color:LIME,marginTop:3,fontWeight:700}}>↑PR</div>}
+                                {/* Set afvinken knop → start rust timer */}
+                                {!setDone&&<button onClick={()=>{
+                                  setSession(p=>p.map((e,i)=>i!==ei?e:{...e,
+                                    setsDone:{...(e.setsDone||{}),[si]:true},
+                                    activeRest:si<e.weights.length-1?si:null
+                                  }));
+                                }} style={{display:"block",width:64,marginTop:4,padding:"4px",borderRadius:8,border:"none",cursor:"pointer",background:"#1C1C1C",color:"#555",fontSize:10,fontWeight:700}}>Klaar</button>}
+                              </div>);
+                            })}
+                          </div>
+
+                          {/* Rust timer verschijnt tussen sets */}
+                          {ex.activeRest!=null&&(
+                            <RestTimer key={`${ei}-${ex.activeRest}`} seconds={restSecs} onDone={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,activeRest:null}))}/>
+                          )}
+
+                          {/* Rust instelling */}
+                          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:12,marginTop:8}}>
+                            <span style={{fontSize:10,color:"#444",fontWeight:700,flexShrink:0}}>⏱ Rust:</span>
+                            <div style={{display:"flex",gap:4}}>
+                              {REST_OPTS.map(s=><button key={s} onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,restSecs:s}))} style={{padding:"3px 7px",borderRadius:6,border:"none",cursor:"pointer",background:restSecs===s?LIME:"#1C1C1C",color:restSecs===s?"#000":"#555",fontSize:10,fontWeight:700}}>{s}s</button>)}
+                            </div>
+                          </div>
+
+                          {/* Opslaan hele oefening */}
+                          <button onClick={()=>markSave(ei)} style={{width:"100%",padding:"10px",borderRadius:12,border:"none",cursor:"pointer",background:ex.saved?LIME:"#1C1C1C",color:ex.saved?"#000":"#666",fontSize:13,fontWeight:800,marginBottom:10}}>{ex.saved?"✓ Opgeslagen":"Oefening opslaan"}</button>
+
+                          <div style={{display:"flex",gap:8}}>
+                            <input value={ex.note} onChange={e=>setN(ei,e.target.value)} placeholder="Notitie..." style={{flex:1,padding:"10px 12px",borderRadius:12,border:"1px solid #1C1C1C",background:"#111",color:"#fff",fontSize:12,outline:"none",minWidth:0}}/>
+                            <button onClick={()=>submitNote(ei)} disabled={!ex.note.trim()||noteLoading[ei]} style={{padding:"10px 14px",borderRadius:12,border:"none",fontWeight:700,fontSize:11,cursor:ex.note.trim()?"pointer":"default",background:ex.note.trim()?ORANGE:"#1C1C1C",color:ex.note.trim()?"#fff":"#444",opacity:noteLoading[ei]?0.5:1,flexShrink:0}}>{noteLoading[ei]?"...":"Finn"}</button>
+                          </div>
+                          {noteAdvice[ei]&&<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:12,marginTop:8,fontSize:12,lineHeight:1.7,color:"#bbb"}}>{noteAdvice[ei].text}</div>}
+                          {wisselIndex===ei&&alts.length>0&&(
+                            <div style={{marginTop:12,background:"#1C1C1C",borderRadius:14,padding:14}}>
+                              <div style={{...S.lbl,marginBottom:10}}>Wissel oefening</div>
+                              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                                {alts.slice(0,6).map(name=><button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:"1px solid #333",background:"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:"#555"}}>{EX_DB[name]?.muscle}</span></button>)}
+                              </div>
+                              <button onClick={()=>setWisselIndex(null)} style={{width:"100%",marginTop:10,padding:"9px",borderRadius:10,border:"1px solid #333",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Annuleren</button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <button onClick={saveWorkout} style={{width:"100%",padding:18,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>Training opslaan</button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -897,7 +1317,13 @@ function App(){
           {id:"Voeding",svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8 2 4 6 4 10c0 5.25 8 12 8 12s8-6.75 8-12c0-4-4-8-8-8z"/></svg>},
           {id:"Coach",svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>},
         ].map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} style={{flex:1,padding:"12px 4px 10px",border:"none",background:"none",cursor:"pointer",color:tab===t.id?(t.id==="Coach"?ORANGE:LIME):"#333",display:"flex",flexDirection:"column",alignItems:"center",gap:4,transition:"color .15s"}}>
+          <button key={t.id} onClick={()=>{
+            if(t.id==="Training"&&tab==="Training"&&!selectingMuscles){
+              setSelectingMuscles(true);setSession(null);setTargetMuscles([]);
+            } else {
+              setTab(t.id);
+            }
+          }} style={{flex:1,padding:"12px 4px 10px",border:"none",background:"none",cursor:"pointer",color:tab===t.id?(t.id==="Coach"?ORANGE:LIME):"#333",display:"flex",flexDirection:"column",alignItems:"center",gap:4,transition:"color .15s"}}>
             {t.svg}
             <div style={{fontSize:9,fontWeight:700,letterSpacing:0.5}}>{t.id.toUpperCase()}</div>
           </button>
