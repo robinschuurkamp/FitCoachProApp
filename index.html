@@ -25,7 +25,6 @@ input[type=number]{-moz-appearance:textfield}
 </head>
 <body>
 <div id="root"></div>
-
 <div id="installModal">
   <div style="background:#141414;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:28px 24px 40px;border-top:1px solid #1C1C1C">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
@@ -35,325 +34,227 @@ input[type=number]{-moz-appearance:textfield}
     <div style="background:#1C1C1C;border-radius:16px;padding:20px;margin-bottom:12px">
       <div style="font-size:13px;font-weight:800;color:#C8F138;margin-bottom:14px;letter-spacing:1px;text-transform:uppercase">iPhone / iPad</div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:12px;align-items:center">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">1</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.7)">Open in <strong style="color:#fff">Safari</strong></div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:center">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">2</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.7)">Tik op het <strong style="color:#fff">deel-icoontje</strong> (vierkantje met pijltje omhoog)</div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:center">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">3</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.7)">Kies <strong style="color:#fff">"Zet op beginscherm"</strong></div>
-        </div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">1</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Open in <strong style="color:#fff">Safari</strong></div></div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">2</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Tik op het <strong style="color:#fff">deel-icoontje</strong></div></div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(200,241,56,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#C8F138;flex-shrink:0">3</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Kies <strong style="color:#fff">"Zet op beginscherm"</strong></div></div>
       </div>
     </div>
     <div style="background:#1C1C1C;border-radius:16px;padding:20px;margin-bottom:24px">
       <div style="font-size:13px;font-weight:800;color:#FF6B2B;margin-bottom:14px;letter-spacing:1px;text-transform:uppercase">Android</div>
       <div style="display:flex;flex-direction:column;gap:12px">
-        <div style="display:flex;gap:12px;align-items:center">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,107,43,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#FF6B2B;flex-shrink:0">1</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.7)">Open in <strong style="color:#fff">Chrome</strong></div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:center">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,107,43,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#FF6B2B;flex-shrink:0">2</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.7)">Tik op de <strong style="color:#fff">3 puntjes</strong> rechtsboven</div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:center">
-          <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,107,43,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#FF6B2B;flex-shrink:0">3</div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.7)">Kies <strong style="color:#fff">"Toevoegen aan startscherm"</strong></div>
-        </div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(255,107,43,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#FF6B2B;flex-shrink:0">1</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Open in <strong style="color:#fff">Chrome</strong></div></div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(255,107,43,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#FF6B2B;flex-shrink:0">2</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Tik op de <strong style="color:#fff">3 puntjes</strong></div></div>
+        <div style="display:flex;gap:12px;align-items:center"><div style="width:28px;height:28px;border-radius:50%;background:rgba(255,107,43,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#FF6B2B;flex-shrink:0">3</div><div style="font-size:13px;color:rgba(255,255,255,0.7)">Kies <strong style="color:#fff">"Toevoegen aan startscherm"</strong></div></div>
       </div>
     </div>
     <button id="closeInstall2" style="width:100%;padding:16px;border-radius:14px;border:none;background:#C8F138;color:#000;font-size:15px;font-weight:800;cursor:pointer">Begrepen, start de app!</button>
   </div>
 </div>
-
 <script>
 function closeModal(){document.getElementById('installModal').classList.remove('show');}
 document.getElementById('closeInstall').onclick=closeModal;
 document.getElementById('closeInstall2').onclick=closeModal;
 </script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <script type="text/babel">
-
 const {useState,useEffect,useRef}=React;
-const LIME="#C8F138";
-const ORANGE="#FF6B2B";
+const LIME="#C8F138",ORANGE="#FF6B2B";
 const FINN_IMG="https://i.postimg.cc/T3yTXytb/Dijkman-Max-c3edcc1ec76dbf8498fc37fcebd56d7a.webp";
 const WORKER="https://fitcoachai.robinschuurkamp.workers.dev";
+const LS={get:(k)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 
-const LS={
-  get:(k)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch{return null;}},
-  set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}},
+function fmtDate(d){const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0');return`${dd}/${mm}/${d.getFullYear()}`;}
+function parseDate(s){const p=s.split('/');return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));}
+
+async function resizeImg(file){return new Promise(res=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const max=220,ratio=Math.min(max/img.width,max/img.height),c=document.createElement('canvas');c.width=img.width*ratio;c.height=img.height*ratio;c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.75));};img.src=e.target.result;};r.readAsDataURL(file);});}
+
+async function ai(prompt){try{const r=await fetch(WORKER,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:prompt}]})});const d=await r.json();return d.content?.[0]?.text||"";}catch(e){return"Verbindingsfout.";}}
+
+const FASE_OPTIES=[{v:"zwaar bulken",l:"Zwaar bulken",d:"Maximale spiergroei",mul:38,c:"#f59e0b"},{v:"licht bulken",l:"Licht bulken",d:"Lean bulk",mul:35,c:"#10b981"},{v:"onderhoud",l:"Onderhoud",d:"Gewicht vasthouden",mul:32,c:LIME},{v:"licht cutten",l:"Licht cutten",d:"Vetverbranding",mul:28,c:"#60a5fa"},{v:"zwaar cutten",l:"Zwaar cutten",d:"Snel afvallen",mul:24,c:"#ef4444"}];
+const MUSCLE_META={benen:{label:"Benen",sub:"Quads · Hamstrings · Calves"},borst:{label:"Borst",sub:"Pecs · Serratus · Deltoids"},rug:{label:"Rug",sub:"Lats · Traps · Rhomboids"},schouders:{label:"Schouders",sub:"Delts · Rotator Cuff"},armen:{label:"Armen",sub:"Biceps · Triceps · Forearms"},billen:{label:"Billen",sub:"Glutes · Hip Flexors"},buik:{label:"Core",sub:"Abs · Obliques · TVA"},"full body":{label:"Full Body",sub:"Complete Compound"}};
+const MUSCLE_GROUPS=Object.keys(MUSCLE_META);
+const MEALS=["Ochtend","Middag","Avond","Snack"];
+const TODAY=new Date(),TODAY_KEY=fmtDate(TODAY),DAYS=["Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag"],DAY_NL=DAYS[TODAY.getDay()],IS_WEEKEND=TODAY.getDay()===0||TODAY.getDay()===6;
+const KG_OPT=[0,2.5,5,7.5,10,12.5,14,15,16,17.5,18,20,22,22.5,24,25,27.5,30,32.5,35,37.5,40,42.5,45,47.5,50,55,60,65,70,75,80,85,90,95,100,110,120,130,140,150];
+const REPS_OPT=[0,1,2,3,4,5,6,7,8,9,10,12,15,20,25,30,40,50];
+const SEC_OPT=[0,10,15,20,30,45,60,90,120,150,180,240,300,600,900,1200,1500,1800];
+const QUICK_FOODS={Ochtend:["Havermout met banaan","2 eieren + toast","Griekse yoghurt","Proteïneshake","Boterham pindakaas"],Middag:["Kipfilet + rijst","Tonijnsalade","Wrap kip","Cottage cheese","Soep + brood"],Avond:["Zalm + groenten","Kip + zoete aardappel","Pasta kipgehakt","Omelet + salade","Biefstuk + broccoli"],Snack:["Banaan","Appel + amandelen","Rijstwafels","Proteïnereep","Kwark"]};
+const FOOD_PHOTOS={Ochtend:"https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=500&q=80",Middag:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80",Avond:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&q=80",Snack:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&q=80"};
+const P={hero:"https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=800&q=85",onboard:"https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=85",benen:"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=80",borst:"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&q=80",rug:"https://images.unsplash.com/photo-1530822847156-5df684ec5ee1?w=600&q=80",schouders:"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",armen:"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80",billen:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=80",buik:"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80","full body":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&q=80",hiit:"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=600&q=80",cardio:"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=600&q=80"};
+
+const SPLITS_KRACHT=[{label:"Push",muscles:["borst","schouders","armen"],pk:"borst",desc:"Borst · Schouders · Triceps"},{label:"Pull",muscles:["rug","armen"],pk:"rug",desc:"Rug · Biceps"},{label:"Legs",muscles:["benen","billen"],pk:"benen",desc:"Quads · Hamstrings · Billen"},{label:"Borst & Triceps",muscles:["borst","armen"],pk:"borst",desc:"Borst · Triceps"},{label:"Rug & Biceps",muscles:["rug","armen"],pk:"rug",desc:"Rug · Biceps"},{label:"Full Body",muscles:["full body"],pk:"full body",desc:"Alles in één"}];
+const SPLITS_HIIT=[{label:"HIIT Full Body",muscles:["hiit_full"],pk:"hiit",desc:"Volledig lichaam"},{label:"HIIT Benen",muscles:["hiit_benen"],pk:"benen",desc:"Explosieve benentraining"},{label:"HIIT Core",muscles:["hiit_core"],pk:"buik",desc:"Core & conditie"}];
+const SPLITS_CARDIO=[{label:"Cardio Run",muscles:["cardio_full"],pk:"cardio",desc:"Hardlopen sessie"},{label:"Cardio Bike",muscles:["cardio_bike"],pk:"benen",desc:"Fiets & cardio"},{label:"Cardio Mix",muscles:["cardio_full"],pk:"cardio",desc:"Gemixte cardio"}];
+
+const EX_DB={
+  "Squat":{muscle:"benen",unit:"kg",info:"Voeten schouderbreedte. Zak neer tot heupen onder kniehoogte.",yt:"squat+techniek"},
+  "Leg Press":{muscle:"benen",unit:"kg",info:"Voeten op platform. Duw volledig uit.",yt:"leg+press"},
+  "Romanian Deadlift":{muscle:"benen",unit:"kg",info:"Stang langs benen omlaag. Voel de rek.",yt:"romanian+deadlift"},
+  "Leg Extension":{muscle:"benen",unit:"kg",info:"Volledig strekken bovenaan.",yt:"leg+extension"},
+  "Leg Curl":{muscle:"benen",unit:"kg",info:"Trek hielen naar billen. Langzaam zakken.",yt:"leg+curl"},
+  "Calf Raises":{muscle:"benen",unit:"kg",info:"Volledig omhoog op bal van je voet.",yt:"calf+raises"},
+  "Bulgarian Split Squat":{muscle:"benen",unit:"kg",info:"Achterste voet op bank. Zak recht omlaag.",yt:"bulgarian+split+squat"},
+  "Bench Press":{muscle:"borst",unit:"kg",info:"Stang laten zakken tot borst. Ellebogen 45-75 graden.",yt:"bench+press+techniek"},
+  "Incline Dumbbell Press":{muscle:"borst",unit:"kg",info:"Bank 30 graden. Druk schuin omhoog.",yt:"incline+dumbbell+press"},
+  "Cable Fly":{muscle:"borst",unit:"kg",info:"Armen licht gebogen. Breng samen voor borst.",yt:"cable+fly"},
+  "Push-up":{muscle:"borst",unit:"reps",info:"Handen schouderbreedte. Lichaam als plank.",yt:"push+up"},
+  "Dips":{muscle:"armen",unit:"reps",info:"Volledig zakken tot 90 graden.",yt:"dips"},
+  "Shoulder Press":{muscle:"schouders",unit:"kg",info:"Dumbells recht boven het hoofd.",yt:"shoulder+press"},
+  "Lateral Raises":{muscle:"schouders",unit:"kg",info:"Hef tot schouderhoogte. Duimen licht omlaag.",yt:"lateral+raises"},
+  "Deadlift":{muscle:"rug",unit:"kg",info:"Stang boven middenvoet. Heupen laag. Rug recht.",yt:"deadlift"},
+  "Bent-over Row":{muscle:"rug",unit:"kg",info:"Romp 45 graden. Trek naar navel.",yt:"bent+over+row"},
+  "Lat Pulldown":{muscle:"rug",unit:"kg",info:"Greep breder dan schouders. Trek naar bovenborst.",yt:"lat+pulldown"},
+  "Pull-ups":{muscle:"rug",unit:"reps",info:"Overhandse greep. Trek kin over de stang.",yt:"pull+ups"},
+  "Seated Cable Row":{muscle:"rug",unit:"kg",info:"Recht zitten. Trek naar navel.",yt:"seated+cable+row"},
+  "Barbell Curl":{muscle:"armen",unit:"kg",info:"Ellebogen vast langs je lijf. Curl volledig omhoog.",yt:"barbell+curl"},
+  "Hammer Curl":{muscle:"armen",unit:"kg",info:"Neutrale grip, duimen omhoog.",yt:"hammer+curl"},
+  "Triceps Pushdown":{muscle:"armen",unit:"kg",info:"Ellebogen vast langs lijf. Duw volledig uit.",yt:"triceps+pushdown"},
+  "Skull Crushers":{muscle:"armen",unit:"kg",info:"Laat stang zakken naar voorhoofd.",yt:"skull+crushers"},
+  "Incline Dumbbell Curl":{muscle:"armen",unit:"kg",info:"Bank schuin. Armen hangen volledig.",yt:"incline+dumbbell+curl"},
+  "Concentration Curl":{muscle:"armen",unit:"kg",info:"Elleboog op binnenknie. Volledige curl.",yt:"concentration+curl"},
+  "Hip Thrust":{muscle:"billen",unit:"kg",info:"Rug op bank. Duw omhoog en knijp billen.",yt:"hip+thrust"},
+  "Glute Bridge":{muscle:"billen",unit:"reps",info:"Lig op rug. Duw heupen omhoog.",yt:"glute+bridge"},
+  "Plank":{muscle:"buik",unit:"sec",info:"Steun op onderarmen en tenen. Lichaam recht.",yt:"plank"},
+  "Crunches":{muscle:"buik",unit:"reps",info:"Lage rug op grond. Kroel omhoog.",yt:"crunches"},
+  "Leg Raises":{muscle:"buik",unit:"reps",info:"Benen gestrekt. Hef tot 90 graden.",yt:"leg+raises"},
+  "Mountain Climber":{muscle:"buik",unit:"sec",info:"Plank positie. Breng knie naar borst snel.",yt:"mountain+climbers"},
+  "Arnold Press":{muscle:"schouders",unit:"kg",info:"Start palmen naar jou. Roteer naar buiten.",yt:"arnold+press"},
+  "Face Pulls":{muscle:"schouders",unit:"kg",info:"Kabel op ooghoogte. Trek naar gezicht.",yt:"face+pulls"},
+  "Burpee":{muscle:"full body",unit:"reps",info:"Squat neer, plank, push-up, spring omhoog.",yt:"burpee"},
+  "Jump Squat":{muscle:"benen",unit:"reps",info:"Squat, spring explosief, land zacht.",yt:"jump+squat"},
+  "High Knees":{muscle:"full body",unit:"sec",info:"Knieën hoog in sneltempo. Armen mee.",yt:"high+knees"},
+  "Box Jump":{muscle:"benen",unit:"reps",info:"Spring op box. Land zacht met gebogen knieën.",yt:"box+jump"},
+  "Jumping Jacks":{muscle:"full body",unit:"reps",info:"Armen en benen synchroon.",yt:"jumping+jacks"},
+  "Kettlebell Swing":{muscle:"full body",unit:"reps",info:"Heupkracht drijft de swing. Rug recht.",yt:"kettlebell+swing"},
+  "Battle Ropes":{muscle:"schouders",unit:"sec",info:"Golven maken. Core strak.",yt:"battle+ropes"},
+  "Skipping":{muscle:"full body",unit:"sec",info:"Springtouw. Polsen draaien, niet armen.",yt:"skipping+rope"},
+  "Hardlopen":{muscle:"full body",unit:"sec",info:"Rustig begin, vlak tempo.",yt:"running+technique"},
+  "Roeien (machine)":{muscle:"rug",unit:"sec",info:"Benen eerst, dan romp, dan armen.",yt:"rowing+machine"},
+  "Stationary Bike":{muscle:"benen",unit:"sec",info:"Wissel tempo en weerstand af.",yt:"stationary+bike+workout"}
+};
+const EX_PHOTOS={"Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Bench Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80","Pull-ups":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80","Shoulder Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80","Barbell Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Bent-over Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80","Leg Press":"https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?w=500&q=80","Plank":"https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=500&q=80","Dips":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80","Hip Thrust":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80","Lateral Raises":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Romanian Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80","Leg Extension":"https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?w=500&q=80","Leg Curl":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Calf Raises":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Bulgarian Split Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Incline Dumbbell Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Cable Fly":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Push-up":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Lat Pulldown":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80","Seated Cable Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80","Hammer Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Triceps Pushdown":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Skull Crushers":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Incline Dumbbell Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Concentration Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Glute Bridge":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80","Crunches":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Leg Raises":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Mountain Climber":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Arnold Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80","Face Pulls":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Burpee":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Jump Squat":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","High Knees":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Box Jump":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Jumping Jacks":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Kettlebell Swing":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Battle Ropes":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Skipping":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80","Hardlopen":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80","Roeien (machine)":"https://images.unsplash.com/photo-1530822847156-5df684ec5ee1?w=500&q=80","Stationary Bike":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80"};
+const WV={
+benen:[[{name:"Squat",sets:4,reps:"8-10",weights:[80,80,80,80]},{name:"Leg Press",sets:3,reps:"10-12",weights:[100,100,100]},{name:"Romanian Deadlift",sets:3,reps:"10-12",weights:[60,60,60]},{name:"Leg Extension",sets:3,reps:"12-15",weights:[40,40,40]},{name:"Leg Curl",sets:3,reps:"12-15",weights:[35,35,35]}],[{name:"Bulgarian Split Squat",sets:3,reps:"8-10",weights:[20,20,20]},{name:"Leg Press",sets:3,reps:"12-15",weights:[100,100,100]},{name:"Romanian Deadlift",sets:3,reps:"10-12",weights:[60,60,60]},{name:"Leg Curl",sets:3,reps:"12-15",weights:[35,35,35]},{name:"Calf Raises",sets:4,reps:"15-20",weights:[60,60,60,60]}]],
+borst:[[{name:"Bench Press",sets:4,reps:"8-10",weights:[70,70,70,70]},{name:"Incline Dumbbell Press",sets:3,reps:"8-10",weights:[22,22,22]},{name:"Cable Fly",sets:3,reps:"12-15",weights:[15,15,15]},{name:"Dips",sets:3,reps:"10",weights:[0,0,0]}],[{name:"Incline Dumbbell Press",sets:4,reps:"8-10",weights:[22,22,22,22]},{name:"Bench Press",sets:3,reps:"8-10",weights:[70,70,70]},{name:"Cable Fly",sets:3,reps:"12-15",weights:[15,15,15]},{name:"Push-up",sets:3,reps:"15-20",weights:[0,0,0]}]],
+rug:[[{name:"Deadlift",sets:4,reps:"6-8",weights:[80,80,80,80]},{name:"Bent-over Row",sets:3,reps:"8-10",weights:[60,60,60]},{name:"Lat Pulldown",sets:3,reps:"10-12",weights:[55,55,55]},{name:"Seated Cable Row",sets:3,reps:"10-12",weights:[50,50,50]}],[{name:"Pull-ups",sets:4,reps:"6-10",weights:[0,0,0,0]},{name:"Bent-over Row",sets:3,reps:"8-10",weights:[60,60,60]},{name:"Lat Pulldown",sets:3,reps:"10-12",weights:[55,55,55]},{name:"Seated Cable Row",sets:3,reps:"10-12",weights:[50,50,50]}]],
+schouders:[[{name:"Shoulder Press",sets:4,reps:"8-10",weights:[18,18,18,18]},{name:"Lateral Raises",sets:3,reps:"12-15",weights:[8,8,8]},{name:"Arnold Press",sets:3,reps:"10-12",weights:[14,14,14]},{name:"Face Pulls",sets:3,reps:"15",weights:[20,20,20]}],[{name:"Arnold Press",sets:4,reps:"10-12",weights:[14,14,14,14]},{name:"Lateral Raises",sets:3,reps:"12-15",weights:[8,8,8]},{name:"Shoulder Press",sets:3,reps:"8-10",weights:[18,18,18]},{name:"Face Pulls",sets:3,reps:"15",weights:[20,20,20]}]],
+armen:[[{name:"Barbell Curl",sets:4,reps:"10-12",weights:[30,30,30,30]},{name:"Hammer Curl",sets:3,reps:"12-15",weights:[14,14,14]},{name:"Triceps Pushdown",sets:4,reps:"10-12",weights:[20,20,20,20]},{name:"Skull Crushers",sets:3,reps:"10-12",weights:[20,20,20]}],[{name:"Incline Dumbbell Curl",sets:3,reps:"10-12",weights:[12,12,12]},{name:"Concentration Curl",sets:3,reps:"12-15",weights:[10,10,10]},{name:"Dips",sets:3,reps:"8-12",weights:[0,0,0]},{name:"Skull Crushers",sets:3,reps:"10-12",weights:[20,20,20]}]],
+billen:[[{name:"Hip Thrust",sets:4,reps:"10-12",weights:[60,60,60,60]},{name:"Romanian Deadlift",sets:3,reps:"10-12",weights:[60,60,60]},{name:"Leg Press",sets:3,reps:"12-15",weights:[100,100,100]},{name:"Glute Bridge",sets:3,reps:"15",weights:[0,0,0]}],[{name:"Glute Bridge",sets:4,reps:"15",weights:[0,0,0,0]},{name:"Hip Thrust",sets:3,reps:"10-12",weights:[60,60,60]},{name:"Bulgarian Split Squat",sets:3,reps:"8-10",weights:[20,20,20]},{name:"Romanian Deadlift",sets:3,reps:"10-12",weights:[60,60,60]}]],
+buik:[[{name:"Plank",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Crunches",sets:3,reps:"20",weights:[0,0,0]},{name:"Leg Raises",sets:3,reps:"15",weights:[0,0,0]},{name:"Mountain Climber",sets:3,reps:"30s",weights:[30,30,30]}],[{name:"Crunches",sets:4,reps:"20",weights:[0,0,0,0]},{name:"Leg Raises",sets:3,reps:"15",weights:[0,0,0]},{name:"Plank",sets:3,reps:"60s",weights:[60,60,60]},{name:"Mountain Climber",sets:3,reps:"45s",weights:[45,45,45]}]],
+"full body":[[{name:"Squat",sets:3,reps:"10",weights:[70,70,70]},{name:"Bench Press",sets:3,reps:"10",weights:[60,60,60]},{name:"Bent-over Row",sets:3,reps:"10",weights:[50,50,50]},{name:"Shoulder Press",sets:3,reps:"10",weights:[16,16,16]},{name:"Plank",sets:3,reps:"45s",weights:[45,45,45]}],[{name:"Deadlift",sets:3,reps:"8",weights:[80,80,80]},{name:"Push-up",sets:3,reps:"15",weights:[0,0,0]},{name:"Pull-ups",sets:3,reps:"8",weights:[0,0,0]},{name:"Arnold Press",sets:3,reps:"12",weights:[12,12,12]},{name:"Burpee",sets:3,reps:"10",weights:[0,0,0]}]]
+};
+const HIIT_WV={
+hiit_full:[[{name:"Burpee",sets:4,reps:"10",weights:[0,0,0,0]},{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"High Knees",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Mountain Climber",sets:3,reps:"30s",weights:[30,30,30]},{name:"Jumping Jacks",sets:3,reps:"30",weights:[0,0,0]}],[{name:"Kettlebell Swing",sets:4,reps:"20",weights:[16,16,16,16]},{name:"Box Jump",sets:4,reps:"10",weights:[0,0,0,0]},{name:"Skipping",sets:4,reps:"60s",weights:[60,60,60,60]},{name:"Burpee",sets:3,reps:"8",weights:[0,0,0]},{name:"High Knees",sets:3,reps:"45s",weights:[45,45,45]}]],
+hiit_benen:[[{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"Box Jump",sets:3,reps:"10",weights:[0,0,0]},{name:"High Knees",sets:3,reps:"45s",weights:[45,45,45]},{name:"Burpee",sets:3,reps:"8",weights:[0,0,0]}]],
+hiit_core:[[{name:"Mountain Climber",sets:4,reps:"45s",weights:[45,45,45,45]},{name:"Burpee",sets:3,reps:"10",weights:[0,0,0]},{name:"High Knees",sets:3,reps:"30s",weights:[30,30,30]},{name:"Jumping Jacks",sets:3,reps:"30",weights:[0,0,0]}]]
+};
+const CARDIO_WV={
+cardio_full:[[{name:"Hardlopen",sets:1,reps:"20 min",weights:[1200]},{name:"Skipping",sets:4,reps:"3 min",weights:[180,180,180,180]},{name:"High Knees",sets:3,reps:"60s",weights:[60,60,60]}],[{name:"Hardlopen",sets:1,reps:"30 min",weights:[1800]},{name:"Jumping Jacks",sets:4,reps:"60s",weights:[60,60,60,60]}]],
+cardio_bike:[[{name:"Stationary Bike",sets:1,reps:"30 min",weights:[1800]},{name:"Jump Squat",sets:4,reps:"15",weights:[0,0,0,0]},{name:"High Knees",sets:3,reps:"60s",weights:[60,60,60]}]]
+};
+const ALL_WV={...WV,...HIIT_WV,...CARDIO_WV};
+
+const FINN_MSGS={
+0:[(n)=>`Weekend vibes ${n}! Zondag = hersteldag. Spieren groeien terwijl je rust 🌿`,(n)=>`${n}, zelfs Finn neemt rust. Genieten vandaag, morgen knallen! 💤`,(n)=>`Hey ${n}! Stretchen, goed eten, vroeg slapen. Morgen pak je ze! 🔋`],
+1:[(n)=>`Nieuwe week, nieuwe kansen ${n}! Maandag is dag 1 — zet de toon 💪`,(n)=>`${n}, Monday energy! Jij bepaalt hoe deze week wordt!`,(n)=>`Hey ${n}! Maandag = motivationdag. Begin sterk! 🔥`,(n)=>`${n}! Start de week met een knaller. Je lichaam staat te wachten!`],
+2:[(n)=>`Dag 2 ${n}! Consistentie wint altijd van perfectie 💪`,(n)=>`${n}, dinsdag power! Gisteren begon je. Vandaag bouw je verder!`,(n)=>`Hey ${n}! Jij bent sterker dan je denkt. Bewijsdag! 🌱`],
+3:[(n)=>`Midweek energie ${n}! Halverwege — geef die extra push! 🔥`,(n)=>`${n}, woensdag! Over de helft. Blijf gefocust!`,(n)=>`Hey ${n}! Hump day! Stap over die heuvel! ⚡`],
+4:[(n)=>`Almost Friday ${n}! Nog één push dag 🏆`,(n)=>`${n}, donderdag = pre-weekend energie!`,(n)=>`Hey ${n}! Morgen vrijdag. Sluit week af met een knaller! 🔥`],
+5:[(n)=>`TGIF ${n}! Sluit de week sterk af 💪`,(n)=>`${n}, vrijdag training = weekend zonder schuldgevoel! 🎉`,(n)=>`Hey ${n}! Vrijdag power. Daarna mag je relaxen!`],
+6:[(n)=>`Zaterdag power ${n}! Geen werk, wel tijd voor jouw beste training 💪`,(n)=>`${n}, weekend training hit different! Geniet van elke rep.`,(n)=>`Hey ${n}! Zaterdagsessie = beste sessie. Pure flow! 🌟`]
 };
 
-async function ai(prompt){
-  try{
-    const r=await fetch(WORKER,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:prompt}]})});
-    const d=await r.json();
-    return d.content?.[0]?.text||"";
-  }catch(e){return "Verbindingsfout.";}
+function getSetValueOptions(unit){
+  if(unit==="sec")return SEC_OPT;
+  if(unit==="reps")return REPS_OPT;
+  return KG_OPT;
+}
+function fmtVal(v,unit){
+  if(!v&&v!==0)return"–";if(!v)return"–";
+  if(unit==="sec"){if(v>=60)return`${Math.floor(v/60)}m${v%60?v%60+'s':''}`;return`${v}s`;}
+  if(unit==="reps")return`${v}x`;
+  return`${v>0?v+"kg":"–"}`;
 }
 
-const FASE_OPTIES=[
-  {v:"zwaar bulken",l:"Zwaar bulken",d:"Maximale spiergroei",mul:38,c:"#f59e0b"},
-  {v:"licht bulken",l:"Licht bulken",d:"Lean bulk",mul:35,c:"#10b981"},
-  {v:"onderhoud",l:"Onderhoud",d:"Gewicht vasthouden",mul:32,c:LIME},
-  {v:"licht cutten",l:"Licht cutten",d:"Vetverbranding",mul:28,c:"#60a5fa"},
-  {v:"zwaar cutten",l:"Zwaar cutten",d:"Snel afvallen",mul:24,c:"#ef4444"},
-];
-
-const MUSCLE_META={
-  benen:{label:"Benen",sub:"Quads · Hamstrings · Calves"},
-  borst:{label:"Borst",sub:"Pecs · Serratus · Deltoids"},
-  rug:{label:"Rug",sub:"Lats · Traps · Rhomboids"},
-  schouders:{label:"Schouders",sub:"Delts · Rotator Cuff"},
-  armen:{label:"Armen",sub:"Biceps · Triceps · Forearms"},
-  billen:{label:"Billen",sub:"Glutes · Hip Flexors"},
-  buik:{label:"Core",sub:"Abs · Obliques · TVA"},
-  "full body":{label:"Full Body",sub:"Complete Compound"},
-};
-const MUSCLE_GROUPS=Object.keys(MUSCLE_META);
-
-const SPLITS=[
-  {label:"Push",muscles:["borst","schouders","armen"]},
-  {label:"Pull",muscles:["rug","armen"]},
-  {label:"Legs",muscles:["benen","billen"]},
-  {label:"Borst & Triceps",muscles:["borst","armen"]},
-  {label:"Rug & Biceps",muscles:["rug","armen"]},
-  {label:"Full Body",muscles:["full body"]},
-];
-
-const MEALS=["Ochtend","Middag","Avond","Snack"];
-const TODAY=new Date();
-const TODAY_KEY=TODAY.toLocaleDateString("nl-NL");
-const DAYS=["Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag"];
-const DAY_NL=DAYS[TODAY.getDay()];
-const IS_WEEKEND=TODAY.getDay()===0||TODAY.getDay()===6;
-
-const KG_OPT=[0,2.5,5,7.5,10,12.5,14,15,16,17.5,18,20,22,22.5,24,25,27.5,30,32.5,35,37.5,40,42.5,45,47.5,50,55,60,65,70,75,80,85,90,95,100,110,120,130,140,150];
-
-const QUICK_FOODS={
-  Ochtend:["Havermout met banaan","2 eieren + toast","Griekse yoghurt","Proteïneshake","Boterham pindakaas"],
-  Middag:["Kipfilet + rijst","Tonijnsalade","Wrap kip","Cottage cheese","Soep + brood"],
-  Avond:["Zalm + groenten","Kip + zoete aardappel","Pasta kipgehakt","Omelet + salade","Biefstuk + broccoli"],
-  Snack:["Banaan","Appel + amandelen","Rijstwafels","Proteïnereep","Kwark"],
-};
-
-const FOOD_PHOTOS={
-  Ochtend:"https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=500&q=80",
-  Middag:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80",
-  Avond:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&q=80",
-  Snack:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&q=80",
-};
-
-const P={
-  hero:"https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=800&q=85",
-  onboard:"https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=85",
-  benen:"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&q=80",
-  borst:"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&q=80",
-  rug:"https://images.unsplash.com/photo-1530822847156-5df684ec5ee1?w=600&q=80",
-  schouders:"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=600&q=80",
-  armen:"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=600&q=80",
-  billen:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&q=80",
-  buik:"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=600&q=80",
-  "full body":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=600&q=80",
-};
-
-const EX_PHOTOS={
-  "Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80",
-  "Bench Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80",
-  "Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80",
-  "Pull-ups":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80",
-  "Shoulder Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80",
-  "Barbell Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80",
-  "Bent-over Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80",
-  "Leg Press":"https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?w=500&q=80",
-  "Plank":"https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=500&q=80",
-  "Dips":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
-  "Hip Thrust":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80",
-  "Lateral Raises":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80",
-  "Romanian Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80",
-  "Leg Extension":"https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?w=500&q=80",
-  "Leg Curl":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80",
-  "Calf Raises":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80",
-  "Bulgarian Split Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80",
-  "Incline Dumbbell Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80",
-  "Cable Fly":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80",
-  "Push-up":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
-  "Lat Pulldown":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80",
-  "Seated Cable Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80",
-  "Hammer Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80",
-  "Triceps Pushdown":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80",
-  "Skull Crushers":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80",
-  "Incline Dumbbell Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80",
-  "Concentration Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80",
-  "Glute Bridge":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80",
-  "Crunches":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
-  "Leg Raises":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
-  "Mountain Climber":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
-  "Arnold Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80",
-  "Face Pulls":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80",
-  "Burpee":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80",
-};
-
-const EXERCISE_DB={
-  "Squat":{muscle:"benen",info:"Voeten schouderbreedte. Zak neer tot heupen onder kniehoogte.",youtube:"https://www.youtube.com/results?search_query=squat+techniek"},
-  "Leg Press":{muscle:"benen",info:"Voeten op platform. Duw volledig uit, buig terug tot 90 graden.",youtube:"https://www.youtube.com/results?search_query=leg+press"},
-  "Romanian Deadlift":{muscle:"benen",info:"Stang langs benen omlaag. Voel de rek in hamstrings.",youtube:"https://www.youtube.com/results?search_query=romanian+deadlift"},
-  "Leg Extension":{muscle:"benen",info:"Volledig strekken bovenaan en 1 seconde vasthouden.",youtube:"https://www.youtube.com/results?search_query=leg+extension"},
-  "Leg Curl":{muscle:"benen",info:"Trek hielen naar billen. Langzaam laten zakken.",youtube:"https://www.youtube.com/results?search_query=leg+curl"},
-  "Calf Raises":{muscle:"benen",info:"Volledig omhoog op bal van je voet.",youtube:"https://www.youtube.com/results?search_query=calf+raises"},
-  "Bulgarian Split Squat":{muscle:"benen",info:"Achterste voet op bank. Zak recht omlaag.",youtube:"https://www.youtube.com/results?search_query=bulgarian+split+squat"},
-  "Bench Press":{muscle:"borst",info:"Stang laten zakken tot borst. Ellebogen 45-75 graden.",youtube:"https://www.youtube.com/results?search_query=bench+press+techniek"},
-  "Incline Dumbbell Press":{muscle:"borst",info:"Bank 30 graden. Druk schuin omhoog.",youtube:"https://www.youtube.com/results?search_query=incline+dumbbell+press"},
-  "Cable Fly":{muscle:"borst",info:"Armen licht gebogen. Breng handgrepen samen voor borst.",youtube:"https://www.youtube.com/results?search_query=cable+fly"},
-  "Push-up":{muscle:"borst",info:"Handen schouderbreedte. Lichaam als plank.",youtube:"https://www.youtube.com/results?search_query=push+up"},
-  "Dips":{muscle:"armen",info:"Volledig zakken tot 90 graden. Ellebogen langs je lijf.",youtube:"https://www.youtube.com/results?search_query=dips"},
-  "Shoulder Press":{muscle:"schouders",info:"Dumbells recht boven het hoofd.",youtube:"https://www.youtube.com/results?search_query=shoulder+press"},
-  "Lateral Raises":{muscle:"schouders",info:"Hef tot schouderhoogte. Duimen licht omlaag.",youtube:"https://www.youtube.com/results?search_query=lateral+raises"},
-  "Deadlift":{muscle:"rug",info:"Stang boven middenvoet. Heupen laag. Rug recht.",youtube:"https://www.youtube.com/results?search_query=deadlift"},
-  "Bent-over Row":{muscle:"rug",info:"Romp 45 graden. Trek naar navel.",youtube:"https://www.youtube.com/results?search_query=bent+over+row"},
-  "Lat Pulldown":{muscle:"rug",info:"Greep iets breder dan schouders. Trek naar bovenborst.",youtube:"https://www.youtube.com/results?search_query=lat+pulldown"},
-  "Pull-ups":{muscle:"rug",info:"Overhandse greep. Trek kin over de stang.",youtube:"https://www.youtube.com/results?search_query=pull+ups"},
-  "Seated Cable Row":{muscle:"rug",info:"Recht zitten. Trek naar navel.",youtube:"https://www.youtube.com/results?search_query=seated+cable+row"},
-  "Barbell Curl":{muscle:"armen",info:"Ellebogen vast langs je lijf. Curl volledig omhoog.",youtube:"https://www.youtube.com/results?search_query=barbell+curl"},
-  "Hammer Curl":{muscle:"armen",info:"Neutrale grip, duimen omhoog.",youtube:"https://www.youtube.com/results?search_query=hammer+curl"},
-  "Triceps Pushdown":{muscle:"armen",info:"Ellebogen vast langs lijf. Duw volledig uit.",youtube:"https://www.youtube.com/results?search_query=triceps+pushdown"},
-  "Skull Crushers":{muscle:"armen",info:"Laat stang zakken naar voorhoofd.",youtube:"https://www.youtube.com/results?search_query=skull+crushers"},
-  "Incline Dumbbell Curl":{muscle:"armen",info:"Bank schuin achterover. Armen hangen volledig.",youtube:"https://www.youtube.com/results?search_query=incline+dumbbell+curl"},
-  "Concentration Curl":{muscle:"armen",info:"Elleboog op binnenknie. Volledige curl omhoog.",youtube:"https://www.youtube.com/results?search_query=concentration+curl"},
-  "Hip Thrust":{muscle:"billen",info:"Rug op bank. Duw omhoog en knijp billen samen.",youtube:"https://www.youtube.com/results?search_query=hip+thrust"},
-  "Glute Bridge":{muscle:"billen",info:"Lig op rug, voeten plat. Duw heupen omhoog.",youtube:"https://www.youtube.com/results?search_query=glute+bridge"},
-  "Plank":{muscle:"buik",info:"Steun op onderarmen en tenen. Lichaam als rechte plank.",youtube:"https://www.youtube.com/results?search_query=plank"},
-  "Crunches":{muscle:"buik",info:"Lage rug op grond. Kroel omhoog.",youtube:"https://www.youtube.com/results?search_query=crunches"},
-  "Leg Raises":{muscle:"buik",info:"Benen gestrekt. Hef tot 90 graden.",youtube:"https://www.youtube.com/results?search_query=leg+raises"},
-  "Mountain Climber":{muscle:"buik",info:"Plank positie. Breng knie naar borst.",youtube:"https://www.youtube.com/results?search_query=mountain+climbers"},
-  "Arnold Press":{muscle:"schouders",info:"Start palmen naar jou. Roteer naar buiten.",youtube:"https://www.youtube.com/results?search_query=arnold+press"},
-  "Face Pulls":{muscle:"schouders",info:"Kabel op ooghoogte. Trek naar gezicht.",youtube:"https://www.youtube.com/results?search_query=face+pulls"},
-  "Burpee":{muscle:"full body",info:"Squat neer, spring naar plank, push-up, spring omhoog.",youtube:"https://www.youtube.com/results?search_query=burpee"},
-};
-
-const WV={
-  benen:[[{name:"Squat",sets:4,reps:"8-10",weights:[80,80,80,80]},{name:"Leg Press",sets:3,reps:"10-12",weights:[100,100,100]},{name:"Romanian Deadlift",sets:3,reps:"10-12",weights:[60,60,60]},{name:"Leg Extension",sets:3,reps:"12-15",weights:[40,40,40]},{name:"Leg Curl",sets:3,reps:"12-15",weights:[35,35,35]}],[{name:"Bulgarian Split Squat",sets:3,reps:"8-10",weights:[20,20,20]},{name:"Leg Press",sets:3,reps:"12-15",weights:[100,100,100]},{name:"Romanian Deadlift",sets:3,reps:"10-12",weights:[60,60,60]},{name:"Leg Curl",sets:3,reps:"12-15",weights:[35,35,35]},{name:"Calf Raises",sets:4,reps:"15-20",weights:[60,60,60,60]}]],
-  borst:[[{name:"Bench Press",sets:4,reps:"8-10",weights:[70,70,70,70]},{name:"Incline Dumbbell Press",sets:3,reps:"8-10",weights:[22,22,22]},{name:"Cable Fly",sets:3,reps:"12-15",weights:[15,15,15]},{name:"Dips",sets:3,reps:"8-12",weights:[0,0,0]}],[{name:"Incline Dumbbell Press",sets:4,reps:"8-10",weights:[22,22,22,22]},{name:"Bench Press",sets:3,reps:"8-10",weights:[70,70,70]},{name:"Cable Fly",sets:3,reps:"12-15",weights:[15,15,15]},{name:"Push-up",sets:3,reps:"15-20",weights:[0,0,0]}]],
-  rug:[[{name:"Deadlift",sets:4,reps:"6-8",weights:[80,80,80,80]},{name:"Bent-over Row",sets:3,reps:"8-10",weights:[60,60,60]},{name:"Lat Pulldown",sets:3,reps:"10-12",weights:[55,55,55]},{name:"Seated Cable Row",sets:3,reps:"10-12",weights:[50,50,50]}],[{name:"Pull-ups",sets:4,reps:"6-10",weights:[0,0,0,0]},{name:"Bent-over Row",sets:3,reps:"8-10",weights:[60,60,60]},{name:"Lat Pulldown",sets:3,reps:"10-12",weights:[55,55,55]},{name:"Seated Cable Row",sets:3,reps:"10-12",weights:[50,50,50]}]],
-  schouders:[[{name:"Shoulder Press",sets:4,reps:"8-10",weights:[18,18,18,18]},{name:"Lateral Raises",sets:3,reps:"12-15",weights:[8,8,8]},{name:"Arnold Press",sets:3,reps:"10-12",weights:[14,14,14]},{name:"Face Pulls",sets:3,reps:"15",weights:[20,20,20]}],[{name:"Arnold Press",sets:4,reps:"10-12",weights:[14,14,14,14]},{name:"Lateral Raises",sets:3,reps:"12-15",weights:[8,8,8]},{name:"Shoulder Press",sets:3,reps:"8-10",weights:[18,18,18]},{name:"Face Pulls",sets:3,reps:"15",weights:[20,20,20]}]],
-  armen:[[{name:"Barbell Curl",sets:4,reps:"10-12",weights:[30,30,30,30]},{name:"Hammer Curl",sets:3,reps:"12-15",weights:[14,14,14]},{name:"Triceps Pushdown",sets:4,reps:"10-12",weights:[20,20,20,20]},{name:"Skull Crushers",sets:3,reps:"10-12",weights:[20,20,20]}],[{name:"Incline Dumbbell Curl",sets:3,reps:"10-12",weights:[12,12,12]},{name:"Concentration Curl",sets:3,reps:"12-15",weights:[10,10,10]},{name:"Dips",sets:3,reps:"8-12",weights:[0,0,0]},{name:"Skull Crushers",sets:3,reps:"10-12",weights:[20,20,20]}]],
-  billen:[[{name:"Hip Thrust",sets:4,reps:"10-12",weights:[60,60,60,60]},{name:"Romanian Deadlift",sets:3,reps:"10-12",weights:[60,60,60]},{name:"Leg Press",sets:3,reps:"12-15",weights:[100,100,100]},{name:"Glute Bridge",sets:3,reps:"15",weights:[0,0,0]}],[{name:"Glute Bridge",sets:4,reps:"15",weights:[0,0,0,0]},{name:"Hip Thrust",sets:3,reps:"10-12",weights:[60,60,60]},{name:"Bulgarian Split Squat",sets:3,reps:"8-10",weights:[20,20,20]},{name:"Romanian Deadlift",sets:3,reps:"10-12",weights:[60,60,60]}]],
-  buik:[[{name:"Plank",sets:4,reps:"45 sec",weights:[0,0,0,0]},{name:"Crunches",sets:3,reps:"20",weights:[0,0,0]},{name:"Leg Raises",sets:3,reps:"15",weights:[0,0,0]},{name:"Mountain Climber",sets:3,reps:"30 sec",weights:[0,0,0]}],[{name:"Crunches",sets:4,reps:"20",weights:[0,0,0,0]},{name:"Leg Raises",sets:3,reps:"15",weights:[0,0,0]},{name:"Plank",sets:3,reps:"60 sec",weights:[0,0,0]},{name:"Mountain Climber",sets:3,reps:"45 sec",weights:[0,0,0]}]],
-  "full body":[[{name:"Squat",sets:3,reps:"10",weights:[70,70,70]},{name:"Bench Press",sets:3,reps:"10",weights:[60,60,60]},{name:"Bent-over Row",sets:3,reps:"10",weights:[50,50,50]},{name:"Shoulder Press",sets:3,reps:"10",weights:[16,16,16]},{name:"Plank",sets:3,reps:"45 sec",weights:[0,0,0]}],[{name:"Deadlift",sets:3,reps:"8",weights:[80,80,80]},{name:"Push-up",sets:3,reps:"15",weights:[0,0,0]},{name:"Pull-ups",sets:3,reps:"8",weights:[0,0,0]},{name:"Arnold Press",sets:3,reps:"12",weights:[12,12,12]},{name:"Burpee",sets:3,reps:"10",weights:[0,0,0]}]],
-};
-
-function buildSession(muscles,log){
+function buildSession(muscles,log,profile){
+  const stype=profile?.sportType||"kracht";
+  const epref=profile?.equipmentPref||"mixed";
+  const level=profile?.level||"beginner";
+  const machineEx=["Leg Press","Leg Extension","Leg Curl","Lat Pulldown","Seated Cable Row","Cable Fly","Triceps Pushdown","Face Pulls"];
+  const dumbEx=["Incline Dumbbell Press","Lateral Raises","Hammer Curl","Incline Dumbbell Curl","Concentration Curl","Arnold Press"];
   const exercises=[];
   muscles.forEach(muscle=>{
-    const variants=WV[muscle];
+    const variants=ALL_WV[muscle]||WV[muscle]||WV["full body"];
     if(!variants)return;
     const prevCount=log.filter(e=>(e.targetMuscles||[]).includes(muscle)).length;
-    const variant=variants[prevCount%2]||variants[0];
+    const variant=variants[prevCount%variants.length]||variants[0];
     const last=log.find(e=>(e.targetMuscles||[]).includes(muscle));
     const lastMap={};
     if(last)last.exercises.forEach(e=>{lastMap[e.name]=e;});
-    variant.forEach(ex=>{
+    let filtered=[...variant];
+    if(stype==="kracht"||stype==="gemixed"){
+      if(epref==="machines"){const m=variant.filter(ex=>machineEx.includes(ex.name));if(m.length>=2)filtered=m;}
+      else if(epref==="dumbbells"){const d=variant.filter(ex=>dumbEx.includes(ex.name));if(d.length>=2)filtered=d;}
+    }
+    if(level==="beginner"){filtered=filtered.slice(0,4);}
+    filtered.forEach(ex=>{
       if(!exercises.find(e=>e.name===ex.name)){
-        const db=EXERCISE_DB[ex.name]||{};
-        exercises.push({...ex,weights:lastMap[ex.name]?[...lastMap[ex.name].weights]:[...ex.weights],note:"",saved:false,info:db.info||"",youtube:db.youtube||"",prevWeights:lastMap[ex.name]?.weights||null,prevNote:lastMap[ex.name]?.note||""});
+        const db=EX_DB[ex.name]||{};
+        const unit=db.unit||"kg";
+        exercises.push({...ex,weights:lastMap[ex.name]?[...lastMap[ex.name].weights]:[...ex.weights],note:"",saved:false,unit,info:db.info||"",yt:db.yt||"",prevWeights:lastMap[ex.name]?.weights||null,prevNote:lastMap[ex.name]?.note||""});
       }
     });
   });
   return exercises;
 }
 
-const S={
-  card:{background:"#141414",borderRadius:20,border:"1px solid #1C1C1C"},
-  lbl:{fontSize:10,color:"#555",fontWeight:700,letterSpacing:2,textTransform:"uppercase"},
-};
-
-function FinnImg({size}){
-  return <div style={{width:size,height:size,flexShrink:0}}><img src={FINN_IMG} alt="Finn" style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"top center"}} onError={e=>e.target.style.display="none"}/></div>;
-}
-
+const S={card:{background:"#141414",borderRadius:20,border:"1px solid #1C1C1C"},lbl:{fontSize:10,color:"#555",fontWeight:700,letterSpacing:2,textTransform:"uppercase"}};
+function FinnImg({size}){return<div style={{width:size,height:size,flexShrink:0}}><img src={FINN_IMG} alt="Finn" style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"top center"}} onError={e=>e.target.style.display="none"}/></div>;}
 function Ring({pct,size=80,stroke=7,color=LIME,value,label}){
   const r=(size-stroke*2)/2,circ=2*Math.PI*r,offset=circ*(1-Math.min(1,(pct||0)/100));
-  return(
-    <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
-      <div style={{position:"relative",width:size,height:size}}>
-        <svg width={size} height={size} style={{transform:"rotate(-90deg)"}}>
-          <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#1C1C1C" strokeWidth={stroke}/>
-          <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" style={{transition:"stroke-dashoffset .8s ease"}}/>
-        </svg>
-        <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <div style={{fontSize:size>70?15:12,fontWeight:800,color,lineHeight:1}}>{value}</div>
-        </div>
-      </div>
-      <div style={{fontSize:10,color:"#666",fontWeight:600,letterSpacing:0.5,textTransform:"uppercase",textAlign:"center"}}>{label}</div>
-    </div>
-  );
+  return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}><div style={{position:"relative",width:size,height:size}}><svg width={size} height={size} style={{transform:"rotate(-90deg)"}}><circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#1C1C1C" strokeWidth={stroke}/><circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" style={{transition:"stroke-dashoffset .8s ease"}}/></svg><div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:size>70?15:12,fontWeight:800,color,lineHeight:1}}>{value}</div></div></div><div style={{fontSize:10,color:"#666",fontWeight:600,letterSpacing:0.5,textTransform:"uppercase",textAlign:"center"}}>{label}</div></div>);
 }
-
 function LineChart({data,height=120}){
   if(!data||data.length<2)return<div style={{height,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:"#444"}}>Meer metingen nodig</div>;
-  const vals=data.map(d=>d.w);
-  const mn=Math.min(...vals)-0.5,mx=Math.max(...vals)+0.5,rng=mx-mn;
-  const W=320,H=height-24;
+  const vals=data.map(d=>d.w),mn=Math.min(...vals)-0.5,mx=Math.max(...vals)+0.5,rng=mx-mn,W=320,H=height-24;
   const pts=data.map((d,i)=>({x:20+(i/(data.length-1))*(W-40),y:H-((d.w-mn)/rng*H)+4,w:d.w,date:d.date}));
   const pd="M"+pts.map((p,i)=>{if(i===0)return`${p.x},${p.y}`;const pv=pts[i-1],cx=(pv.x+p.x)/2;return`C${cx},${pv.y} ${cx},${p.y} ${p.x},${p.y}`;}).join(" ");
-  return(
-    <svg viewBox={`0 0 ${W} ${height}`} style={{width:"100%",height}}>
-      <defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={LIME} stopOpacity="0.25"/><stop offset="100%" stopColor={LIME} stopOpacity="0"/></linearGradient></defs>
-      <path d={pd+` L${pts[pts.length-1].x},${H+4} L${pts[0].x},${H+4} Z`} fill="url(#lg)"/>
-      <path d={pd} fill="none" stroke={LIME} strokeWidth="2.5" strokeLinecap="round"/>
-      {pts.map((p,i)=>(
-        <g key={i}>
-          <circle cx={p.x} cy={p.y} r={i===pts.length-1?5:2.5} fill={i===pts.length-1?LIME:"#333"} stroke={i===pts.length-1?"#0D0D0D":"none"} strokeWidth={2}/>
-          {(i===0||i===pts.length-1||data.length<=6)&&<text x={p.x} y={height-2} textAnchor="middle" fontSize="8" fill="#555">{p.date.slice(0,5)}</text>}
-          {i===pts.length-1&&<text x={p.x} y={p.y-10} textAnchor="middle" fontSize="9" fill={LIME} fontWeight="700">{p.w}kg</text>}
-        </g>
-      ))}
-    </svg>
-  );
+  return(<svg viewBox={`0 0 ${W} ${height}`} style={{width:"100%",height}}><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={LIME} stopOpacity="0.25"/><stop offset="100%" stopColor={LIME} stopOpacity="0"/></linearGradient></defs><path d={pd+` L${pts[pts.length-1].x},${H+4} L${pts[0].x},${H+4} Z`} fill="url(#lg)"/><path d={pd} fill="none" stroke={LIME} strokeWidth="2.5" strokeLinecap="round"/>{pts.map((p,i)=>(<g key={i}><circle cx={p.x} cy={p.y} r={i===pts.length-1?5:2.5} fill={i===pts.length-1?LIME:"#333"} stroke={i===pts.length-1?"#0D0D0D":"none"} strokeWidth={2}/>{(i===0||i===pts.length-1||data.length<=6)&&<text x={p.x} y={height-2} textAnchor="middle" fontSize="8" fill="#555">{p.date.slice(0,5)}</text>}{i===pts.length-1&&<text x={p.x} y={p.y-10} textAnchor="middle" fontSize="9" fill={LIME} fontWeight="700">{p.w}kg</text>}</g>))}</svg>);
 }
-
-function FinnPopup({onClose,pendingMsg}){
+function FinnPopup({onClose,pendingMsg,profile,log,food}){
   const [input,setInput]=useState("");
-  const [msgs,setMsgs]=useState([{r:"a",t:"Hey! Finn hier. Wat kan ik voor je doen?"}]);
+  const [msgs,setMsgs]=useState([{r:"a",t:`Hey! Finn hier. Ik coach ${profile?.name||"jou"} persoonlijk. Wat kan ik voor je doen?`}]);
   const [loading,setLoading]=useState(false);
   const endRef=useRef(null);
   useEffect(()=>{endRef.current?.scrollIntoView({behavior:"smooth"});},[msgs,loading]);
   useEffect(()=>{if(pendingMsg)doSend(pendingMsg);},[]);
+  function getCtx(){
+    const lw=log.slice(0,5).map(e=>`${e.day}: ${e.workout}`).join(", ")||"Geen trainingen";
+    const tf=food[TODAY_KEY]||{};
+    const tk=MEALS.reduce((s,m)=>s+(tf[m]||[]).reduce((a,i)=>a+(i.kcal||0),0),0);
+    return`Naam:${profile?.name} Doel:${profile?.goal} Fase:${profile?.fase||"onderhoud"} Sport:${profile?.sportType||"kracht"} Level:${profile?.level||"beginner"} Gewicht:${profile?.weight}kg→${profile?.goalWeight}kg Trainingen:${lw} Vandaag:${tk}kcal`;
+  }
   async function doSend(txt){
     if(!txt?.trim()||loading)return;
-    const nc=[...msgs,{r:"u",t:txt}];
-    setMsgs(nc);setLoading(true);
-    const reply=await ai("Jij bent Finn, energieke AI fitnesscoach. Reageer motiverend en kort. Max 2 zinnen. NL.\n\nGebruiker: "+txt+"\nFinn:");
-    setMsgs(p=>[...p,{r:"a",t:reply}]);
-    setLoading(false);
+    const nc=[...msgs,{r:"u",t:txt}];setMsgs(nc);setLoading(true);
+    const reply=await ai(`Jij bent Finn, persoonlijke AI fitnesscoach. Gebruikersinfo: ${getCtx()}\nGeef motiverende, persoonlijke adviezen op maat. Max 3 zinnen. Nederlands.\nGebruiker: ${txt}\nFinn:`);
+    setMsgs(p=>[...p,{r:"a",t:reply}]);setLoading(false);
   }
   function send(){if(!input.trim()||loading)return;const m=input.trim();setInput("");doSend(m);}
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:200,display:"flex",alignItems:"flex-end"}} onClick={onClose}>
       <div onClick={e=>e.stopPropagation()} style={{background:"#141414",borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,margin:"0 auto",padding:20,maxHeight:"70vh",display:"flex",flexDirection:"column",animation:"slideUp .4s cubic-bezier(.16,1,.3,1)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
-          <div style={{display:"flex",gap:12,alignItems:"center"}}><FinnImg size={50}/><div><div style={{fontSize:16,fontWeight:900}}>Finn</div><div style={{fontSize:11,color:"#555"}}>AI Coach</div></div></div>
+          <div style={{display:"flex",gap:12,alignItems:"center"}}><FinnImg size={50}/><div><div style={{fontSize:16,fontWeight:900}}>Finn</div><div style={{fontSize:11,color:"#555"}}>AI Coach · Kent jouw data</div></div></div>
           <button onClick={onClose} style={{background:"#1C1C1C",border:"none",color:"#666",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:16}}>×</button>
         </div>
         <div style={{flex:1,overflowY:"auto",display:"flex",flexDirection:"column",gap:10,paddingBottom:8}}>
-          {msgs.map((m,i)=>m.r==="a"?(
-            <div key={i} style={{display:"flex",gap:10,alignItems:"flex-end"}}>
-              <FinnImg size={32}/>
-              <div style={{background:"#1C1C1C",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"10px 14px",maxWidth:"80%",fontSize:13,color:"rgba(255,255,255,0.85)",lineHeight:1.7}}>{m.t}</div>
-            </div>
-          ):(
-            <div key={i} style={{display:"flex",justifyContent:"flex-end"}}>
-              <div style={{background:ORANGE,borderRadius:"16px 16px 4px 16px",padding:"10px 14px",maxWidth:"75%",fontSize:13,color:"#fff"}}>{m.t}</div>
-            </div>
-          ))}
+          {msgs.map((m,i)=>m.r==="a"
+            ?<div key={i} style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{background:"#1C1C1C",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"10px 14px",maxWidth:"80%",fontSize:13,color:"rgba(255,255,255,0.85)",lineHeight:1.7}}>{m.t}</div></div>
+            :<div key={i} style={{display:"flex",justifyContent:"flex-end"}}><div style={{background:ORANGE,borderRadius:"16px 16px 4px 16px",padding:"10px 14px",maxWidth:"75%",fontSize:13,color:"#fff"}}>{m.t}</div></div>
+          )}
           {loading&&<div style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{background:"#1C1C1C",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"12px 16px",display:"flex",gap:5}}>{[0,1,2].map(d=><div key={d} style={{width:6,height:6,borderRadius:"50%",background:ORANGE,animation:"pulse 1.2s infinite",animationDelay:`${d*.2}s`}}/>)}</div></div>}
           <div ref={endRef}/>
         </div>
@@ -368,9 +269,10 @@ function FinnPopup({onClose,pendingMsg}){
 
 function Onboarding({onComplete}){
   const [step,setStep]=useState(0);
-  const [p,setP]=useState({name:"",age:"",gender:"man",weight:"",goalWeight:"",goal:"afvallen",level:"beginner",sportType:"kracht",equipment:"gym",fase:"onderhoud"});
+  const [p,setP]=useState({name:"",weight:"",goalWeight:"",goal:"afvallen",level:"beginner",sportType:"kracht",trainingLoc:"gym",equipmentPref:"mixed",fase:"onderhoud",fotoUrl:""});
   const u=(k,v)=>setP(prev=>({...prev,[k]:v}));
   const inp={width:"100%",padding:"15px 16px",borderRadius:14,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:15,outline:"none",marginBottom:14,boxSizing:"border-box"};
+  async function handlePhoto(e){const f=e.target.files[0];if(!f)return;const b=await resizeImg(f);u("fotoUrl",b);}
   if(step===0)return(
     <div style={{minHeight:"100vh",position:"relative",overflow:"hidden"}}>
       <img src={P.onboard} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
@@ -379,36 +281,33 @@ function Onboarding({onComplete}){
         <div style={{animation:"slideUp .6s cubic-bezier(.16,1,.3,1)"}}>
           <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:16}}><span style={{color:"#fff"}}>FitCoach</span><span style={{color:LIME}}>Pro</span></div>
           <div style={{fontSize:40,fontWeight:900,lineHeight:1.05,letterSpacing:-1,marginBottom:16}}>Train slimmer.<br/>Leef beter.</div>
-          <div style={{display:"flex",alignItems:"center",gap:12,background:"rgba(255,107,43,0.12)",border:"1px solid rgba(255,107,43,0.25)",borderRadius:14,padding:"12px 14px",marginBottom:32}}>
-            <FinnImg size={52}/>
-            <div style={{fontSize:13,color:"rgba(255,255,255,0.7)"}}>"Klaar om jouw beste zelf te worden?"</div>
-          </div>
+          <div style={{display:"flex",alignItems:"center",gap:12,background:"rgba(255,107,43,0.12)",border:"1px solid rgba(255,107,43,0.25)",borderRadius:14,padding:"12px 14px",marginBottom:32}}><FinnImg size={52}/><div style={{fontSize:13,color:"rgba(255,255,255,0.7)"}}>"Klaar om jouw beste zelf te worden?"</div></div>
           <button onClick={()=>setStep(1)} style={{width:"100%",padding:18,borderRadius:18,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>Begin nu</button>
         </div>
       </div>
     </div>
   );
-  const prog=step/4*100;
+  const prog=step/5*100;
   return(
     <div style={{background:"#0D0D0D",minHeight:"100vh",maxWidth:480,margin:"0 auto"}}>
       <div style={{padding:"20px 24px 0"}}><div style={{background:"#1C1C1C",borderRadius:99,height:3,overflow:"hidden",marginBottom:28}}><div style={{width:`${prog}%`,height:3,background:LIME,borderRadius:99,transition:"width .4s"}}/></div></div>
       <div style={{padding:"0 24px 40px"}}>
         {step===1&&<>
-          <div style={{fontSize:11,color:"#555",fontWeight:700,letterSpacing:3,textTransform:"uppercase",marginBottom:12}}>Stap 1 van 4</div>
-          <div style={{fontSize:30,fontWeight:900,marginBottom:24}}>Over jou</div>
-          <input style={inp} placeholder="Jouw naam" value={p.name} onChange={e=>u("name",e.target.value)}/>
-          <input style={inp} type="number" placeholder="Leeftijd" value={p.age} onChange={e=>u("age",e.target.value)}/>
+          <div style={{...S.lbl,marginBottom:12}}>Stap 1 van 5</div>
+          <div style={{fontSize:30,fontWeight:900,marginBottom:24}}>Hoe heet je?</div>
+          <input style={inp} placeholder="Voornaam" value={p.name} onChange={e=>u("name",e.target.value)}/>
           <input style={inp} type="number" placeholder="Huidig gewicht (kg)" value={p.weight} onChange={e=>u("weight",e.target.value)}/>
           <input style={inp} type="number" placeholder="Doelgewicht (kg)" value={p.goalWeight} onChange={e=>u("goalWeight",e.target.value)}/>
-          <div style={{display:"flex",gap:8,marginBottom:28}}>
-            {[{v:"man",l:"Man"},{v:"vrouw",l:"Vrouw"},{v:"anders",l:"Anders"}].map(g=>(
-              <button key={g.v} onClick={()=>u("gender",g.v)} style={{flex:1,padding:13,borderRadius:14,border:`1.5px solid ${p.gender===g.v?LIME:"#222"}`,background:p.gender===g.v?"rgba(200,241,56,0.08)":"#141414",color:p.gender===g.v?LIME:"#666",fontSize:13,fontWeight:700,cursor:"pointer"}}>{g.l}</button>
-            ))}
-          </div>
+          <div style={{...S.lbl,marginBottom:8}}>Profielfoto (optioneel)</div>
+          <label style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:12,border:"1px solid #222",background:"#141414",color:"#888",fontSize:13,cursor:"pointer",marginBottom:14}}>
+            📸 Upload foto
+            <input type="file" accept="image/*" onChange={handlePhoto} style={{display:"none"}}/>
+            {p.fotoUrl&&<span style={{color:LIME,fontSize:11}}>✓ Foto geladen</span>}
+          </label>
           <button onClick={()=>setStep(2)} disabled={!p.name||!p.weight} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:"pointer",background:p.name&&p.weight?LIME:"#1C1C1C",color:p.name&&p.weight?"#000":"#444",fontSize:15,fontWeight:800}}>Volgende</button>
         </>}
         {step===2&&<>
-          <div style={{fontSize:11,color:"#555",fontWeight:700,letterSpacing:3,textTransform:"uppercase",marginBottom:12}}>Stap 2 van 4</div>
+          <div style={{...S.lbl,marginBottom:12}}>Stap 2 van 5</div>
           <div style={{fontSize:30,fontWeight:900,marginBottom:24}}>Jouw doel</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:28}}>
             {[{v:"afvallen",l:"Afvallen",d:"Vet verbranden"},{v:"spiermassa",l:"Spiermassa",d:"Groter & sterker"},{v:"fitter",l:"Fitter worden",d:"Meer energie"},{v:"gezonder",l:"Gezonder leven",d:"Algehele gezondheid"}].map(g=>(
@@ -418,69 +317,120 @@ function Onboarding({onComplete}){
               </button>
             ))}
           </div>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={()=>setStep(1)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button>
-            <button onClick={()=>setStep(3)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button>
-          </div>
+          <div style={{display:"flex",gap:10}}><button onClick={()=>setStep(1)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>setStep(3)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button></div>
         </>}
         {step===3&&<>
-          <div style={{fontSize:11,color:"#555",fontWeight:700,letterSpacing:3,textTransform:"uppercase",marginBottom:12}}>Stap 3 van 4</div>
-          <div style={{fontSize:30,fontWeight:900,marginBottom:24}}>Hoe sport jij?</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:18}}>
-            {[{v:"kracht",l:"Kracht"},{v:"cardio",l:"Cardio"},{v:"hiit",l:"HIIT"},{v:"gemixed",l:"Gemixed"}].map(s=>(
-              <button key={s.v} onClick={()=>u("sportType",s.v)} style={{padding:16,borderRadius:14,border:`1.5px solid ${p.sportType===s.v?LIME:"#1C1C1C"}`,background:p.sportType===s.v?"rgba(200,241,56,0.07)":"#141414",color:p.sportType===s.v?LIME:"#666",fontSize:13,fontWeight:700,cursor:"pointer"}}>{s.l}</button>
+          <div style={{...S.lbl,marginBottom:12}}>Stap 3 van 5</div>
+          <div style={{fontSize:30,fontWeight:900,marginBottom:20}}>Hoe sport jij?</div>
+          <div style={{...S.lbl,marginBottom:8}}>Sport type</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}>
+            {[{v:"kracht",l:"💪 Kracht"},{v:"hiit",l:"🔥 HIIT"},{v:"cardio",l:"🏃 Cardio"},{v:"gemixed",l:"⚡ Gemixed"}].map(s=>(
+              <button key={s.v} onClick={()=>u("sportType",s.v)} style={{padding:14,borderRadius:14,border:`1.5px solid ${p.sportType===s.v?LIME:"#1C1C1C"}`,background:p.sportType===s.v?"rgba(200,241,56,0.07)":"#141414",color:p.sportType===s.v?LIME:"#666",fontSize:13,fontWeight:700,cursor:"pointer"}}>{s.l}</button>
             ))}
           </div>
+          <div style={{...S.lbl,marginBottom:8}}>Niveau</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:14}}>
+            {[{v:"beginner",l:"Beginner"},{v:"gemiddeld",l:"Gemiddeld"},{v:"gevorderd",l:"Gevorderd"}].map(l=>(
+              <button key={l.v} onClick={()=>u("level",l.v)} style={{padding:"12px 8px",borderRadius:12,border:`1.5px solid ${p.level===l.v?LIME:"#1C1C1C"}`,background:p.level===l.v?"rgba(200,241,56,0.07)":"#141414",color:p.level===l.v?LIME:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{l.l}</button>
+            ))}
+          </div>
+          <div style={{...S.lbl,marginBottom:8}}>Locatie</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:28}}>
-            {[{v:"gym",l:"Gym"},{v:"thuis",l:"Thuis"},{v:"gemixed",l:"Gemixed"}].map(e=>(
-              <button key={e.v} onClick={()=>u("equipment",e.v)} style={{padding:"13px 8px",borderRadius:14,border:`1.5px solid ${p.equipment===e.v?LIME:"#1C1C1C"}`,background:p.equipment===e.v?"rgba(200,241,56,0.07)":"#141414",color:p.equipment===e.v?LIME:"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>{e.l}</button>
+            {[{v:"gym",l:"🏋️ Gym"},{v:"thuis",l:"🏠 Thuis"},{v:"buiten",l:"🌳 Buiten"}].map(e=>(
+              <button key={e.v} onClick={()=>u("trainingLoc",e.v)} style={{padding:"12px 8px",borderRadius:12,border:`1.5px solid ${p.trainingLoc===e.v?LIME:"#1C1C1C"}`,background:p.trainingLoc===e.v?"rgba(200,241,56,0.07)":"#141414",color:p.trainingLoc===e.v?LIME:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{e.l}</button>
             ))}
           </div>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={()=>setStep(2)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button>
-            <button onClick={()=>setStep(4)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button>
-          </div>
+          <div style={{display:"flex",gap:10}}><button onClick={()=>setStep(2)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>setStep(4)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button></div>
         </>}
         {step===4&&<>
-          <div style={{fontSize:11,color:"#555",fontWeight:700,letterSpacing:3,textTransform:"uppercase",marginBottom:12}}>Stap 4 van 4</div>
+          <div style={{...S.lbl,marginBottom:12}}>Stap 4 van 5</div>
+          <div style={{fontSize:30,fontWeight:900,marginBottom:20}}>Voorkeur materiaal</div>
+          <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:28}}>
+            {[{v:"machines",l:"🖥️ Machines",d:"Leg press, kabel, apparaten"},{v:"dumbbells",l:"🏋️ Vrije gewichten",d:"Dumbbells, barbells, kettlebells"},{v:"mixed",l:"⚡ Gemixed",d:"Combinatie van alles"}].map(e=>(
+              <button key={e.v} onClick={()=>u("equipmentPref",e.v)} style={{padding:"16px 18px",borderRadius:14,border:`1.5px solid ${p.equipmentPref===e.v?LIME:"#1C1C1C"}`,background:p.equipmentPref===e.v?"rgba(200,241,56,0.07)":"#141414",textAlign:"left",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <div><div style={{fontSize:14,fontWeight:700,color:p.equipmentPref===e.v?LIME:"#fff",marginBottom:2}}>{e.l}</div><div style={{fontSize:11,color:"#555"}}>{e.d}</div></div>
+                {p.equipmentPref===e.v&&<div style={{width:20,height:20,borderRadius:"50%",background:LIME,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#000",fontWeight:900}}>✓</div>}
+              </button>
+            ))}
+          </div>
+          <div style={{display:"flex",gap:10}}><button onClick={()=>setStep(3)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>setStep(5)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button></div>
+        </>}
+        {step===5&&<>
+          <div style={{...S.lbl,marginBottom:12}}>Stap 5 van 5</div>
           <div style={{fontSize:30,fontWeight:900,marginBottom:24}}>Bijna klaar!</div>
-          <div style={{background:"rgba(255,107,43,0.08)",border:"1px solid rgba(255,107,43,0.2)",borderRadius:16,padding:16,marginBottom:24,display:"flex",gap:12,alignItems:"center"}}>
-            <FinnImg size={52}/>
-            <div style={{fontSize:13,color:"rgba(255,255,255,0.6)",lineHeight:1.6}}>"Geweldig {p.name||""}! Laten we beginnen!"</div>
-          </div>
-          <div style={{display:"flex",gap:10}}>
-            <button onClick={()=>setStep(3)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button>
-            <button onClick={()=>onComplete(p)} style={{flex:2,padding:16,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:15,fontWeight:800,cursor:"pointer"}}>Start met Finn</button>
-          </div>
+          <div style={{background:"rgba(255,107,43,0.08)",border:"1px solid rgba(255,107,43,0.2)",borderRadius:16,padding:16,marginBottom:24,display:"flex",gap:12,alignItems:"center"}}><FinnImg size={52}/><div style={{fontSize:13,color:"rgba(255,255,255,0.6)",lineHeight:1.6}}>"Geweldig {p.name||""}! Ik ben klaar om jou te coachen!"</div></div>
+          <div style={{display:"flex",gap:10}}><button onClick={()=>setStep(4)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>onComplete(p)} style={{flex:2,padding:16,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:15,fontWeight:800,cursor:"pointer"}}>Start met Finn</button></div>
         </>}
       </div>
     </div>
   );
 }
-
 function SettingsModal({profile,onSave,onClose}){
   const [p,setP]=useState({...profile});
   const u=(k,v)=>setP(prev=>({...prev,[k]:v}));
   const inp={width:"100%",padding:"13px 14px",borderRadius:12,border:"1px solid #222",background:"#111",color:"#fff",fontSize:14,outline:"none",marginBottom:12,boxSizing:"border-box"};
+  async function handlePhoto(e){const f=e.target.files[0];if(!f)return;const b=await resizeImg(f);u("fotoUrl",b);}
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",zIndex:99,display:"flex",alignItems:"flex-end"}} onClick={onClose}>
-      <div onClick={e=>e.stopPropagation()} style={{background:"#141414",borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,margin:"0 auto",maxHeight:"90vh",overflowY:"auto",padding:24,animation:"slideUp .35s cubic-bezier(.16,1,.3,1)"}}>
+      <div onClick={e=>e.stopPropagation()} style={{background:"#141414",borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,margin:"0 auto",maxHeight:"92vh",overflowY:"auto",padding:24,animation:"slideUp .35s cubic-bezier(.16,1,.3,1)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24}}>
           <div style={{fontSize:22,fontWeight:900}}>Instellingen</div>
           <button onClick={onClose} style={{width:36,height:36,borderRadius:"50%",background:"#1C1C1C",border:"none",color:"#fff",fontSize:18,cursor:"pointer"}}>×</button>
         </div>
         <div style={{...S.card,padding:16,marginBottom:16}}>
-          <div style={{...S.lbl,marginBottom:12}}>Profielfoto URL</div>
-          <input style={inp} placeholder="https://..." value={p.fotoUrl||""} onChange={e=>u("fotoUrl",e.target.value)}/>
+          <div style={{...S.lbl,marginBottom:12}}>Profielfoto</div>
+          <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:8}}>
+            <div style={{width:64,height:64,borderRadius:"50%",background:"#1C1C1C",overflow:"hidden",flexShrink:0,border:"2px solid #333"}}>
+              {p.fotoUrl?<img src={p.fotoUrl} alt="foto" style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>👤</div>}
+            </div>
+            <label style={{flex:1,display:"block",padding:"10px 14px",borderRadius:10,border:"1px solid #333",background:"#1C1C1C",color:LIME,fontSize:12,fontWeight:700,cursor:"pointer",textAlign:"center"}}>
+              📸 Upload foto
+              <input type="file" accept="image/*" onChange={handlePhoto} style={{display:"none"}}/>
+            </label>
+          </div>
+          <input style={{...inp,marginBottom:0,fontSize:12}} placeholder="Of plak foto URL..." value={p.fotoUrl&&p.fotoUrl.startsWith("data:")?"":p.fotoUrl||""} onChange={e=>u("fotoUrl",e.target.value)}/>
         </div>
         <div style={{...S.card,padding:16,marginBottom:16}}>
           <div style={{...S.lbl,marginBottom:12}}>Gegevens</div>
           <input style={inp} placeholder="Naam" value={p.name||""} onChange={e=>u("name",e.target.value)}/>
           <input style={inp} type="number" placeholder="Huidig gewicht (kg)" value={p.weight||""} onChange={e=>u("weight",e.target.value)}/>
           <input style={inp} type="number" placeholder="Doelgewicht (kg)" value={p.goalWeight||""} onChange={e=>u("goalWeight",e.target.value)}/>
+          <div style={{...S.lbl,marginBottom:8}}>Doel</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            {[{v:"afvallen",l:"Afvallen"},{v:"spiermassa",l:"Spiermassa"},{v:"fitter",l:"Fitter worden"},{v:"gezonder",l:"Gezonder leven"}].map(g=>(
+              <button key={g.v} onClick={()=>u("goal",g.v)} style={{padding:"10px",borderRadius:12,border:`1.5px solid ${p.goal===g.v?LIME:"#222"}`,background:p.goal===g.v?"rgba(200,241,56,0.08)":"#111",color:p.goal===g.v?LIME:"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>{g.l}</button>
+            ))}
+          </div>
         </div>
         <div style={{...S.card,padding:16,marginBottom:16}}>
-          <div style={{...S.lbl,marginBottom:12}}>Huidige fase</div>
+          <div style={{...S.lbl,marginBottom:12}}>Training instellingen</div>
+          <div style={{...S.lbl,marginBottom:8}}>Sport type</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
+            {[{v:"kracht",l:"💪 Kracht"},{v:"hiit",l:"🔥 HIIT"},{v:"cardio",l:"🏃 Cardio"},{v:"gemixed",l:"⚡ Gemixed"}].map(s=>(
+              <button key={s.v} onClick={()=>u("sportType",s.v)} style={{padding:"10px",borderRadius:12,border:`1.5px solid ${p.sportType===s.v?LIME:"#222"}`,background:p.sportType===s.v?"rgba(200,241,56,0.08)":"#111",color:p.sportType===s.v?LIME:"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>{s.l}</button>
+            ))}
+          </div>
+          <div style={{...S.lbl,marginBottom:8}}>Niveau</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
+            {[{v:"beginner",l:"Beginner"},{v:"gemiddeld",l:"Gemiddeld"},{v:"gevorderd",l:"Gevorderd"}].map(l=>(
+              <button key={l.v} onClick={()=>u("level",l.v)} style={{padding:"9px 6px",borderRadius:10,border:`1.5px solid ${p.level===l.v?LIME:"#222"}`,background:p.level===l.v?"rgba(200,241,56,0.08)":"#111",color:p.level===l.v?LIME:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{l.l}</button>
+            ))}
+          </div>
+          <div style={{...S.lbl,marginBottom:8}}>Materiaal voorkeur</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
+            {[{v:"machines",l:"Machines"},{v:"dumbbells",l:"Dumbbells"},{v:"mixed",l:"Gemixed"}].map(e=>(
+              <button key={e.v} onClick={()=>u("equipmentPref",e.v)} style={{padding:"9px 6px",borderRadius:10,border:`1.5px solid ${p.equipmentPref===e.v?LIME:"#222"}`,background:p.equipmentPref===e.v?"rgba(200,241,56,0.08)":"#111",color:p.equipmentPref===e.v?LIME:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{e.l}</button>
+            ))}
+          </div>
+          <div style={{...S.lbl,marginBottom:8}}>Locatie</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+            {[{v:"gym",l:"🏋️ Gym"},{v:"thuis",l:"🏠 Thuis"},{v:"buiten",l:"🌳 Buiten"}].map(e=>(
+              <button key={e.v} onClick={()=>u("trainingLoc",e.v)} style={{padding:"9px 6px",borderRadius:10,border:`1.5px solid ${p.trainingLoc===e.v?LIME:"#222"}`,background:p.trainingLoc===e.v?"rgba(200,241,56,0.08)":"#111",color:p.trainingLoc===e.v?LIME:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{e.l}</button>
+            ))}
+          </div>
+        </div>
+        <div style={{...S.card,padding:16,marginBottom:16}}>
+          <div style={{...S.lbl,marginBottom:12}}>Fase</div>
           <div style={{display:"flex",flexDirection:"column",gap:8}}>
             {FASE_OPTIES.map(f=>(
               <button key={f.v} onClick={()=>u("fase",f.v)} style={{padding:"12px 14px",borderRadius:12,border:`1.5px solid ${p.fase===f.v?f.c:"#222"}`,background:p.fase===f.v?f.c+"18":"#111",cursor:"pointer",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -491,7 +441,7 @@ function SettingsModal({profile,onSave,onClose}){
           </div>
         </div>
         <button onClick={()=>onSave(p)} style={{width:"100%",padding:16,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:15,fontWeight:800,cursor:"pointer",marginBottom:12}}>Opslaan</button>
-        <button onClick={onClose} style={{width:"100%",padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Annuleren</button>
+        <button onClick={onClose} style={{width:"100%",padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer",marginBottom:20}}>Annuleren</button>
       </div>
     </div>
   );
@@ -499,7 +449,7 @@ function SettingsModal({profile,onSave,onClose}){
 
 function ExInfo({ex,onClose}){
   if(!ex)return null;
-  const db=EXERCISE_DB[ex.name]||{};
+  const db=EX_DB[ex.name]||{};
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",zIndex:99,display:"flex",alignItems:"flex-end"}} onClick={onClose}>
       <div onClick={e=>e.stopPropagation()} style={{background:"#141414",borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,margin:"0 auto",maxHeight:"82vh",overflowY:"auto",animation:"slideUp .35s cubic-bezier(.16,1,.3,1)"}}>
@@ -515,13 +465,12 @@ function ExInfo({ex,onClose}){
           <div style={{background:"#1C1C1C",borderRadius:14,padding:16,marginBottom:16}}>
             <div style={{fontSize:14,color:"#bbb",lineHeight:1.8}}>{db.info||"Voer de oefening gecontroleerd uit."}</div>
           </div>
-          {db.youtube&&<a href={db.youtube} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",background:"#FF0000",borderRadius:14,padding:14,color:"#fff",fontWeight:700,fontSize:14,textDecoration:"none"}}>Bekijk op YouTube</a>}
+          {db.yt&&<a href={`https://www.youtube.com/results?search_query=${db.yt}`} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",background:"#FF0000",borderRadius:14,padding:14,color:"#fff",fontWeight:700,fontSize:14,textDecoration:"none"}}>▶ Bekijk op YouTube</a>}
         </div>
       </div>
     </div>
   );
 }
-
 function App(){
   const [profile,setProfile]=useState(()=>LS.get("fitcoach_profile"));
   const [tab,setTab]=useState("Home");
@@ -532,6 +481,7 @@ function App(){
   const [wLog,setWLog]=useState(()=>LS.get("fitcoach_wlog")||[]);
   const [newW,setNewW]=useState("");
   const [food,setFood]=useState(()=>LS.get("fitcoach_food")||{});
+  const [foodDate,setFoodDate]=useState(TODAY_KEY);
   const [foodInput,setFoodInput]=useState({Ochtend:"",Middag:"",Avond:"",Snack:""});
   const [foodLoading,setFoodLoading]=useState({Ochtend:false,Middag:false,Avond:false,Snack:false});
   const [foodAdvice,setFoodAdvice]=useState("");
@@ -556,110 +506,79 @@ function App(){
   useEffect(()=>{LS.set("fitcoach_log",log);},[log]);
   useEffect(()=>{LS.set("fitcoach_wlog",wLog);},[wLog]);
   useEffect(()=>{LS.set("fitcoach_food",food);},[food]);
-
+  useEffect(()=>{if(!localStorage.getItem('fcp_installed')){localStorage.setItem('fcp_installed','true');setTimeout(()=>{const m=document.getElementById('installModal');if(m)m.classList.add('show');},1500);}},[]);
   useEffect(()=>{
-    if(!localStorage.getItem('fcp_installed')){
-      localStorage.setItem('fcp_installed','true');
-      setTimeout(()=>{
-        const m=document.getElementById('installModal');
-        if(m)m.classList.add('show');
-      },1500);
-    }
-  },[]);
+    if(!profile||!log.length)return;
+    try{const d=parseDate(log[0].date),days=Math.floor((TODAY-d)/86400000);
+    if(days>=3&&'Notification' in window){if(Notification.permission==='granted'){new Notification('FitCoach Pro 💪',{body:`Hey ${profile.name}! Al ${days} dagen niet getraind!`});}else if(Notification.permission==='default'){Notification.requestPermission();}}}catch(e){}
+  },[profile]);
 
+  const fase=profile?.fase||"onderhoud",faseObj=FASE_OPTIES.find(f=>f.v===fase)||FASE_OPTIES[2];
+  const curW=wLog.length>0?wLog[wLog.length-1].w:parseFloat(profile?.weight)||80;
+  const goalW=parseFloat(profile?.goalWeight)||75,startW=parseFloat(profile?.weight)||80;
+  const pct=Math.max(0,Math.min(100,Math.round((1-(curW-goalW)/(startW-goalW))*100)));
+  const kcalT=Math.round(curW*faseObj.mul),protT=fase.includes("bulken")?Math.round(curW*2.2):Math.round(curW*2),fatT=Math.round(curW*0.9);
   const todayFood=food[TODAY_KEY]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};
   const totals=MEALS.reduce((a,m)=>{(todayFood[m]||[]).forEach(i=>{a.kcal+=(i.kcal||0);a.prot+=(i.prot||0);a.carbs+=(i.carbs||0);a.fat+=(i.fat||0);});return a;},{kcal:0,prot:0,carbs:0,fat:0});
-  const curW=wLog.length>0?wLog[wLog.length-1].w:parseFloat(profile?.weight)||80;
-  const goalW=parseFloat(profile?.goalWeight)||75;
-  const startW=parseFloat(profile?.weight)||80;
-  const pct=Math.max(0,Math.min(100,Math.round((1-(curW-goalW)/(startW-goalW))*100)));
-  const fase=profile?.fase||"onderhoud";
-  const faseObj=FASE_OPTIES.find(f=>f.v===fase)||FASE_OPTIES[2];
-  const kcalT=Math.round(curW*faseObj.mul);
-  const protT=fase.includes("bulken")?Math.round(curW*2.2):Math.round(curW*2);
-  const fatT=Math.round(curW*0.9);
   const carbsT=Math.max(0,Math.round((kcalT-protT*4-totals.fat*9)/4));
+  const selFood=food[foodDate]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};
+  const selTotals=MEALS.reduce((a,m)=>{(selFood[m]||[]).forEach(i=>{a.kcal+=(i.kcal||0);a.prot+=(i.prot||0);a.carbs+=(i.carbs||0);a.fat+=(i.fat||0);});return a;},{kcal:0,prot:0,carbs:0,fat:0});
+  const sportType=profile?.sportType||"kracht";
+  const splits=sportType==="hiit"?SPLITS_HIIT:sportType==="cardio"?SPLITS_CARDIO:SPLITS_KRACHT;
+
+  const weekNum=Math.floor(TODAY.getTime()/(7*24*60*60*1000));
+  const dayPool=FINN_MSGS[TODAY.getDay()]||FINN_MSGS[1];
+  let finnBericht=dayPool[weekNum%dayPool.length](profile?.name||"");
+  if(profile){try{
+    const yk=fmtDate(new Date(TODAY.getTime()-86400000)),yLog=log.find(e=>e.date===yk);
+    const yFood=food[yk],yKcal=yFood?MEALS.reduce((s,m)=>s+(yFood[m]||[]).reduce((a,i)=>a+(i.kcal||0),0),0):0;
+    if(log[0]){const d=parseDate(log[0].date),since=Math.floor((TODAY-d)/86400000);
+      if(since>=3)finnBericht=`${profile.name}, het is al ${since} dagen geleden. Je lichaam mist de training! Vandaag kom je terug 💪`;
+      else if(yLog)finnBericht=`Super gedaan gisteren ${profile.name}! Die ${yLog.workout} training was geweldig 🏆 Vandaag ook?`;
+      else if(yKcal>0&&yKcal<kcalT*0.75)finnBericht=`${profile.name}, je at gisteren weinig (${yKcal} kcal). Zorg vandaag voor genoeg energie! 🥗`;
+    }
+  }catch(e){}}
 
   function openFinnWith(msg){setPendingMsg(msg||null);setShowFinn(true);}
-
   function startSess(muscles,custom){
-    if(custom){
-      setSession(custom.exercises.map(e=>({...e,weights:Array(parseInt(e.sets)||3).fill(parseFloat(e.weights)||0),note:"",saved:false,info:EXERCISE_DB[e.name]?.info||"",youtube:EXERCISE_DB[e.name]?.youtube||"",prevWeights:null,prevNote:""})));
-      setTargetMuscles([custom.name]);
-    }else{
-      if(!muscles.length)return;
-      setSession(buildSession(muscles,log));
-      setTargetMuscles(muscles);
-    }
+    if(custom){setSession(custom.exercises.map(e=>({...e,unit:"kg",weights:Array(parseInt(e.sets)||3).fill(parseFloat(e.weights)||0),note:"",saved:false,info:EX_DB[e.name]?.info||"",yt:EX_DB[e.name]?.yt||"",prevWeights:null,prevNote:""})));setTargetMuscles([custom.name]);}
+    else{if(!muscles.length)return;setSession(buildSession(muscles,log,profile));setTargetMuscles(muscles);}
     setSelectingMuscles(false);setNoteAdvice({});setSavedFlash(null);
   }
-
   function setW2(ei,si,v){setSession(p=>p.map((e,i)=>i!==ei?e:{...e,weights:e.weights.map((w,j)=>j===si?v:w)}));}
   function setN(ei,v){setSession(p=>p.map((e,i)=>i!==ei?e:{...e,note:v}));}
   function markSave(ei){setSession(p=>p.map((e,i)=>i!==ei?e:{...e,saved:true}));setSavedFlash(ei);setTimeout(()=>setSavedFlash(null),1500);}
   function removeExercise(ei){setSession(p=>p.filter((_,i)=>i!==ei));}
-
   async function submitNote(ei){
     const ex=session[ei];if(!ex.note.trim())return;
     setNoteLoading(p=>({...p,[ei]:true}));
-    const txt=await ai(`Coach Finn voor ${profile?.name}. Oefening: ${ex.name}. Notitie: "${ex.note}". Motiveer kort. NL, 2 zinnen.`);
-    setNoteAdvice(p=>({...p,[ei]:{text:txt}}));
-    setNoteLoading(p=>({...p,[ei]:false}));
+    const txt=await ai(`Finn coacht ${profile?.name} (${profile?.level||"beginner"}). Oefening: ${ex.name}. Notitie: "${ex.note}". Motiveer persoonlijk. NL, 2 zinnen.`);
+    setNoteAdvice(p=>({...p,[ei]:{text:txt}}));setNoteLoading(p=>({...p,[ei]:false}));
   }
-
   function wisselOefening(ei,newName){
-    const db=EXERCISE_DB[newName]||{};
-    setSession(p=>p.map((e,i)=>i!==ei?e:{...e,name:newName,info:db.info||"",youtube:db.youtube||"",note:"",saved:false}));
-    setWisselIndex(null);
+    const db=EX_DB[newName]||{};
+    setSession(p=>p.map((e,i)=>i!==ei?e:{...e,name:newName,unit:db.unit||"kg",info:db.info||"",yt:db.yt||"",note:"",saved:false}));setWisselIndex(null);
   }
-
   function saveWorkout(){
     if(!session?.length)return;
-    const entry={date:TODAY_KEY,day:DAY_NL,workout:targetMuscles.map(m=>MUSCLE_META[m]?.label||m).join(" + "),exercises:session.map(e=>({name:e.name,weights:[...e.weights],reps:e.reps,note:e.note})),targetMuscles,id:Date.now()};
+    const entry={date:TODAY_KEY,day:DAY_NL,workout:targetMuscles.map(m=>MUSCLE_META[m]?.label||m).join(" + "),exercises:session.map(e=>({name:e.name,weights:[...e.weights],reps:e.reps,note:e.note,unit:e.unit||"kg"})),targetMuscles,id:Date.now()};
     const updated=[entry,...log].slice(0,100);
     setLog(updated);LS.set("fitcoach_log",updated);
     setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);
     setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab("Home");
   }
-
   function deleteWorkout(id){const u=log.filter(e=>e.id!==id);setLog(u);LS.set("fitcoach_log",u);}
   function deleteWeight(id){const u=wLog.filter(e=>e.id!==id);setWLog(u);LS.set("fitcoach_wlog",u);}
-
   async function addFood(meal,quickItem){
     const txt=quickItem||foodInput[meal].trim();if(!txt)return;
     if(!quickItem)setFoodLoading(p=>({...p,[meal]:true}));
     const raw=await ai(`Voedingswaarden voor: "${txt}". ALLEEN JSON: {"desc":"${txt}","kcal":0,"prot":0,"carbs":0,"fat":0}.`);
-    try{
-      const pp=JSON.parse(raw.replace(/```json|```/g,"").trim());
-      const item={desc:pp.desc||txt,kcal:pp.kcal||0,prot:pp.prot||0,carbs:pp.carbs||0,fat:pp.fat||0};
-      const day=food[TODAY_KEY]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};
-      const updated={...food,[TODAY_KEY]:{...day,[meal]:[...(day[meal]||[]),item]}};
-      setFood(updated);LS.set("fitcoach_food",updated);
-      const ck="fitcoach_custom_foods";
-      const custom=LS.get(ck)||{Ochtend:[],Middag:[],Avond:[],Snack:[]};
-      if(custom[meal]&&!custom[meal].includes(txt)){custom[meal]=[txt,...custom[meal]].slice(0,6);LS.set(ck,custom);}
-      if(!quickItem)setFoodInput(p=>({...p,[meal]:""}));
-    }catch(e){}
+    try{const pp=JSON.parse(raw.replace(/```json|```/g,"").trim());const item={desc:pp.desc||txt,kcal:pp.kcal||0,prot:pp.prot||0,carbs:pp.carbs||0,fat:pp.fat||0};const day=food[foodDate]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};const updated={...food,[foodDate]:{...day,[meal]:[...(day[meal]||[]),item]}};setFood(updated);LS.set("fitcoach_food",updated);const ck="fitcoach_custom_foods";const custom=LS.get(ck)||{Ochtend:[],Middag:[],Avond:[],Snack:[]};if(custom[meal]&&!custom[meal].includes(txt)){custom[meal]=[txt,...custom[meal]].slice(0,6);LS.set(ck,custom);}if(!quickItem)setFoodInput(p=>({...p,[meal]:""}));}catch(e){}
     if(!quickItem)setFoodLoading(p=>({...p,[meal]:false}));
   }
-
-  function remFood(meal,idx){
-    const day=food[TODAY_KEY]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};
-    const updated={...food,[TODAY_KEY]:{...day,[meal]:(day[meal]||[]).filter((_,i)=>i!==idx)}};
-    setFood(updated);LS.set("fitcoach_food",updated);
-  }
-
-  function addWeight(){
-    const w=parseFloat(newW);if(!w||w<40||w>250)return;
-    const updated=[...wLog,{date:TODAY_KEY,w,id:Date.now()}];
-    setWLog(updated);LS.set("fitcoach_wlog",updated);setNewW("");
-  }
-
-  async function getRecipe(){
-    setLoadingRecipe(true);setRecipe("");
-    const txt=await ai(`Maak een gezond recept voor ${profile?.name} met fase: ${fase}. NL, max 250 woorden.`);
-    setRecipe(txt);setLoadingRecipe(false);
-  }
+  function remFood(meal,idx){const day=food[foodDate]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};const updated={...food,[foodDate]:{...day,[meal]:(day[meal]||[]).filter((_,i)=>i!==idx)}};setFood(updated);LS.set("fitcoach_food",updated);}
+  function addWeight(){const w=parseFloat(newW);if(!w||w<40||w>250)return;const updated=[...wLog,{date:TODAY_KEY,w,id:Date.now()}];setWLog(updated);LS.set("fitcoach_wlog",updated);setNewW("");}
+  async function getRecipe(){setLoadingRecipe(true);setRecipe("");const txt=await ai(`Gezond recept voor ${profile?.name}, fase: ${fase}, niveau: ${profile?.level||"beginner"}. NL, max 250 woorden.`);setRecipe(txt);setLoadingRecipe(false);}
 
   if(!profile)return<Onboarding onComplete={p=>setProfile(p)}/>;
 
@@ -667,9 +586,8 @@ function App(){
     <div style={{background:"#0D0D0D",minHeight:"100vh",maxWidth:480,margin:"0 auto",paddingBottom:80}}>
       {infoEx&&<ExInfo ex={infoEx} onClose={()=>setInfoEx(null)}/>}
       {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)}/>}
-      {showFinn&&<FinnPopup onClose={()=>{setShowFinn(false);setPendingMsg(null);}} pendingMsg={pendingMsg}/>}
-      {savedBanner&&<div style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",zIndex:100,background:LIME,color:"#000",padding:"14px 28px",borderRadius:"0 0 20px 20px",fontWeight:800,fontSize:14,maxWidth:480,width:"100%",textAlign:"center"}}>Training opgeslagen!</div>}
-
+      {showFinn&&<FinnPopup onClose={()=>{setShowFinn(false);setPendingMsg(null);}} pendingMsg={pendingMsg} profile={profile} log={log} food={food}/>}
+      {savedBanner&&<div style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",zIndex:100,background:LIME,color:"#000",padding:"14px 28px",borderRadius:"0 0 20px 20px",fontWeight:800,fontSize:14,maxWidth:480,width:"100%",textAlign:"center"}}>Training opgeslagen! 💪</div>}
       {tab==="Home"&&(
         <div>
           <div style={{position:"relative",height:300,overflow:"hidden"}}>
@@ -679,21 +597,17 @@ function App(){
               {profile.fotoUrl?<img src={profile.fotoUrl} alt="profiel" style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:16}}>⚙️</span>}
             </button>
             <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"0 20px 24px"}}>
-              <div style={{...S.lbl,color:"rgba(200,241,56,0.8)",marginBottom:6}}>{DAY_NL.toUpperCase()} · {IS_WEEKEND?"WEEKEND":"TRAININGSDAG"}</div>
+              <div style={{...S.lbl,color:"rgba(200,241,56,0.8)",marginBottom:6}}>{DAY_NL.toUpperCase()} · {IS_WEEKEND?"WEEKEND":"TRAININGSDAG"} · {sportType.toUpperCase()}</div>
               <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.5,marginBottom:4}}>Goedendag, {profile.name}</div>
               <div style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>Doel: {startW}→{goalW}kg · {pct}% behaald</div>
             </div>
           </div>
           <div style={{padding:"0 16px"}}>
             <div style={{display:"flex",gap:12,alignItems:"flex-start",background:"rgba(255,107,43,0.07)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:16,padding:14,margin:"16px 0",transform:"translateY(-8px)"}}>
-              <FinnImg size={44}/>
-              <div><div style={{fontSize:11,color:ORANGE,fontWeight:700,marginBottom:3}}>Finn zegt</div><div style={{fontSize:13,color:"rgba(255,255,255,0.7)",lineHeight:1.6}}>{IS_WEEKEND?"Weekend! Herstel is net zo belangrijk als trainen.":"Weeg jezelf 's ochtends nuchter voor de meest betrouwbare meting."}</div></div>
+              <FinnImg size={44}/><div><div style={{fontSize:11,color:ORANGE,fontWeight:700,marginBottom:3}}>Finn zegt</div><div style={{fontSize:13,color:"rgba(255,255,255,0.7)",lineHeight:1.6}}>{finnBericht}</div></div>
             </div>
             <div style={{...S.card,padding:18,marginBottom:14}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
-                <div style={{...S.lbl}}>Voortgang naar doel</div>
-                <div style={{fontSize:15,fontWeight:800,color:LIME}}>{pct}%</div>
-              </div>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}><div style={{...S.lbl}}>Voortgang naar doel</div><div style={{fontSize:15,fontWeight:800,color:LIME}}>{pct}%</div></div>
               <div style={{background:"#1C1C1C",borderRadius:99,height:8,overflow:"hidden",marginBottom:10}}><div style={{width:`${pct}%`,height:8,background:`linear-gradient(90deg,${LIME},#A8D020)`,borderRadius:99,transition:"width .8s ease"}}/></div>
               <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:"#444"}}><span>Start: {startW}kg</span><span>Nu: {curW}kg</span><span>Doel: {goalW}kg</span></div>
             </div>
@@ -702,46 +616,48 @@ function App(){
                 <div key={s.l} style={{...S.card,padding:"14px 10px",textAlign:"center"}}><div style={{...S.lbl,marginBottom:6}}>{s.l}</div><div style={{fontSize:18,fontWeight:800,color:s.c}}>{s.v}</div></div>
               ))}
             </div>
-            <button onClick={()=>setTab("Training")} style={{width:"100%",padding:17,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:800,marginBottom:20}}>Start Training</button>
-            <div style={{...S.lbl,marginBottom:14}}>Train vandaag</div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:24}}>
-              {MUSCLE_GROUPS.slice(0,6).map((m,i)=>(
-                <button key={m} onClick={()=>{setTargetMuscles([m]);startSess([m]);setTab("Training");}} style={{height:i===0||i===3?140:110,borderRadius:18,border:"none",cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
-                  <img src={P[m]} alt={m} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
-                  <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(0,0,0,0.05),rgba(0,0,0,0.72))"}}/>
-                  <div style={{position:"relative",padding:"12px 14px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-                    <div style={{fontSize:14,fontWeight:900,color:"#fff",marginBottom:2}}>{MUSCLE_META[m].label}</div>
-                    <div style={{fontSize:9,color:"rgba(255,255,255,0.5)"}}>{MUSCLE_META[m].sub}</div>
+            <button onClick={()=>setTab("Training")} style={{width:"100%",padding:17,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:800,marginBottom:20}}>
+              {sportType==="hiit"?"🔥 Start HIIT":sportType==="cardio"?"🏃 Start Cardio":"💪 Start Training"}
+            </button>
+            {(()=>{
+              const last=log[0];
+              const dgl=last?Math.floor((TODAY-parseDate(last.date))/86400000):null;
+              const volg=(()=>{if(!last)return MUSCLE_GROUPS[0];const lm=last.targetMuscles||[];const all=MUSCLE_GROUPS.filter(m=>m!=="full body");const li=all.findIndex(m=>lm.includes(m));return all[(li+1)%all.length];})();
+              return(<div style={{marginBottom:24}}>
+                {last&&<div style={{...S.card,padding:14,marginBottom:12,background:"rgba(200,241,56,0.05)",border:"1px solid rgba(200,241,56,0.15)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:"#888"}}>{last.day} · {dgl===0?"Vandaag":dgl===1?"Gisteren":`${dgl} dagen geleden`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
+                <button onClick={()=>{setTargetMuscles([volg]);startSess([volg]);setTab("Training");}} style={{width:"100%",height:160,borderRadius:18,border:`2px solid ${LIME}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left",marginBottom:10}}>
+                  <img src={P[volg]} alt={volg} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+                  <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(0,0,0,0.05),rgba(0,0,0,0.75))"}}/>
+                  <div style={{position:"absolute",top:12,right:12,background:LIME,borderRadius:99,padding:"4px 12px",fontSize:10,fontWeight:800,color:"#000"}}>AANBEVOLEN</div>
+                  <div style={{position:"relative",padding:"16px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.6)",marginBottom:4}}>Vandaag trainen</div>
+                    <div style={{fontSize:20,fontWeight:900,color:"#fff",marginBottom:2}}>{MUSCLE_META[volg]?.label}</div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.5)"}}>{MUSCLE_META[volg]?.sub}</div>
                   </div>
                 </button>
-              ))}
-            </div>
-            {log[0]&&(
-              <><div style={{...S.lbl,marginBottom:12}}>Laatste training</div>
-              <div style={{...S.card,padding:16,marginBottom:20}}>
-                <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}><div style={{fontSize:15,fontWeight:800}}>{log[0].workout}</div><div style={{fontSize:11,color:"#444"}}>{log[0].day} · {log[0].date}</div></div>
-                {(log[0].exercises||[]).slice(0,4).map((ex,j)=>(
-                  <div key={j} style={{display:"flex",justifyContent:"space-between",paddingBottom:7,marginBottom:7,borderBottom:j<3?"1px solid #1C1C1C":"none"}}>
-                    <div style={{fontSize:12,color:"#666"}}>{ex.name}</div>
-                    <div style={{fontSize:12,fontWeight:700,color:LIME}}>{(ex.weights||[]).filter(w=>w>0).map(w=>`${w}kg`).join("·")||"–"}</div>
-                  </div>
-                ))}
-              </div></>
-            )}
+              </div>);
+            })()}
+            {log[0]&&<><div style={{...S.lbl,marginBottom:12}}>Laatste training</div><div style={{...S.card,padding:16,marginBottom:20}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}><div style={{fontSize:15,fontWeight:800}}>{log[0].workout}</div><div style={{fontSize:11,color:"#444"}}>{log[0].day} · {log[0].date}</div></div>{(log[0].exercises||[]).slice(0,4).map((ex,j)=><div key={j} style={{display:"flex",justifyContent:"space-between",paddingBottom:7,marginBottom:7,borderBottom:j<3?"1px solid #1C1C1C":"none"}}><div style={{fontSize:12,color:"#666"}}>{ex.name}</div><div style={{fontSize:12,fontWeight:700,color:LIME}}>{(ex.weights||[]).filter(w=>w>0).map(w=>fmtVal(w,ex.unit||"kg")).join("·")||"–"}</div></div>)}</div></>}
           </div>
         </div>
       )}
-
       {tab==="Training"&&(
         <div style={{padding:"24px 16px"}}>
-          <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.5,marginBottom:4}}>Training</div>
-          <div style={{fontSize:13,color:"#555",marginBottom:20}}>{DAY_NL}</div>
+          <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.5,marginBottom:2}}>Training</div>
+          <div style={{fontSize:13,color:"#555",marginBottom:4}}>{DAY_NL} · <span style={{color:sportType==="hiit"?ORANGE:sportType==="cardio"?"#60a5fa":LIME,fontWeight:700,textTransform:"capitalize"}}>{sportType}</span> · {profile.level||"beginner"}</div>
           {selectingMuscles?(
             <div>
-              <div style={{...S.lbl,marginBottom:12}}>Snelle splits</div>
-              <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:20}}>
-                {SPLITS.map(s=>(
-                  <button key={s.label} onClick={()=>startSess(s.muscles)} style={{padding:"8px 14px",borderRadius:20,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:12,cursor:"pointer",fontWeight:600}}>{s.label}</button>
+              <div style={{...S.lbl,marginBottom:12}}>Splits</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
+                {splits.map(s=>(
+                  <button key={s.label} onClick={()=>startSess(s.muscles)} style={{height:110,borderRadius:16,border:"none",cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
+                    <img src={P[s.pk||"full body"]} alt={s.label} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}} onError={()=>{}}/>
+                    <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 10%,rgba(0,0,0,0.82))"}}/>
+                    <div style={{position:"relative",padding:"10px 12px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+                      <div style={{fontSize:13,fontWeight:900,color:"#fff",marginBottom:2}}>{s.label}</div>
+                      <div style={{fontSize:9,color:"rgba(255,255,255,0.55)"}}>{s.desc}</div>
+                    </div>
+                  </button>
                 ))}
               </div>
               <button onClick={()=>setShowCustom(!showCustom)} style={{width:"100%",padding:"12px",borderRadius:14,border:`1px solid ${showCustom?LIME:"#222"}`,background:showCustom?"rgba(200,241,56,0.07)":"#141414",color:showCustom?LIME:"#888",fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:16}}>+ Eigen workout</button>
@@ -749,7 +665,7 @@ function App(){
                 <div style={{...S.card,padding:16,marginBottom:16}}>
                   <input value={customName} onChange={e=>setCustomName(e.target.value)} placeholder="Naam bijv. 'Push dag'" style={{width:"100%",padding:"11px 14px",borderRadius:12,border:"1px solid #222",background:"#111",color:"#fff",fontSize:13,outline:"none",marginBottom:12,boxSizing:"border-box"}}/>
                   {customExercises.map((ex,i)=>(
-                    <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 50px 50px 50px 28px",gap:6,marginBottom:8,alignItems:"center"}}>
+                    <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 44px 44px 50px 28px",gap:6,marginBottom:8,alignItems:"center"}}>
                       <input value={ex.name} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,name:e.target.value}:x))} placeholder="Oefening" style={{padding:"9px 10px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",boxSizing:"border-box"}}/>
                       <input value={ex.sets} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,sets:e.target.value}:x))} placeholder="Sets" style={{padding:"9px 4px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
                       <input value={ex.reps} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,reps:e.target.value}:x))} placeholder="Reps" style={{padding:"9px 4px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
@@ -761,7 +677,7 @@ function App(){
                   <button onClick={()=>{if(!customName||!customExercises[0].name)return;startSess([],{name:customName,exercises:customExercises});setShowCustom(false);}} style={{width:"100%",padding:"12px",borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:13,fontWeight:800}}>Starten</button>
                 </div>
               )}
-              <div style={{...S.lbl,marginBottom:14}}>Of kies zelf</div>
+              <div style={{...S.lbl,marginBottom:14}}>Of kies spiergroep</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
                 {MUSCLE_GROUPS.map(m=>(
                   <button key={m} onClick={()=>setTargetMuscles(p=>p.includes(m)?p.filter(x=>x!==m):[...p,m])} style={{height:120,borderRadius:18,border:`2px solid ${targetMuscles.includes(m)?LIME:"transparent"}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
@@ -786,19 +702,21 @@ function App(){
                 <button onClick={()=>{setSelectingMuscles(true);setSession(null);setTargetMuscles([]);}} style={{padding:"7px 14px",borderRadius:10,border:"1px solid #222",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Wijzig</button>
               </div>
               {session.map((ex,ei)=>{
+                const unit=ex.unit||"kg";
+                const opts=getSetValueOptions(unit);
                 const maxNow=Math.max(0,...ex.weights.filter(w=>w>0));
                 const maxPrev=ex.prevWeights?Math.max(0,...ex.prevWeights.filter(w=>w>0)):0;
                 const isPR=maxNow>0&&maxPrev>0&&maxNow>maxPrev;
                 const photo=EX_PHOTOS[ex.name];
-                const exMuscle=EXERCISE_DB[ex.name]?.muscle||"";
-                const alternatieven=Object.entries(EXERCISE_DB).filter(([n,db])=>db.muscle===exMuscle&&n!==ex.name).map(([n])=>n);
+                const exMuscle=EX_DB[ex.name]?.muscle||"";
+                const alts=Object.entries(EX_DB).filter(([n,db])=>db.muscle===exMuscle&&n!==ex.name).map(([n])=>n);
                 return(
                   <div key={ex.name+ei} style={{...S.card,marginBottom:12,overflow:"hidden",border:`1px solid ${ex.saved?"rgba(200,241,56,0.25)":"#1C1C1C"}`}}>
                     <div style={{height:160,position:"relative",background:"#1C1C1C"}}>
                       {photo&&<img src={photo} alt={ex.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 30%"}} onError={e=>e.target.style.display="none"}/>}
                       <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 40%,#141414)"}}/>
                       <div style={{position:"absolute",bottom:12,left:16,right:12,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
-                        <div><div style={{fontSize:17,fontWeight:900}}>{ex.name}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginTop:2}}>{ex.weights.length} sets · {ex.reps} reps</div></div>
+                        <div><div style={{fontSize:17,fontWeight:900}}>{ex.name}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.5)",marginTop:2}}>{ex.weights.length} sets · {ex.reps} {unit==="sec"?"sec":unit==="reps"?"reps":"reps"}</div></div>
                         <div style={{display:"flex",gap:6}}>
                           <button onClick={()=>setInfoEx(ex)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#fff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:13,fontWeight:700}}>i</button>
                           <button onClick={()=>setWisselIndex(wisselIndex===ei?null:ei)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#fff",padding:"6px 10px",borderRadius:20,cursor:"pointer",fontSize:11,fontWeight:700}}>↕</button>
@@ -809,50 +727,31 @@ function App(){
                     </div>
                     <div style={{padding:16}}>
                       {isPR&&<div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🏆 PR!</div>}
-                      {ex.prevWeights&&(
-                        <div style={{background:"#1C1C1C",borderRadius:12,padding:"10px 14px",marginBottom:12}}>
-                          <div style={{...S.lbl,marginBottom:8}}>Vorige training</div>
-                          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-                            {ex.prevWeights.map((w,i)=>(
-                              <div key={i} style={{textAlign:"center",minWidth:44}}>
-                                <div style={{fontSize:9,color:"#444",marginBottom:3}}>Set {i+1}</div>
-                                <div style={{fontSize:13,fontWeight:700,color:"#666"}}>{w>0?`${w}kg`:"–"}</div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                      {ex.prevWeights&&<div style={{background:"#1C1C1C",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>Vorige training</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:"#444",marginBottom:3}}>Set {i+1}</div><div style={{fontSize:13,fontWeight:700,color:"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
+                      <div style={{...S.lbl,marginBottom:8}}>{unit==="sec"?"Tijd":unit==="reps"?"Herhalingen":"Gewicht"}</div>
                       <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:12}}>
                         {ex.weights.map((w,si)=>{
                           const pv=ex.prevWeights?.[si];const up=w>0&&pv>0&&w>pv;
-                          return(
-                            <div key={si} style={{textAlign:"center"}}>
-                              <div style={{...S.lbl,marginBottom:4}}>Set {si+1}</div>
-                              {pv>0&&<div style={{fontSize:9,color:"#444",marginBottom:3}}>{pv}kg</div>}
-                              <select value={w} onChange={e=>setW2(ei,si,Number(e.target.value))} style={{width:64,padding:"10px 4px",borderRadius:12,border:`1px solid ${up?"rgba(200,241,56,0.3)":w>0?"#333":"#1C1C1C"}`,background:up?"rgba(200,241,56,0.06)":w>0?"#1C1C1C":"#111",color:up?LIME:w>0?"#fff":"#444",fontSize:13,fontWeight:800,cursor:"pointer",textAlign:"center"}}>
-                                {KG_OPT.map(o=><option key={o} value={o}>{o>0?`${o}`:"–"}</option>)}
-                              </select>
-                              {up&&<div style={{fontSize:9,color:LIME,marginTop:3,fontWeight:700}}>↑PR</div>}
-                            </div>
-                          );
+                          return(<div key={si} style={{textAlign:"center"}}>
+                            <div style={{...S.lbl,marginBottom:4}}>Set {si+1}</div>
+                            {pv>0&&<div style={{fontSize:9,color:"#444",marginBottom:3}}>{fmtVal(pv,unit)}</div>}
+                            <select value={w} onChange={e=>setW2(ei,si,Number(e.target.value))} style={{width:64,padding:"10px 4px",borderRadius:12,border:`1px solid ${up?"rgba(200,241,56,0.3)":w>0?"#333":"#1C1C1C"}`,background:up?"rgba(200,241,56,0.06)":w>0?"#1C1C1C":"#111",color:up?LIME:w>0?"#fff":"#444",fontSize:13,fontWeight:800,cursor:"pointer",textAlign:"center"}}>
+                              {opts.map(o=><option key={o} value={o}>{o>0?fmtVal(o,unit):"–"}</option>)}
+                            </select>
+                            {up&&<div style={{fontSize:9,color:LIME,marginTop:3,fontWeight:700}}>↑PR</div>}
+                          </div>);
                         })}
                       </div>
                       <div style={{display:"flex",gap:8}}>
                         <input value={ex.note} onChange={e=>setN(ei,e.target.value)} placeholder="Notitie..." style={{flex:1,padding:"10px 12px",borderRadius:12,border:"1px solid #1C1C1C",background:"#111",color:"#fff",fontSize:12,outline:"none",minWidth:0}}/>
-                        <button onClick={()=>submitNote(ei)} disabled={!ex.note.trim()||noteLoading[ei]} style={{padding:"10px 14px",borderRadius:12,border:"none",fontWeight:700,fontSize:11,cursor:ex.note.trim()?"pointer":"default",background:ex.note.trim()?ORANGE:"#1C1C1C",color:ex.note.trim()?"#fff":"#444",opacity:noteLoading[ei]?0.5:1,flexShrink:0}}>
-                          {noteLoading[ei]?"...":"Finn"}
-                        </button>
+                        <button onClick={()=>submitNote(ei)} disabled={!ex.note.trim()||noteLoading[ei]} style={{padding:"10px 14px",borderRadius:12,border:"none",fontWeight:700,fontSize:11,cursor:ex.note.trim()?"pointer":"default",background:ex.note.trim()?ORANGE:"#1C1C1C",color:ex.note.trim()?"#fff":"#444",opacity:noteLoading[ei]?0.5:1,flexShrink:0}}>{noteLoading[ei]?"...":"Finn"}</button>
                       </div>
                       {noteAdvice[ei]&&<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:12,marginTop:8,fontSize:12,lineHeight:1.7,color:"#bbb"}}>{noteAdvice[ei].text}</div>}
-                      {wisselIndex===ei&&alternatieven.length>0&&(
+                      {wisselIndex===ei&&alts.length>0&&(
                         <div style={{marginTop:12,background:"#1C1C1C",borderRadius:14,padding:14}}>
                           <div style={{...S.lbl,marginBottom:10}}>Wissel oefening</div>
                           <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                            {alternatieven.map(name=>(
-                              <button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:"1px solid #333",background:"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                                <span>{name}</span><span style={{fontSize:11,color:"#555"}}>{EXERCISE_DB[name]?.muscle}</span>
-                              </button>
-                            ))}
+                            {alts.map(name=><button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:"1px solid #333",background:"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:"#555"}}>{EX_DB[name]?.muscle}</span></button>)}
                           </div>
                           <button onClick={()=>setWisselIndex(null)} style={{width:"100%",marginTop:10,padding:"9px",borderRadius:10,border:"1px solid #333",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Annuleren</button>
                         </div>
@@ -866,7 +765,6 @@ function App(){
           )}
         </div>
       )}
-
       {tab==="Voortgang"&&(
         <div style={{padding:"24px 16px"}}>
           <div style={{...S.lbl,color:LIME,marginBottom:4}}>Statistieken</div>
@@ -880,10 +778,7 @@ function App(){
             <div style={{background:"#1C1C1C",borderRadius:99,height:8,overflow:"hidden",marginBottom:6}}><div style={{width:`${pct}%`,height:8,background:`linear-gradient(90deg,${LIME},#A8D020)`,borderRadius:99,transition:"width .8s ease"}}/></div>
             <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"#444"}}><span>Start: {startW}kg</span><span>Doel: {goalW}kg</span></div>
           </div>
-          <div style={{...S.card,padding:20,marginBottom:14}}>
-            <div style={{...S.lbl,marginBottom:16}}>Gewichtsverloop</div>
-            <LineChart data={wLog.slice(-14)} height={130}/>
-          </div>
+          <div style={{...S.card,padding:20,marginBottom:14}}><div style={{...S.lbl,marginBottom:16}}>Gewichtsverloop</div><LineChart data={wLog.slice(-14)} height={130}/></div>
           <div style={{...S.card,padding:16,marginBottom:14}}>
             <div style={{...S.lbl,marginBottom:12}}>Gewicht invoeren</div>
             <div style={{display:"flex",gap:8}}>
@@ -891,45 +786,30 @@ function App(){
               <button onClick={addWeight} style={{padding:"12px 20px",borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontWeight:800,fontSize:14}}>Opslaan</button>
             </div>
           </div>
-          {wLog.length>0&&<>
-            <div style={{...S.lbl,marginBottom:10}}>Metingen</div>
-            {wLog.slice().reverse().slice(0,10).map((e,i,arr)=>{
-              const prev=arr[i+1];const diff=prev?(e.w-prev.w).toFixed(1):null;
-              return(<div key={e.id||i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",...S.card,padding:"12px 16px",marginBottom:6}}>
-                <div style={{fontSize:13,color:"#666"}}>{e.date}</div>
-                <div style={{display:"flex",gap:12,alignItems:"center"}}>
-                  {diff!==null&&<div style={{fontSize:12,fontWeight:700,color:parseFloat(diff)<0?LIME:parseFloat(diff)>0?"#ef4444":"#555"}}>{parseFloat(diff)>0?`+${diff}`:diff}kg</div>}
-                  <div style={{fontWeight:800,fontSize:16,color:LIME}}>{e.w}kg</div>
-                  <button onClick={()=>deleteWeight(e.id)} style={{background:"none",border:"none",color:"#444",fontSize:16,cursor:"pointer",padding:"0 4px"}}>×</button>
-                </div>
-              </div>);
-            })}
-          </>}
-          {log.length>0&&<>
-            <div style={{...S.lbl,marginBottom:12,marginTop:20}}>Trainingslog</div>
-            {log.slice(0,8).map((e,i)=>(
-              <div key={e.id||i} style={{...S.card,padding:16,marginBottom:8}}>
-                <div style={{display:"flex",justifyContent:"space-between",marginBottom:10,alignItems:"flex-start"}}>
-                  <div><div style={{fontSize:14,fontWeight:800}}>{e.workout}</div><div style={{fontSize:11,color:"#444",marginTop:2}}>{e.day} · {e.date}</div></div>
-                  <button onClick={()=>deleteWorkout(e.id)} style={{background:"rgba(239,68,68,0.1)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:8,color:"#ef4444",fontSize:11,cursor:"pointer",padding:"4px 10px",fontWeight:600,flexShrink:0}}>Verwijder</button>
-                </div>
-                {(e.exercises||[]).slice(0,4).map((ex,j)=>(
-                  <div key={j} style={{display:"flex",justifyContent:"space-between",paddingBottom:6,marginBottom:6,borderBottom:j<Math.min(3,(e.exercises||[]).length-1)?"1px solid #1C1C1C":"none"}}>
-                    <div style={{fontSize:11,color:"#666"}}>{ex.name}</div>
-                    <div style={{fontSize:11,fontWeight:700,color:LIME}}>{(ex.weights||[]).filter(w=>w>0).map(w=>`${w}kg`).join("·")||"–"}</div>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </>}
+          {wLog.length>0&&<><div style={{...S.lbl,marginBottom:10}}>Metingen</div>
+            {wLog.slice().reverse().slice(0,10).map((e,i,arr)=>{const prev=arr[i+1];const diff=prev?(e.w-prev.w).toFixed(1):null;return(<div key={e.id||i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",...S.card,padding:"12px 16px",marginBottom:6}}><div style={{fontSize:13,color:"#666"}}>{e.date}</div><div style={{display:"flex",gap:12,alignItems:"center"}}>{diff!==null&&<div style={{fontSize:12,fontWeight:700,color:parseFloat(diff)<0?LIME:parseFloat(diff)>0?"#ef4444":"#555"}}>{parseFloat(diff)>0?`+${diff}`:diff}kg</div>}<div style={{fontWeight:800,fontSize:16,color:LIME}}>{e.w}kg</div><button onClick={()=>deleteWeight(e.id)} style={{background:"none",border:"none",color:"#444",fontSize:16,cursor:"pointer",padding:"0 4px"}}>×</button></div></div>);})}</>}
+          {log.length>0&&<><div style={{...S.lbl,marginBottom:12,marginTop:20}}>Trainingslog</div>
+            {log.slice(0,8).map((e,i)=><div key={e.id||i} style={{...S.card,padding:16,marginBottom:8}}>
+              <div style={{display:"flex",justifyContent:"space-between",marginBottom:10,alignItems:"flex-start"}}><div><div style={{fontSize:14,fontWeight:800}}>{e.workout}</div><div style={{fontSize:11,color:"#444",marginTop:2}}>{e.day} · {e.date}</div></div><button onClick={()=>deleteWorkout(e.id)} style={{background:"rgba(239,68,68,0.1)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:8,color:"#ef4444",fontSize:11,cursor:"pointer",padding:"4px 10px",fontWeight:600,flexShrink:0}}>Verwijder</button></div>
+              {(e.exercises||[]).slice(0,4).map((ex,j)=><div key={j} style={{display:"flex",justifyContent:"space-between",paddingBottom:6,marginBottom:6,borderBottom:j<Math.min(3,(e.exercises||[]).length-1)?"1px solid #1C1C1C":"none"}}><div style={{fontSize:11,color:"#666"}}>{ex.name}</div><div style={{fontSize:11,fontWeight:700,color:LIME}}>{(ex.weights||[]).filter(w=>w>0).map(w=>fmtVal(w,ex.unit||"kg")).join("·")||"–"}</div></div>)}
+            </div>)}</>}
         </div>
       )}
 
       {tab==="Voeding"&&(
         <div style={{padding:"24px 16px"}}>
           <div style={{...S.lbl,color:LIME,marginBottom:4}}>Dagelijks overzicht</div>
-          <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:4}}>Voeding</div>
-          <div style={{fontSize:13,color:"#555",marginBottom:12}}>{TODAY_KEY} · {DAY_NL}</div>
+          <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:8}}>Voeding</div>
+
+          <div style={{display:"flex",gap:8,marginBottom:16,alignItems:"center"}}>
+            <button onClick={()=>setFoodDate(d=>fmtDate(new Date(parseDate(d).getTime()-86400000)))} style={{width:36,height:36,borderRadius:10,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+            <div style={{flex:1,textAlign:"center"}}>
+              <div style={{fontSize:13,fontWeight:700,color:foodDate===TODAY_KEY?LIME:"#888"}}>{foodDate===TODAY_KEY?"Vandaag":foodDate}</div>
+              <div style={{fontSize:10,color:"#555"}}>{DAYS[parseDate(foodDate).getDay()]}</div>
+            </div>
+            <button onClick={()=>{if(foodDate!==TODAY_KEY)setFoodDate(d=>fmtDate(new Date(parseDate(d).getTime()+86400000)));}} disabled={foodDate===TODAY_KEY} style={{width:36,height:36,borderRadius:10,border:"1px solid #222",background:foodDate===TODAY_KEY?"#111":"#141414",color:foodDate===TODAY_KEY?"#333":"#fff",fontSize:18,cursor:foodDate===TODAY_KEY?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>›</button>
+          </div>
+
           <div style={{...S.card,padding:"12px 16px",marginBottom:14,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <div><div style={{...S.lbl,marginBottom:2}}>Fase</div><div style={{fontSize:15,fontWeight:800,color:faseObj.c}}>{fase}</div></div>
             <div style={{textAlign:"right"}}><div style={{fontSize:11,color:"#555",marginBottom:2}}>Dagdoel</div><div style={{fontSize:18,fontWeight:900,color:LIME}}>{kcalT} kcal</div><div style={{fontSize:11,color:"#555"}}>{protT}g eiwit</div></div>
@@ -937,12 +817,12 @@ function App(){
           </div>
           <div style={{...S.card,padding:24,marginBottom:14}}>
             <div style={{display:"flex",justifyContent:"space-around",alignItems:"center",marginBottom:16}}>
-              <Ring pct={Math.min(100,totals.kcal/kcalT*100)} size={92} stroke={8} color={LIME} value={totals.kcal} label="Calorieën"/>
+              <Ring pct={Math.min(100,selTotals.kcal/kcalT*100)} size={92} stroke={8} color={LIME} value={selTotals.kcal} label="Calorieën"/>
               <div style={{display:"flex",flexDirection:"column",gap:14}}>
-                <Ring pct={Math.min(100,totals.prot/protT*100)} size={66} stroke={6} color="#60a5fa" value={`${totals.prot}g`} label="Eiwit"/>
-                <Ring pct={Math.min(100,totals.carbs/Math.max(1,carbsT)*100)} size={66} stroke={6} color="#f59e0b" value={`${totals.carbs}g`} label="Koolh."/>
+                <Ring pct={Math.min(100,selTotals.prot/protT*100)} size={66} stroke={6} color="#60a5fa" value={`${selTotals.prot}g`} label="Eiwit"/>
+                <Ring pct={Math.min(100,selTotals.carbs/Math.max(1,carbsT)*100)} size={66} stroke={6} color="#f59e0b" value={`${selTotals.carbs}g`} label="Koolh."/>
               </div>
-              <Ring pct={Math.min(100,totals.fat/Math.max(1,fatT)*100)} size={66} stroke={6} color="#a78bfa" value={`${totals.fat}g`} label="Vet"/>
+              <Ring pct={Math.min(100,selTotals.fat/Math.max(1,fatT)*100)} size={66} stroke={6} color="#a78bfa" value={`${selTotals.fat}g`} label="Vet"/>
             </div>
           </div>
           <button onClick={()=>{setRecipeTab(!recipeTab);if(!recipeTab&&!recipe)getRecipe();}} style={{width:"100%",padding:14,borderRadius:14,border:`1px solid ${recipeTab?ORANGE:"#222"}`,background:recipeTab?"rgba(255,107,43,0.08)":"none",color:recipeTab?ORANGE:"#888",fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:recipeTab?10:16,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -950,51 +830,37 @@ function App(){
           </button>
           {recipeTab&&<div style={{...S.card,padding:16,marginBottom:16}}>{loadingRecipe?<div style={{textAlign:"center",padding:20,color:"#555"}}>Finn maakt een recept...</div>:<div><div style={{fontSize:13,lineHeight:1.8,color:"#bbb",whiteSpace:"pre-wrap"}}>{recipe}</div><button onClick={getRecipe} style={{marginTop:12,padding:"9px 16px",borderRadius:10,border:"1px solid #222",background:"none",color:"#888",fontSize:12,cursor:"pointer"}}>Nieuw recept</button></div>}</div>}
           {MEALS.map(meal=>{
-            const items=todayFood[meal]||[];
-            const mKcal=items.reduce((s,i)=>s+(i.kcal||0),0);
-            const mProt=items.reduce((s,i)=>s+(i.prot||0),0);
+            const items=selFood[meal]||[];
+            const mKcal=items.reduce((s,i)=>s+(i.kcal||0),0),mProt=items.reduce((s,i)=>s+(i.prot||0),0);
             const customFoods=LS.get("fitcoach_custom_foods")||{};
             const snelkeuzes=[...(customFoods[meal]||[]),...QUICK_FOODS[meal]].filter((v,i,a)=>a.indexOf(v)===i).slice(0,6);
-            return(
-              <div key={meal} style={{...S.card,marginBottom:12,overflow:"hidden"}}>
-                <div style={{height:110,position:"relative",overflow:"hidden",background:"#1C1C1C"}}>
-                  <img src={FOOD_PHOTOS[meal]} alt={meal} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>e.target.style.display="none"}/>
-                  <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 20%,rgba(13,13,13,0.92))"}}/>
-                  <div style={{position:"absolute",bottom:10,left:14,right:14,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
-                    <div style={{fontSize:17,fontWeight:900}}>{meal}</div>
-                    {items.length>0&&<div style={{display:"flex",gap:8,alignItems:"center"}}><span style={{fontSize:11,color:"rgba(255,255,255,0.55)"}}>{mKcal} kcal</span><span style={{padding:"2px 8px",borderRadius:99,background:"rgba(200,241,56,0.15)",color:LIME,fontSize:10,fontWeight:700}}>{mProt}g eiwit</span></div>}
-                  </div>
-                </div>
-                <div style={{padding:14}}>
-                  <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
-                    {snelkeuzes.map(q=><button key={q} onClick={()=>addFood(meal,q)} style={{padding:"5px 10px",borderRadius:20,border:"1px solid #222",background:"#1C1C1C",color:"#888",fontSize:10,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>{q}</button>)}
-                  </div>
-                  {items.map((item,idx)=>(
-                    <div key={idx} style={{display:"flex",alignItems:"center",background:"#1C1C1C",borderRadius:12,padding:"10px 12px",marginBottom:8}}>
-                      <div style={{flex:1}}><div style={{fontSize:13,fontWeight:700,marginBottom:3}}>{item.desc}</div><div style={{display:"flex",gap:8,fontSize:11,color:"#555"}}><span>{item.kcal}kcal</span><span>{item.prot}g eiwit</span><span>{item.carbs}g koolh</span><span>{item.fat}g vet</span></div></div>
-                      <button onClick={()=>remFood(meal,idx)} style={{background:"none",border:"none",color:"#555",fontSize:18,cursor:"pointer",padding:"0 4px",marginLeft:8}}>×</button>
-                    </div>
-                  ))}
-                  <div style={{display:"flex",gap:8}}>
-                    <input value={foodInput[meal]} onChange={e=>setFoodInput(p=>({...p,[meal]:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&addFood(meal,null)} placeholder="Toevoegen bijv. '150g kip'..." style={{flex:1,padding:"11px 14px",borderRadius:12,border:"1px solid #1C1C1C",background:"#111",color:"#fff",fontSize:13,outline:"none"}}/>
-                    <button onClick={()=>addFood(meal,null)} disabled={foodLoading[meal]} style={{width:44,height:44,borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontWeight:900,fontSize:18,opacity:foodLoading[meal]?0.5:1,flexShrink:0}}>{foodLoading[meal]?"·":"+"}</button>
-                  </div>
+            return(<div key={meal} style={{...S.card,marginBottom:12,overflow:"hidden"}}>
+              <div style={{height:110,position:"relative",overflow:"hidden",background:"#1C1C1C"}}>
+                <img src={FOOD_PHOTOS[meal]} alt={meal} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>e.target.style.display="none"}/>
+                <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 20%,rgba(13,13,13,0.92))"}}/>
+                <div style={{position:"absolute",bottom:10,left:14,right:14,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
+                  <div style={{fontSize:17,fontWeight:900}}>{meal}</div>
+                  {items.length>0&&<div style={{display:"flex",gap:8}}><span style={{fontSize:11,color:"rgba(255,255,255,0.55)"}}>{mKcal} kcal</span><span style={{padding:"2px 8px",borderRadius:99,background:"rgba(200,241,56,0.15)",color:LIME,fontSize:10,fontWeight:700}}>{mProt}g eiwit</span></div>}
                 </div>
               </div>
-            );
+              <div style={{padding:14}}>
+                <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
+                  {snelkeuzes.map(q=><button key={q} onClick={()=>addFood(meal,q)} style={{padding:"5px 10px",borderRadius:20,border:"1px solid #222",background:"#1C1C1C",color:"#888",fontSize:10,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>{q}</button>)}
+                </div>
+                {items.map((item,idx)=><div key={idx} style={{display:"flex",alignItems:"center",background:"#1C1C1C",borderRadius:12,padding:"10px 12px",marginBottom:8}}><div style={{flex:1}}><div style={{fontSize:13,fontWeight:700,marginBottom:3}}>{item.desc}</div><div style={{display:"flex",gap:8,fontSize:11,color:"#555"}}><span>{item.kcal}kcal</span><span>{item.prot}g eiwit</span><span>{item.carbs}g koolh</span><span>{item.fat}g vet</span></div></div><button onClick={()=>remFood(meal,idx)} style={{background:"none",border:"none",color:"#555",fontSize:18,cursor:"pointer",padding:"0 4px",marginLeft:8}}>×</button></div>)}
+                <div style={{display:"flex",gap:8}}>
+                  <input value={foodInput[meal]} onChange={e=>setFoodInput(p=>({...p,[meal]:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&addFood(meal,null)} placeholder="Toevoegen bijv. '150g kip'..." style={{flex:1,padding:"11px 14px",borderRadius:12,border:"1px solid #1C1C1C",background:"#111",color:"#fff",fontSize:13,outline:"none"}}/>
+                  <button onClick={()=>addFood(meal,null)} disabled={foodLoading[meal]} style={{width:44,height:44,borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontWeight:900,fontSize:18,opacity:foodLoading[meal]?0.5:1,flexShrink:0}}>{foodLoading[meal]?"·":"+"}</button>
+                </div>
+              </div>
+            </div>);
           })}
-          <button onClick={async()=>{
-            setLoadingFA(true);setFoodAdvice("");
-            const ms=MEALS.map(m=>{const items=todayFood[m]||[];return items.length?`${m}: ${items.map(i=>i.desc).join(", ")}`:`${m}: leeg`;}).join("\n");
-            const txt=await ai(`Finn, coach voor ${profile?.name} (fase: ${fase}).\n${ms}\nTotaal: ${totals.kcal}/${kcalT}kcal. Geef advies. NL, max 180w.`);
-            setFoodAdvice(txt);setLoadingFA(false);
-          }} disabled={loadingFA} style={{width:"100%",padding:14,borderRadius:14,border:"none",cursor:"pointer",background:ORANGE,color:"#fff",fontSize:14,fontWeight:800,marginBottom:12,opacity:loadingFA?0.7:1}}>
+          <button onClick={async()=>{setLoadingFA(true);setFoodAdvice("");const ms=MEALS.map(m=>{const its=selFood[m]||[];return its.length?`${m}: ${its.map(i=>i.desc).join(", ")}`:`${m}: leeg`;}).join("\n");const txt=await ai(`Finn, coach voor ${profile?.name} (fase: ${fase}).\n${ms}\nTotaal: ${selTotals.kcal}/${kcalT}kcal. Geef voedingsadvies. NL, max 180w.`);setFoodAdvice(txt);setLoadingFA(false);}} disabled={loadingFA} style={{width:"100%",padding:14,borderRadius:14,border:"none",cursor:"pointer",background:ORANGE,color:"#fff",fontSize:14,fontWeight:800,marginBottom:12,opacity:loadingFA?0.7:1}}>
             {loadingFA?"Finn analyseert...":"Vraag voedingsadvies aan Finn"}
           </button>
           {foodAdvice&&<div style={{...S.card,padding:16,fontSize:13,lineHeight:1.8,color:"#bbb",marginBottom:12}}>{foodAdvice}</div>}
         </div>
       )}
-
       {tab==="Coach"&&(
         <div style={{padding:"24px 16px",display:"flex",flexDirection:"column",alignItems:"center"}}>
           <div style={{...S.lbl,color:LIME,marginBottom:4,alignSelf:"flex-start"}}>Jouw coach</div>
@@ -1007,12 +873,12 @@ function App(){
           </div>
           <div style={{...S.card,padding:20,marginBottom:16,width:"100%",textAlign:"center"}}>
             <div style={{fontSize:16,fontWeight:800,marginBottom:8}}>Finn, jouw persoonlijke AI coach</div>
-            <div style={{fontSize:13,color:"#666",lineHeight:1.8}}>Ik help je met trainingsadvies, voeding en motivatie.</div>
+            <div style={{fontSize:13,color:"#666",lineHeight:1.8}}>Ik ken jouw trainingen, voeding en doelen. Ik geef je altijd persoonlijk advies.</div>
           </div>
           <div style={{width:"100%",marginBottom:16}}>
             <div style={{...S.lbl,marginBottom:12}}>Vraag Finn iets</div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-              {["Motiveer me!","Wat eten vandaag?","Hoe val ik af?","Maak een schema","Analyse mijn week","Ik ben moe"].map(q=>(
+              {["Motiveer me!","Wat eten vandaag?","Analyseer mijn week","Maak een schema","Ik ben moe","Hoe val ik af?"].map(q=>(
                 <button key={q} onClick={()=>openFinnWith(q)} style={{padding:"12px 14px",borderRadius:14,border:"1px solid #1C1C1C",background:"#141414",color:"#888",fontSize:12,cursor:"pointer",fontWeight:600,textAlign:"left"}}>{q}</button>
               ))}
             </div>
