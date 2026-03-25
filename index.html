@@ -99,14 +99,15 @@ function startListening(onResult,onEnd){
 // ────────────────────────────────────────────────────────────
 
 const REST_OPTS=[15,30,45,60,90];
-const FASE_OPTIES=[{v:"zwaar bulken",d:"Maximale spiergroei",mul:38,c:"#f59e0b"},{v:"licht bulken",l:"Licht bulken",d:"Lean bulk",mul:35,c:"#10b981"},{v:"onderhoud",l:"Onderhoud",d:"Gewicht vasthouden",mul:32,c:LIME},{v:"licht cutten",l:"Licht cutten",d:"Vetverbranding",mul:28,c:"#60a5fa"},{v:"zwaar cutten",l:"Zwaar cutten",d:"Snel afvallen",mul:24,c:"#ef4444"}];
+const FASE_OPTIES=[{v:"zwaar bulken",l:"Zwaar bulken",d:"Maximale spiergroei",mul:38,c:"#f59e0b"},{v:"licht bulken",l:"Licht bulken",d:"Lean bulk",mul:35,c:"#10b981"},{v:"onderhoud",l:"Onderhoud",d:"Gewicht vasthouden",mul:32,c:LIME},{v:"licht cutten",l:"Licht cutten",d:"Vetverbranding",mul:28,c:"#60a5fa"},{v:"zwaar cutten",l:"Zwaar cutten",d:"Snel afvallen",mul:24,c:"#ef4444"}];
 const MUSCLE_META={benen:{label:"Benen",sub:"Quads · Hamstrings · Calves"},borst:{label:"Borst",sub:"Pecs · Serratus · Deltoids"},rug:{label:"Rug",sub:"Lats · Traps · Rhomboids"},schouders:{label:"Schouders",sub:"Delts · Rotator Cuff"},armen:{label:"Armen",sub:"Biceps · Triceps · Forearms"},billen:{label:"Billen",sub:"Glutes · Hip Flexors"},buik:{label:"Core",sub:"Abs · Obliques · TVA"},"full body":{label:"Full Body",sub:"Complete Compound"}};
 const MUSCLE_GROUPS=Object.keys(MUSCLE_META);
 const MEALS=["Ochtend","Middag","Avond","Snack"];
 const TODAY=new Date(),TODAY_KEY=fmtDate(TODAY),DAYS=["Zondag","Maandag","Dinsdag","Woensdag","Donderdag","Vrijdag","Zaterdag"],DAY_NL=DAYS[TODAY.getDay()],IS_WEEKEND=TODAY.getDay()===0||TODAY.getDay()===6;
 const KG_OPT=[0,2.5,5,7.5,10,12.5,14,15,16,17.5,18,20,22,22.5,24,25,27.5,30,32.5,35,37.5,40,42.5,45,47.5,50,55,60,65,70,75,80,85,90,95,100,110,120,130,140,150];
 const REPS_OPT=[0,1,2,3,4,5,6,7,8,9,10,12,15,20,25,30,40,50];
-const SEC_OPT=[0,10,15,20,30,45,60,90,120,150,180,240,300,600,900,1200,1500,1800];
+const SEC_OPT=[0,10,15,20,30,45,60,90,120,150,180,240,300,600,900,1200,1500,1800,2400,3000,3600];
+const BANEN_OPT=[0,1,2,4,6,8,10,12,15,20,25,30,40,50,60,80,100];
 const QUICK_FOODS={Ochtend:["Havermout met banaan","2 eieren + toast","Griekse yoghurt","Proteïneshake","Boterham pindakaas"],Middag:["Kipfilet + rijst","Tonijnsalade","Wrap kip","Cottage cheese","Soep + brood"],Avond:["Zalm + groenten","Kip + zoete aardappel","Pasta kipgehakt","Omelet + salade","Biefstuk + broccoli"],Snack:["Banaan","Appel + amandelen","Rijstwafels","Proteïnereep","Kwark"]};
 const FOOD_PHOTOS={Ochtend:"https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=500&q=80",Middag:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=80",Avond:"https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=500&q=80",Snack:"https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=500&q=80"};
 // ============================================================
@@ -151,18 +152,23 @@ const SPLITS_HIIT=[
   {label:"HIIT Benen",muscles:["hiit_benen"],pk:"benen",desc:"Explosieve benentraining"},
   {label:"HIIT Core",muscles:["hiit_core"],pk:"buik",desc:"Core & conditie"},
   {label:"HIIT Upper",muscles:["hiit_upper"],pk:"borst",desc:"Borst, schouders & armen"},
+  {label:"HIIT Tabata",muscles:["hiit_tabata"],pk:"hiit",desc:"20s werk / 10s rust × 8"},
+  {label:"HIIT Pyramid",muscles:["hiit_pyramid"],pk:"hiit",desc:"Opbouwend circuit"},
 ];
 const SPLITS_CARDIO=[
   {label:"Hardlopen",muscles:["cardio_full"],pk:"cardio",desc:"Run, interval of wandeling"},
   {label:"Spinning",muscles:["cardio_bike"],pk:"cardio",desc:"Fiets & spin"},
   {label:"Stair Climber",muscles:["cardio_stairs"],pk:"benen",desc:"Trap & helling"},
-  {label:"Zwemmen",muscles:["cardio_swim"],pk:"cardio",desc:"Low impact, full body"},
+  {label:"Zwemmen",muscles:["cardio_swim"],pk:"cardio",desc:"Banen tellen, low impact"},
   {label:"Crosstrainer",muscles:["cardio_cross"],pk:"cardio",desc:"Elliptical & roeien"},
+  {label:"Interval Run",muscles:["cardio_interval"],pk:"cardio",desc:"Sprint & herstel intervallen"},
 ];
 
 const MUSCLE_LABEL={
   hiit_full:"HIIT Full Body",hiit_benen:"HIIT Benen",hiit_core:"HIIT Core",hiit_upper:"HIIT Upper",
-  cardio_full:"Hardlopen",cardio_bike:"Spinning",cardio_stairs:"Stair Climber",cardio_swim:"Zwemmen",cardio_cross:"Crosstrainer",
+  hiit_tabata:"HIIT Tabata",hiit_pyramid:"HIIT Pyramid",
+  cardio_full:"Hardlopen",cardio_bike:"Spinning",cardio_stairs:"Stair Climber",
+  cardio_swim:"Zwemmen",cardio_cross:"Crosstrainer",cardio_interval:"Interval Run",
 };
 function muscleLabel(m){return MUSCLE_META[m]?.label||MUSCLE_LABEL[m]||m;}
 
@@ -232,7 +238,7 @@ const EX_DB={
   "Donkey Kick":{muscle:"billen",unit:"reps",rest:15,info:"Begin op handen en knieën. Schop één been omhoog naar het plafond terwijl je knie gebogen blijft. Knijp bil samen bovenaan. Afwisselend per been.",yt:"donkey+kick+exercise"},
   "Frog Jump":{muscle:"benen",unit:"reps",rest:30,info:"Diepe squat met handen op de grond tussen je voeten. Spring explosief omhoog en laat armen meebewegen. Land terug in diepe squat. Kikker-achtig.",yt:"frog+jump+exercise"},
   "Interval Hardlopen":{muscle:"full body",unit:"sec",rest:60,info:"Wissel 30 seconden sprinten af met 30 seconden rustig joggen. Verhoogt conditie sneller dan steady-state cardio. Bouw intervallen op per week.",yt:"interval+running+workout"},
-  "Zwemmen":{muscle:"full body",unit:"sec",rest:30,info:"Laag impact, hoge calorieverbranding. Wissel slagen af voor verschillende spiergroepen. Crawl voor snelheid, schoolslag voor duur. Goed voor herstel.",yt:"swimming+workout+beginners"},
+  "Zwemmen":{muscle:"full body",unit:"banen",rest:30,info:"Laag impact, hoge calorieverbranding. Wissel slagen af voor verschillende spiergroepen. Crawl voor snelheid, schoolslag voor duur. Goed voor herstel.",yt:"swimming+workout+beginners"},
   "Roeien buiten":{muscle:"rug",unit:"sec",rest:60,info:"Buiten roeien geeft extra weerstand door wind en stroom. Trek met heupen en rug, niet alleen armen. Goede houding voorkomt rugklachten.",yt:"rowing+outdoor+technique"},
   "Crosstrainer":{muscle:"full body",unit:"sec",rest:30,info:"Elliptical met armbeweging. Laag impact, hoge calorieverbranding. Stel weerstand in op een niveau dat je nog net kunt praten maar niet zingen.",yt:"cross+trainer+workout"},
   "Wandelen":{muscle:"benen",unit:"sec",rest:0,info:"Onderschat wandelen niet — 30 minuten op tempo verbrandt net zoveel vet als joggen. Houd een flink tempo aan. Goed voor herstel en vetverbranding.",yt:"power+walking+workout"},
@@ -266,6 +272,13 @@ hiit_core:[
 ],
 hiit_upper:[
   [{name:"Plyo Push-up",sets:4,reps:"8",weights:[0,0,0,0]},{name:"Battle Ropes",sets:4,reps:"30s",weights:[30,30,30,30]},{name:"Burpee",sets:3,reps:"10",weights:[0,0,0]},{name:"Mountain Climber",sets:3,reps:"30s",weights:[30,30,30]}]
+],
+hiit_tabata:[
+  [{name:"Burpee",sets:8,reps:"20s",weights:[20,20,20,20,20,20,20,20]},{name:"Mountain Climber",sets:8,reps:"20s",weights:[20,20,20,20,20,20,20,20]}],
+  [{name:"Jump Squat",sets:8,reps:"20s",weights:[20,20,20,20,20,20,20,20]},{name:"Plank Jack",sets:8,reps:"20s",weights:[20,20,20,20,20,20,20,20]}]
+],
+hiit_pyramid:[
+  [{name:"Jumping Jacks",sets:1,reps:"30",weights:[0]},{name:"Burpee",sets:1,reps:"5",weights:[0]},{name:"Jump Squat",sets:1,reps:"10",weights:[0]},{name:"High Knees",sets:1,reps:"30s",weights:[30]},{name:"Mountain Climber",sets:1,reps:"20s",weights:[20]},{name:"Burpee",sets:1,reps:"10",weights:[0]},{name:"Jump Squat",sets:1,reps:"15",weights:[0]},{name:"High Knees",sets:1,reps:"45s",weights:[45]}]
 ]
 };
 const CARDIO_WV={
@@ -283,12 +296,17 @@ cardio_stairs:[
   [{name:"Stair Climber",sets:3,reps:"5 min",weights:[300,300,300]},{name:"Treadmill Walk",sets:1,reps:"15 min",weights:[900]},{name:"High Knees",sets:3,reps:"45s",weights:[45,45,45]}]
 ],
 cardio_swim:[
-  [{name:"Zwemmen",sets:4,reps:"5 min",weights:[300,300,300,300]}],
-  [{name:"Zwemmen",sets:1,reps:"30 min",weights:[1800]}]
+  [{name:"Zwemmen",sets:4,reps:"10 banen",weights:[10,10,10,10]}],
+  [{name:"Zwemmen",sets:1,reps:"40 banen",weights:[40]}],
+  [{name:"Zwemmen",sets:6,reps:"4 banen",weights:[4,4,4,4,4,4]}]
 ],
 cardio_cross:[
   [{name:"Crosstrainer",sets:1,reps:"30 min",weights:[1800]},{name:"Roeien (machine)",sets:3,reps:"5 min",weights:[300,300,300]}],
   [{name:"Crosstrainer",sets:2,reps:"15 min",weights:[900,900]},{name:"Touwtjespringen",sets:3,reps:"2 min",weights:[120,120,120]}]
+],
+cardio_interval:[
+  [{name:"Interval Hardlopen",sets:8,reps:"30s sprint",weights:[30,30,30,30,30,30,30,30]}],
+  [{name:"Treadmill Sprint",sets:6,reps:"20s",weights:[20,20,20,20,20,20]},{name:"Wandelen",sets:1,reps:"5 min",weights:[300]}]
 ]
 };
 const ALL_WV={...WV,...HIIT_WV,...CARDIO_WV};
@@ -306,13 +324,32 @@ const FINN_MSGS={
 function getSetValueOptions(unit){
   if(unit==="sec")return SEC_OPT;
   if(unit==="reps")return REPS_OPT;
+  if(unit==="banen")return BANEN_OPT;
   return KG_OPT;
 }
 function fmtVal(v,unit){
   if(!v&&v!==0)return"–";if(!v)return"–";
-  if(unit==="sec"){if(v>=60)return`${Math.floor(v/60)}m${v%60?v%60+'s':''}`;return`${v}s`;}
+  if(unit==="sec"){if(v>=3600)return`${Math.floor(v/3600)}u${Math.floor((v%3600)/60)?Math.floor((v%3600)/60)+'m':''}`;if(v>=60)return`${Math.floor(v/60)}m${v%60?v%60+'s':''}`;return`${v}s`;}
   if(unit==="reps")return`${v}x`;
+  if(unit==="banen")return`${v} banen`;
   return`${v>0?v+"kg":"–"}`;
+}
+
+// Slimme labels per unit en oefening
+function unitLabel(unit,exName){
+  if(unit==="sec"){
+    const n=(exName||"").toLowerCase();
+    if(n.includes("hardlop")||n.includes("sprint")||n.includes("wandel")||n.includes("interval"))return"Duur";
+    return"Tijd";
+  }
+  if(unit==="banen")return"Banen";
+  if(unit==="reps")return"Herhalingen";
+  return"Gewicht";
+}
+function setLabel(unit,idx){
+  if(unit==="sec")return`Ronde ${idx+1}`;
+  if(unit==="banen")return`Ronde ${idx+1}`;
+  return`Set ${idx+1}`;
 }
 
 // ── RUST TIMER (kracht — stil, strak) ────────────────────────
@@ -1030,7 +1067,7 @@ function App(){
           {selectingMuscles?(
             <div>
               <div style={{...S.lbl,marginBottom:12}}>Splits</div>
-              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
                 {splits.map(s=>(
                   <button key={s.label} onClick={()=>startSess(s.muscles)} style={{height:110,borderRadius:16,border:"none",cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
                     <img src={P[s.pk||"full body"]} alt={s.label} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}} onError={()=>{}}/>
@@ -1042,24 +1079,29 @@ function App(){
                   </button>
                 ))}
               </div>
-              {showMuscleGroups&&<>
-              <button onClick={()=>setShowCustom(!showCustom)} style={{width:"100%",padding:"12px",borderRadius:14,border:`1px solid ${showCustom?LIME:"#222"}`,background:showCustom?"rgba(200,241,56,0.07)":"#141414",color:showCustom?LIME:"#888",fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:16}}>+ Eigen workout</button>
+
+              {/* Eigen circuit — voor alle sporten */}
+              <button onClick={()=>setShowCustom(!showCustom)} style={{width:"100%",padding:"12px",borderRadius:14,border:`1px solid ${showCustom?LIME:"#222"}`,background:showCustom?"rgba(200,241,56,0.07)":"#141414",color:showCustom?LIME:"#888",fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:16,letterSpacing:1,textTransform:"uppercase"}}>
+                {showCustom?"Sluiten":"Eigen circuit samenstellen"}
+              </button>
               {showCustom&&(
                 <div style={{...S.card,padding:16,marginBottom:16}}>
-                  <input value={customName} onChange={e=>setCustomName(e.target.value)} placeholder="Naam bijv. 'Push dag'" style={{width:"100%",padding:"11px 14px",borderRadius:12,border:"1px solid #222",background:"#111",color:"#fff",fontSize:13,outline:"none",marginBottom:12,boxSizing:"border-box"}}/>
+                  <input value={customName} onChange={e=>setCustomName(e.target.value)} placeholder={sportType==="cardio"?"Naam bijv. 'Run sessie'":sportType==="hiit"?"Naam bijv. 'HIIT mix'":"Naam bijv. 'Push dag'"} style={{width:"100%",padding:"11px 14px",borderRadius:12,border:"1px solid #222",background:"#111",color:"#fff",fontSize:13,outline:"none",marginBottom:12,boxSizing:"border-box"}}/>
                   {customExercises.map((ex,i)=>(
                     <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 44px 44px 50px 28px",gap:6,marginBottom:8,alignItems:"center"}}>
-                      <input value={ex.name} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,name:e.target.value}:x))} placeholder="Oefening" style={{padding:"9px 10px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",boxSizing:"border-box"}}/>
-                      <input value={ex.sets} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,sets:e.target.value}:x))} placeholder="Sets" style={{padding:"9px 4px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
-                      <input value={ex.reps} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,reps:e.target.value}:x))} placeholder="Reps" style={{padding:"9px 4px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
-                      <input value={ex.weights} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,weights:e.target.value}:x))} placeholder="kg" style={{padding:"9px 4px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
+                      <input value={ex.name} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,name:e.target.value}:x))} placeholder={sportType==="cardio"?"Bijv. Hardlopen":sportType==="hiit"?"Bijv. Burpee":"Oefening"} style={{padding:"9px 10px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",boxSizing:"border-box"}}/>
+                      <input value={ex.sets} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,sets:e.target.value}:x))} placeholder={sportType==="cardio"?"Runs":"Sets"} style={{padding:"9px 4px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
+                      <input value={ex.reps} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,reps:e.target.value}:x))} placeholder={sportType==="cardio"?"Min":"Reps"} style={{padding:"9px 4px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
+                      <input value={ex.weights} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,weights:e.target.value}:x))} placeholder={sportType==="cardio"?"sec":sportType==="hiit"?"sec":"kg"} style={{padding:"9px 4px",borderRadius:10,border:"1px solid #222",background:"#111",color:"#fff",fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
                       <button onClick={()=>setCustomExercises(p=>p.filter((_,j)=>j!==i))} style={{background:"none",border:"none",color:"#ef4444",fontSize:16,cursor:"pointer",padding:0}}>×</button>
                     </div>
                   ))}
-                  <button onClick={()=>setCustomExercises(p=>[...p,{name:"",sets:"3",reps:"10",weights:""}])} style={{width:"100%",padding:"9px",borderRadius:10,border:"1px dashed #333",background:"none",color:"#555",fontSize:12,cursor:"pointer",marginBottom:10}}>+ Oefening</button>
+                  <button onClick={()=>setCustomExercises(p=>[...p,{name:"",sets:"3",reps:"10",weights:""}])} style={{width:"100%",padding:"9px",borderRadius:10,border:"1px dashed #333",background:"none",color:"#555",fontSize:12,cursor:"pointer",marginBottom:10}}>+ Toevoegen</button>
                   <button onClick={()=>{if(!customName||!customExercises[0].name)return;startSess([],{name:customName,exercises:customExercises});setShowCustom(false);}} style={{width:"100%",padding:"12px",borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:13,fontWeight:800}}>Starten</button>
                 </div>
               )}
+
+              {showMuscleGroups&&<>
               <div style={{...S.lbl,marginBottom:14}}>Of kies spiergroep</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
                 {MUSCLE_GROUPS.map(m=>(
@@ -1083,7 +1125,7 @@ function App(){
             <div>
               <div style={{...S.card,padding:16,marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <div><div style={{...S.lbl,color:sportType==="hiit"?ORANGE:LIME,marginBottom:4}}>Vandaag</div><div style={{fontSize:16,fontWeight:800}}>{targetMuscles.map(m=>muscleLabel(m)).join(" + ")}</div></div>
-                <button onClick={()=>{setSelectingMuscles(true);setSession(null);setTargetMuscles([]);}} style={{padding:"7px 14px",borderRadius:10,border:"1px solid #222",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Wijzig</button>
+                <button onClick={()=>{setSelectingMuscles(true);setSession(null);setTargetMuscles([]);}} style={{padding:"9px 16px",borderRadius:10,border:"1px solid #222",background:"none",color:"#777",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:0.5}}>← Terug</button>
               </div>
 
               {/* HIIT = volledig interactief circuit scherm */}
@@ -1119,15 +1161,15 @@ function App(){
                         </div>
                         <div style={{padding:16}}>
                           {isPR&&<div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>🏆 PR!</div>}
-                          {ex.prevWeights&&<div style={{background:"#1C1C1C",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>Vorige training</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:"#444",marginBottom:3}}>Set {i+1}</div><div style={{fontSize:13,fontWeight:700,color:"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
+                          {ex.prevWeights&&<div style={{background:"#1C1C1C",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>Vorige training</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:"#444",marginBottom:3}}>{setLabel(unit,i)}</div><div style={{fontSize:13,fontWeight:700,color:"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
 
-                          <div style={{...S.lbl,marginBottom:8}}>{unit==="reps"?"Herhalingen":"Gewicht"}</div>
+                          <div style={{...S.lbl,marginBottom:8}}>{unitLabel(unit,ex.name)}</div>
                           <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:4}}>
                             {ex.weights.map((w,si)=>{
                               const pv=ex.prevWeights?.[si];const up=w>0&&pv>0&&w>pv;
                               const setDone=ex.setsDone&&ex.setsDone[si];
                               return(<div key={si} style={{textAlign:"center"}}>
-                                <div style={{...S.lbl,marginBottom:4,color:setDone?LIME:"#555"}}>Set {si+1}{setDone?" ✓":""}</div>
+                                <div style={{...S.lbl,marginBottom:4,color:setDone?LIME:"#555"}}>{setLabel(unit,si)}{setDone?" ✓":""}</div>
                                 {pv>0&&<div style={{fontSize:9,color:"#444",marginBottom:3}}>{fmtVal(pv,unit)}</div>}
                                 <select value={w} onChange={e=>setW2(ei,si,Number(e.target.value))} style={{width:64,padding:"10px 4px",borderRadius:12,border:`1px solid ${up?"rgba(200,241,56,0.3)":w>0?"#333":"#1C1C1C"}`,background:up?"rgba(200,241,56,0.06)":w>0?"#1C1C1C":"#111",color:up?LIME:w>0?"#fff":"#444",fontSize:13,fontWeight:800,cursor:"pointer",textAlign:"center"}}>
                                   {opts.map(o=><option key={o} value={o}>{o>0?fmtVal(o,unit):"–"}</option>)}
