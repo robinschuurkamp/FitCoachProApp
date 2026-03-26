@@ -738,15 +738,55 @@ function FinnPopup({onClose,pendingMsg,profile,log,food}){
 }
 
 function AuthScreen({onAuth}){
-  const [mode,setMode]=useState("login"),[email,setEmail]=useState(""),[pw,setPw]=useState(""),[loading,setLoading]=useState(false),[err,setErr]=useState(""),[ok,setOk]=useState("");
-  async function handle(){setErr("");setOk("");if(!email||!pw){setErr("Vul email en wachtwoord in.");return;}setLoading(true);if(mode==="register"){const {data,error}=await sb.auth.signUp({email,password:pw});if(error){setErr(error.message);setLoading(false);return;}setOk("Account aangemaakt! Check je email voor bevestiging.");setLoading(false);}else{const {data,error}=await sb.auth.signInWithPassword({email,password:pw});if(error){setErr("Email of wachtwoord klopt niet.");setLoading(false);return;}onAuth(data.user);}}
+  const [mode,setMode]=useState("login"),[email,setEmail]=useState(""),[pw,setPw]=useState(""),[pw2,setPw2]=useState(""),[loading,setLoading]=useState(false),[err,setErr]=useState(""),[ok,setOk]=useState("");
+  async function handle(){
+    setErr("");setOk("");
+    if(!email||!pw){setErr("Vul email en wachtwoord in.");return;}
+    if(mode==="register"){
+      if(pw.length<6){setErr("Wachtwoord moet minimaal 6 tekens zijn.");return;}
+      if(pw!==pw2){setErr("Wachtwoorden komen niet overeen.");return;}
+    }
+    setLoading(true);
+    if(mode==="register"){
+      const {data,error}=await sb.auth.signUp({email,password:pw});
+      if(error){setErr(error.message);setLoading(false);return;}
+      setOk("Account aangemaakt! Check je email voor bevestiging.");
+      setLoading(false);
+    } else {
+      const {data,error}=await sb.auth.signInWithPassword({email,password:pw});
+      if(error){setErr("Email of wachtwoord klopt niet.");setLoading(false);return;}
+      onAuth(data.user);
+    }
+  }
   async function handleForgot(){if(!email){setErr("Vul eerst je email in.");return;}await sb.auth.resetPasswordForEmail(email);setOk("Reset link verstuurd naar "+email);}
+  const inputStyle={width:"100%",padding:"16px",borderRadius:14,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:15,outline:"none",marginBottom:10,boxSizing:"border-box"};
   return(
     <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"0 24px 52px",background:"#0D0D0D"}}>
-      <div style={{marginBottom:40}}><div style={{fontSize:11,letterSpacing:3,color:"#444",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>FitCoach Pro</div><div style={{fontSize:40,fontWeight:900,letterSpacing:-2,lineHeight:1,marginBottom:8}}>{mode==="login"?"Welkom terug.":"Account aanmaken."}</div><div style={{fontSize:14,color:"#555"}}>{mode==="login"?"Log in om verder te gaan":"Gratis beginnen met Finn"}</div></div>
-      <div style={{marginBottom:16}}><input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" type="email" style={{width:"100%",padding:"16px",borderRadius:14,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:15,outline:"none",marginBottom:10,boxSizing:"border-box"}}/><input value={pw} onChange={e=>setPw(e.target.value)} placeholder="Wachtwoord" type="password" onKeyDown={e=>e.key==="Enter"&&handle()} style={{width:"100%",padding:"16px",borderRadius:14,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:15,outline:"none",marginBottom:10,boxSizing:"border-box"}}/>{err&&<div style={{fontSize:12,color:"#ef4444",marginBottom:8}}>{err}</div>}{ok&&<div style={{fontSize:12,color:LIME,marginBottom:8}}>{ok}</div>}</div>
-      <button onClick={handle} disabled={loading} style={{width:"100%",padding:"17px",borderRadius:16,border:"none",cursor:"pointer",background:loading?"#1a1a1a":LIME,color:loading?"#555":"#000",fontSize:16,fontWeight:900,marginBottom:12}}>{loading?"Bezig...":(mode==="login"?"Inloggen":"Account aanmaken")}</button>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><button onClick={()=>{setMode(m=>m==="login"?"register":"login");setErr("");setOk("");}} style={{background:"none",border:"none",color:"#555",fontSize:13,cursor:"pointer"}}>{mode==="login"?"Nog geen account? Registreer":"Al een account? Log in"}</button>{mode==="login"&&<button onClick={handleForgot} style={{background:"none",border:"none",color:"#333",fontSize:12,cursor:"pointer"}}>Wachtwoord vergeten</button>}</div>
+      <div style={{marginBottom:32}}>
+        <div style={{fontSize:11,letterSpacing:3,color:"#444",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>FitCoach Pro</div>
+        <div style={{fontSize:40,fontWeight:900,letterSpacing:-2,lineHeight:1,marginBottom:8}}>{mode==="login"?"Welkom terug.":"Account aanmaken."}</div>
+        <div style={{fontSize:14,color:"#555"}}>{mode==="login"?"Log in om verder te gaan":"Gratis beginnen met Finn"}</div>
+      </div>
+      <div style={{marginBottom:16}}>
+        <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" type="email" style={inputStyle}/>
+        <input value={pw} onChange={e=>setPw(e.target.value)} placeholder="Wachtwoord" type="password" onKeyDown={e=>e.key==="Enter"&&handle()} style={inputStyle}/>
+        {mode==="register"&&(
+          <input value={pw2} onChange={e=>setPw2(e.target.value)} placeholder="Bevestig wachtwoord" type="password" onKeyDown={e=>e.key==="Enter"&&handle()} style={{...inputStyle,border:`1px solid ${pw2&&pw===pw2?"rgba(200,241,56,0.4)":pw2?"rgba(239,68,68,0.4)":"#222"}`}}/>
+        )}
+        {mode==="register"&&pw2&&pw!==pw2&&<div style={{fontSize:12,color:"#ef4444",marginBottom:8,marginTop:-6}}>Wachtwoorden komen niet overeen</div>}
+        {mode==="register"&&pw2&&pw===pw2&&<div style={{fontSize:12,color:LIME,marginBottom:8,marginTop:-6}}>Wachtwoorden komen overeen</div>}
+        {err&&<div style={{fontSize:12,color:"#ef4444",marginBottom:8}}>{err}</div>}
+        {ok&&<div style={{fontSize:12,color:LIME,marginBottom:8}}>{ok}</div>}
+      </div>
+      <button onClick={handle} disabled={loading||(mode==="register"&&pw!==pw2&&pw2.length>0)} style={{width:"100%",padding:"17px",borderRadius:16,border:"none",cursor:"pointer",background:loading?"#1a1a1a":(mode==="register"&&pw2&&pw!==pw2)?"#1a1a1a":LIME,color:loading||( mode==="register"&&pw2&&pw!==pw2)?"#555":"#000",fontSize:16,fontWeight:900,marginBottom:12}}>
+        {loading?"Bezig...":(mode==="login"?"Inloggen":"Account aanmaken")}
+      </button>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <button onClick={()=>{setMode(m=>m==="login"?"register":"login");setErr("");setOk("");setPw2("");}} style={{background:"none",border:"none",color:"#555",fontSize:13,cursor:"pointer"}}>
+          {mode==="login"?"Nog geen account? Registreer":"Al een account? Log in"}
+        </button>
+        {mode==="login"&&<button onClick={handleForgot} style={{background:"none",border:"none",color:"#333",fontSize:12,cursor:"pointer"}}>Wachtwoord vergeten</button>}
+      </div>
     </div>
   );
 }
