@@ -891,9 +891,6 @@ function App(){
     await sbUpsert("user_data",{user_id:sbUser.id,email:sbUser.email,profile:np||profile,log:nl||log,food:nf||food,updated_at:new Date().toISOString()});
   }
 
-  if(!authChecked)return<div style={{minHeight:"100vh",background:"#0D0D0D",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}><div style={{width:40,height:40,border:`3px solid #1C1C1C`,borderTop:`3px solid ${LIME}`,borderRadius:"50%",animation:"spin 1s linear infinite"}}/><div style={{fontSize:13,color:"#666"}}>Laden...</div><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>;
-  if(!sbUser)return<AuthScreen onAuth={user=>{setSbUser(user);loadFromSupabase(user.id);}}/>;
-
   const [showWhatsNew,setShowWhatsNew]=useState(()=>{const hasP=!!LS.get("fitcoach_profile");const ls=LS.get("fitcoach_seen_version");return hasP&&ls!==APP_VERSION;});
   const [tab,setTab]=useState("Home");
   const [session,setSession]=useState(null);
@@ -1034,6 +1031,8 @@ function App(){
   function addWeight(){const w=parseFloat(newW);if(!w||w<40||w>250)return;const u=[...wLog,{date:TODAY_KEY,w,id:Date.now()}];setWLog(u);LS.set("fitcoach_wlog",u);setNewW("");}
   async function getRecipe(){setLoadingRecipe(true);setRecipe("");const txt=await ai(`Gezond recept voor ${profile?.name}, fase: ${fase}, niveau: ${profile?.level||"beginner"}. NL, max 250 woorden.`);setRecipe(txt);setLoadingRecipe(false);}
 
+  if(!authChecked)return<div style={{minHeight:"100vh",background:"#0D0D0D",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}><div style={{width:40,height:40,border:`3px solid #1C1C1C`,borderTop:`3px solid ${LIME}`,borderRadius:"50%",animation:"spin 1s linear infinite"}}/><div style={{fontSize:13,color:"#666"}}>Laden...</div><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>;
+  if(!sbUser)return<AuthScreen onAuth={user=>{setSbUser(user);loadFromSupabase(user.id);}}/>;
   if(!profile)return<Onboarding onComplete={p=>setProfile(p)}/>;
 
   return(
