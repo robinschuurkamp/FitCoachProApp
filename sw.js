@@ -1,7 +1,6 @@
-const CACHE = 'fitcoach-v1.6';
+const CACHE = 'fitcoach-v1.6.1';
 const ASSETS = [
   '/',
-  '/fitcoach.html',
   '/index.html',
   'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js',
@@ -10,44 +9,51 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(
-    caches.open(CACHE).then(cache => {
-      return Promise.allSettled(ASSETS.map(url => cache.add(url).catch(() => {})));
-    })
-  );
+  // Forceer direct activeren — geen wachten op oude tabs
   self.skipWaiting();
+  e.waitUntil(
+    caches.open(CACHE).then(cache =>
+      Promise.allSettled(ASSETS.map(url => cache.add(url).catch(() => {})))
+    )
+  );
 });
 
 self.addEventListener('activate', e => {
+  // Verwijder ALLE oude caches
   e.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
+      Promise.all(keys.filter(k => k !== CACHE).map(k => {
+        console.log('Deleting old cache:', k);
+        return caches.delete(k);
+      }))
+    ).then(() => self.clients.claim()) // Neem direct controle over alle tabs
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
-  // Supabase en AI calls altijd via netwerk
-  if (e.request.url.includes('supabase.co') || 
+  // Supabase, AI en externe API calls altijd via netwerk
+  if (e.request.url.includes('supabase.co') ||
       e.request.url.includes('workers.dev') ||
-      e.request.url.includes('anthropic')) {
+      e.request.url.includes('anthropic') ||
+      e.request.url.includes('postimg.cc') ||
+      e.request.url.includes('unsplash.com')) {
     return;
   }
+
   e.respondWith(
-    caches.match(e.request).then(cached => {
-      if (cached) return cached;
-      return fetch(e.request).then(response => {
-        // Cache nieuwe resources
-        if (response.ok && e.request.method === 'GET') {
-          const clone = response.clone();
-          caches.open(CACHE).then(cache => cache.put(e.request, clone));
-        }
-        return response;
-      }).catch(() => {
-        // Offline fallback: stuur de hoofdpagina terug
+    fetch(e.request).then(response => {
+      // Sla verse versie op in cache
+      if (response.ok && e.request.method === 'GET') {
+        const clone = response.clone();
+        caches.open(CACHE).then(cache => cache.put(e.request, clone));
+      }
+      return response;
+    }).catch(() => {
+      // Offline: gebruik cache
+      return caches.match(e.request).then(cached => {
+        if (cached) return cached;
         if (e.request.destination === 'document') {
-          return caches.match('/fitcoach.html') || caches.match('/');
+          return caches.match('/index.html') || caches.match('/');
         }
       });
     })
