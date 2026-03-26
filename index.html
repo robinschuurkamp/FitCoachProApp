@@ -68,7 +68,7 @@ const sb=supabase.createClient(SB_URL,SB_KEY);
 async function sbUpsert(table,data){try{await sb.from(table).upsert(data,{onConflict:"user_id"});}catch(e){}}
 async function sbInsert(table,data){try{await sb.from(table).insert(data);}catch(e){}}
 async function sbGetUser(){try{const {data:{user}}=await sb.auth.getUser();return user;}catch(e){return null;}}
-async function sbLoad(table,userId){try{const {data}=await sb.from(table).select("*").eq("user_id",userId).single();return data;}catch(e){return null;}}
+async function sbLoad(table,userId){try{const {data}=await sb.from(table).select("*").eq("user_id",userId).maybeSingle();return data;}catch(e){return null;}}
 
 const LIME="#C8F138",ORANGE="#FF6B2B";
 const FINN_IMG="https://i.postimg.cc/T3yTXytb/Dijkman-Max-c3edcc1ec76dbf8498fc37fcebd56d7a.webp";
