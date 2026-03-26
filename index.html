@@ -18,7 +18,7 @@ select option{background:#1A1A1A;color:#fff}
 input[type=number]{-moz-appearance:textfield}
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
 @keyframes slideUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@keyframes finnFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
 #installModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:flex-end;justify-content:center}
 #installModal.show{display:flex}
 </style>
@@ -80,7 +80,13 @@ async function sbGetUser(){try{const {data:{user}}=await sb.auth.getUser();retur
 async function sbLoad(table,userId){try{const {data}=await sb.from(table).select("*").eq("user_id",userId).maybeSingle();return data;}catch(e){return null;}}
 
 const LIME="#C8F138",ORANGE="#FF6B2B";
-const FINN_IMG="https://i.postimg.cc/T3yTXytb/Dijkman-Max-c3edcc1ec76dbf8498fc37fcebd56d7a.webp";
+const FINN_IMG="https://i.postimg.cc/7JrhdT4h/Ontwerp-zonder-titel-(4).png";
+const ROAN_IMGS={
+  cool:"https://i.postimg.cc/7JrhdT4h/Ontwerp-zonder-titel-(4).png",
+  laugh:"https://i.postimg.cc/7JrhdT4b/Ontwerp-zonder-titel-(3).png",
+  victory:"https://i.postimg.cc/sGCxqZzX/Ontwerp-zonder-titel-(5).png",
+  strong:"https://i.postimg.cc/D430Hbh2/Ontwerp-zonder-titel-(6).png",
+};
 
 const APP_VERSION="1.6";
 const CHANGELOG=[
@@ -99,7 +105,7 @@ const CHANGELOG=[
     version:"1.5",
     title:"Slimmer trainen",
     items:[
-      "Feedback na training — beoordeel hoe het ging, Finn past gewichten aan",
+      "Feedback na training — beoordeel hoe het ging, Roan past gewichten aan",
       "Trainingen ingekort: max 6 oefeningen, altijd 45-60 minuten",
       "Warming up toegevoegd per spiergroep",
       "Boodschappenlijst als eigen tabblad in Voeding",
@@ -674,7 +680,25 @@ function buildSession(muscles,log,profile){
 }
 
 const S={card:{background:"#141414",borderRadius:20,border:"1px solid #1C1C1C"},lbl:{fontSize:10,color:"#555",fontWeight:700,letterSpacing:2,textTransform:"uppercase"}};
-function FinnImg({size}){return<div style={{width:size,height:size,flexShrink:0}}><img src={FINN_IMG} alt="Finn" style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"top center"}} onError={e=>e.target.style.display="none"}/></div>;}
+function FinnImg({size,emotion="cool"}){
+  const src=ROAN_IMGS[emotion]||ROAN_IMGS.cool;
+  return(
+    <div style={{width:size,height:size*1.2,flexShrink:0,position:"relative",overflow:"hidden"}}>
+      <style>{`
+        @keyframes roanBob{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-3px) rotate(1deg)}75%{transform:translateY(-1px) rotate(-1deg)}}
+        @keyframes roanBlink{0%,90%,100%{transform:scaleY(1)}95%{transform:scaleY(0.1)}}
+        .roan-img{animation:roanBob 3s ease-in-out infinite;transform-origin:bottom center;}
+      `}</style>
+      <img 
+        src={src} 
+        alt="Roan" 
+        className="roan-img"
+        style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"top center",transition:"opacity .3s ease"}} 
+        onError={e=>e.target.style.display="none"}
+      />
+    </div>
+  );
+}
 function Ring({pct,size=80,stroke=7,color=LIME,value,label}){
   const r=(size-stroke*2)/2,circ=2*Math.PI*r,offset=circ*(1-Math.min(1,(pct||0)/100));
   return(<div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:6}}><div style={{position:"relative",width:size,height:size}}><svg width={size} height={size} style={{transform:"rotate(-90deg)"}}><circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#1C1C1C" strokeWidth={stroke}/><circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={stroke} strokeDasharray={circ} strokeDashoffset={offset} strokeLinecap="round" style={{transition:"stroke-dashoffset .8s ease"}}/></svg><div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center"}}><div style={{fontSize:size>70?15:12,fontWeight:800,color,lineHeight:1}}>{value}</div></div></div><div style={{fontSize:10,color:"#666",fontWeight:600,letterSpacing:0.5,textTransform:"uppercase",textAlign:"center"}}>{label}</div></div>);
@@ -760,12 +784,19 @@ function FinnPopup({onClose,pendingMsg,profile,log,food,onNavigate,onGenerateMen
     const nc=[...msgs,{r:"u",t:txt}];setMsgs(nc);
     if(detectAndExecute(txt))return;
     setLoading(true);
-    const prompt=`Jij bent Finn, persoonlijke AI fitnesscoach. Je KAN taken uitvoeren voor de gebruiker zoals weekmenu maken, boodschappenlijst genereren, naar tabs navigeren. Gebruikersinfo: ${getCtx()}
+    const prompt=`Jij bent Roan, persoonlijke AI fitnesscoach. Je KAN taken uitvoeren voor de gebruiker zoals weekmenu maken, boodschappenlijst genereren, naar tabs navigeren. Gebruikersinfo: ${getCtx()}
 Geef motiverende, persoonlijke adviezen. Max 3 zinnen. NL.
 Gebruiker: ${txt}
 Finn:`;
     const reply=await ai(prompt);
-    setMsgs(p=>[...p,{r:"a",t:reply}]);
+    // Bepaal emotie op basis van antwoord
+    const rl=reply.toLowerCase();
+    let emotion="cool";
+    if(rl.includes("geweldig")||rl.includes("top")||rl.includes("super")||rl.includes("pr")||rl.includes("record"))emotion="victory";
+    else if(rl.includes("haha")||rl.includes("grappig")||rl.includes("lach"))emotion="laugh";
+    else if(rl.includes("sterk")||rl.includes("trainen")||rl.includes("spieren")||rl.includes("knallen"))emotion="strong";
+    setCurrentEmotion(emotion);
+    setMsgs(p=>[...p,{r:"a",t:reply,emotion}]);
     setLoading(false);
   }
   function send(){if(!input.trim()||loading)return;const m=input.trim();setInput("");doSend(m);}
@@ -881,7 +912,7 @@ function Onboarding({onComplete}){
         {step===3&&<><div style={{...S.lbl,marginBottom:12}}>Stap 3 van 7</div><div style={{fontSize:30,fontWeight:900,marginBottom:20}}>Hoe sport jij?</div><div style={{...S.lbl,marginBottom:8}}>Sport type</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}>{[{v:"kracht",l:"Kracht"},{v:"hiit",l:"HIIT"},{v:"cardio",l:"Cardio"},{v:"gemixed",l:"Gemixed"}].map(s=><button key={s.v} onClick={()=>u("sportType",s.v)} style={{padding:14,borderRadius:14,border:`1.5px solid ${p.sportType===s.v?LIME:"#1C1C1C"}`,background:p.sportType===s.v?"rgba(200,241,56,0.07)":"#141414",color:p.sportType===s.v?LIME:"#666",fontSize:13,fontWeight:700,cursor:"pointer"}}>{s.l}</button>)}</div><div style={{...S.lbl,marginBottom:8}}>Niveau</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:14}}>{[{v:"beginner",l:"Beginner"},{v:"gemiddeld",l:"Gemiddeld"},{v:"gevorderd",l:"Gevorderd"}].map(l=><button key={l.v} onClick={()=>u("level",l.v)} style={{padding:"12px 8px",borderRadius:12,border:`1.5px solid ${p.level===l.v?LIME:"#1C1C1C"}`,background:p.level===l.v?"rgba(200,241,56,0.07)":"#141414",color:p.level===l.v?LIME:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{l.l}</button>)}</div><div style={{...S.lbl,marginBottom:8}}>Locatie</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:28}}>{[{v:"gym",l:"Gym"},{v:"thuis",l:"Thuis"},{v:"buiten",l:"Buiten"}].map(e=><button key={e.v} onClick={()=>u("trainingLoc",e.v)} style={{padding:"12px 8px",borderRadius:12,border:`1.5px solid ${p.trainingLoc===e.v?LIME:"#1C1C1C"}`,background:p.trainingLoc===e.v?"rgba(200,241,56,0.07)":"#141414",color:p.trainingLoc===e.v?LIME:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{e.l}</button>)}</div><div style={{display:"flex",gap:10}}><button onClick={()=>setStep(2)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>setStep(4)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button></div></>}
         {step===4&&<><div style={{...S.lbl,marginBottom:12}}>Stap 4 van 7</div><div style={{fontSize:30,fontWeight:900,marginBottom:20}}>Voorkeur materiaal</div><div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:28}}>{[{v:"machines",l:"Machines",d:"Leg press, kabel, apparaten"},{v:"dumbbells",l:"Vrije gewichten",d:"Dumbbells, barbells, kettlebells"},{v:"mixed",l:"Gemixed",d:"Combinatie van alles"}].map(e=><button key={e.v} onClick={()=>u("equipmentPref",e.v)} style={{padding:"16px 18px",borderRadius:14,border:`1.5px solid ${p.equipmentPref===e.v?LIME:"#1C1C1C"}`,background:p.equipmentPref===e.v?"rgba(200,241,56,0.07)":"#141414",textAlign:"left",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div><div style={{fontSize:14,fontWeight:700,color:p.equipmentPref===e.v?LIME:"#fff",marginBottom:2}}>{e.l}</div><div style={{fontSize:11,color:"#555"}}>{e.d}</div></div>{p.equipmentPref===e.v&&<div style={{width:20,height:20,borderRadius:"50%",background:LIME,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#000",fontWeight:900}}>✓</div>}</button>)}</div><div style={{display:"flex",gap:10}}><button onClick={()=>setStep(3)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>setStep(5)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button></div></>}
         {step===5&&<><div style={{...S.lbl,marginBottom:12}}>Stap 5 van 7</div><div style={{fontSize:30,fontWeight:900,marginBottom:8}}>Wanneer train je?</div><div style={{fontSize:13,color:"#555",marginBottom:20}}>Kies jouw trainingsdagen</div><div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:6,marginBottom:16}}>{[{k:"ma",l:"Ma"},{k:"di",l:"Di"},{k:"wo",l:"Wo"},{k:"do",l:"Do"},{k:"vr",l:"Vr"},{k:"za",l:"Za"},{k:"zo",l:"Zo"}].map(d=>{const sel=(p.trainDayNames||[]).includes(d.k);return<button key={d.k} onClick={()=>{const cur=p.trainDayNames||[];u("trainDayNames",sel?cur.filter(x=>x!==d.k):[...cur,d.k]);}} style={{padding:"12px 4px",borderRadius:10,border:`1px solid ${sel?LIME:"#1C1C1C"}`,background:sel?"rgba(200,241,56,0.1)":"#111",color:sel?LIME:"#444",fontSize:12,fontWeight:900,cursor:"pointer"}}>{d.l}</button>;})}</div><div style={{fontSize:11,color:"#444",marginBottom:20,textAlign:"center"}}>{(p.trainDayNames||[]).length} dag{(p.trainDayNames||[]).length!==1?"en":""} geselecteerd</div><div style={{display:"flex",gap:10}}><button onClick={()=>setStep(4)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>setStep(6)} disabled={!(p.trainDayNames||[]).length} style={{flex:2,padding:14,borderRadius:14,border:"none",background:(p.trainDayNames||[]).length?LIME:"#1C1C1C",color:(p.trainDayNames||[]).length?"#000":"#444",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button></div></>}
-        {step===6&&<><div style={{...S.lbl,marginBottom:12}}>Stap 6 van 7</div><div style={{fontSize:30,fontWeight:900,marginBottom:8}}>Hoe wil je gecoacht worden?</div><div style={{fontSize:13,color:"#555",marginBottom:20}}>Finn past zijn coaching aan op jouw voorkeur</div><div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:28}}>{[{v:"weinig",l:"Weinig coach",d:"Finn is op de achtergrond. Je traint zelfstandig.",icon:"—"},{v:"regelmatig",l:"Regelmatig",d:"Finn geeft tips, feedback na trainingen en wekelijkse check-ins.",icon:"◎"},{v:"personal",l:"Personal trainer",d:"Finn coacht actief bij elke set, analyseert alles en stuurt bij.",icon:"●"}].map(c=><button key={c.v} onClick={()=>u("coachLevel",c.v)} style={{padding:"16px 18px",borderRadius:14,border:`1.5px solid ${p.coachLevel===c.v?ORANGE:"#1C1C1C"}`,background:p.coachLevel===c.v?"rgba(255,107,43,0.07)":"#141414",textAlign:"left",cursor:"pointer",display:"flex",gap:14,alignItems:"flex-start"}}><div style={{width:28,height:28,borderRadius:"50%",border:`1.5px solid ${p.coachLevel===c.v?ORANGE:"#333"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:p.coachLevel===c.v?ORANGE:"#333",flexShrink:0,marginTop:1}}>{c.icon}</div><div><div style={{fontSize:14,fontWeight:700,color:p.coachLevel===c.v?ORANGE:"#fff",marginBottom:3}}>{c.l}</div><div style={{fontSize:11,color:"#555",lineHeight:1.5}}>{c.d}</div></div></button>)}</div><div style={{display:"flex",gap:10}}><button onClick={()=>setStep(5)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>setStep(7)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button></div></>}
+        {step===6&&<><div style={{...S.lbl,marginBottom:12}}>Stap 6 van 7</div><div style={{fontSize:30,fontWeight:900,marginBottom:8}}>Hoe wil je gecoacht worden?</div><div style={{fontSize:13,color:"#555",marginBottom:20}}>Roan past zijn coaching aan op jouw voorkeur</div><div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:28}}>{[{v:"weinig",l:"Weinig coach",d:"Roan is op de achtergrond. Je traint zelfstandig.",icon:"—"},{v:"regelmatig",l:"Regelmatig",d:"Roan geeft tips, feedback na trainingen en wekelijkse check-ins.",icon:"◎"},{v:"personal",l:"Personal trainer",d:"Roan coacht actief bij elke set, analyseert alles en stuurt bij.",icon:"●"}].map(c=><button key={c.v} onClick={()=>u("coachLevel",c.v)} style={{padding:"16px 18px",borderRadius:14,border:`1.5px solid ${p.coachLevel===c.v?ORANGE:"#1C1C1C"}`,background:p.coachLevel===c.v?"rgba(255,107,43,0.07)":"#141414",textAlign:"left",cursor:"pointer",display:"flex",gap:14,alignItems:"flex-start"}}><div style={{width:28,height:28,borderRadius:"50%",border:`1.5px solid ${p.coachLevel===c.v?ORANGE:"#333"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,color:p.coachLevel===c.v?ORANGE:"#333",flexShrink:0,marginTop:1}}>{c.icon}</div><div><div style={{fontSize:14,fontWeight:700,color:p.coachLevel===c.v?ORANGE:"#fff",marginBottom:3}}>{c.l}</div><div style={{fontSize:11,color:"#555",lineHeight:1.5}}>{c.d}</div></div></button>)}</div><div style={{display:"flex",gap:10}}><button onClick={()=>setStep(5)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>setStep(7)} style={{flex:2,padding:14,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer"}}>Volgende</button></div></>}
         {step===7&&<><div style={{...S.lbl,marginBottom:12}}>Stap 7 van 7</div><div style={{fontSize:30,fontWeight:900,marginBottom:24}}>Klaar om te starten!</div><div style={{background:"rgba(255,107,43,0.08)",border:"1px solid rgba(255,107,43,0.2)",borderRadius:16,padding:16,marginBottom:16,display:"flex",gap:12,alignItems:"center"}}><FinnImg size={52}/><div style={{fontSize:13,color:"rgba(255,255,255,0.6)",lineHeight:1.6}}>"Hallo {p.name}! Ik ben klaar als jouw coach. Je traint {(p.trainDayNames||[]).length}x per week. Let's go!"</div></div><div style={{...S.card,padding:14,marginBottom:24}}><div style={{...S.lbl,marginBottom:10}}>Jouw profiel</div>{[{l:"Naam",v:`${p.name}, ${p.age} jaar`},{l:"Gewicht",v:`${p.weight} → ${p.goalWeight} kg`},{l:"Doel",v:p.goal},{l:"Sport",v:p.sportType},{l:"Trainingsdagen",v:(p.trainDayNames||[]).join(", ")},{l:"Coaching",v:p.coachLevel}].map(r=><div key={r.l} style={{display:"flex",justifyContent:"space-between",paddingBottom:8,marginBottom:8,borderBottom:"1px solid #111"}}><div style={{fontSize:12,color:"#444"}}>{r.l}</div><div style={{fontSize:12,color:"#ccc",fontWeight:600,textTransform:"capitalize"}}>{r.v}</div></div>)}</div><div style={{display:"flex",gap:10}}><button onClick={()=>setStep(6)} style={{flex:1,padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer"}}>Terug</button><button onClick={()=>onComplete(p)} style={{flex:2,padding:16,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:15,fontWeight:800,cursor:"pointer"}}>Start met Finn</button></div></>}
       </div>
     </div>
@@ -1096,13 +1127,13 @@ function App(){
     if(custom){setSession(custom.exercises.map(e=>({...e,unit:"kg",weights:Array(parseInt(e.sets)||3).fill(parseFloat(e.weights)||0),note:"",saved:false,info:EX_DB[e.name]?.info||"",yt:EX_DB[e.name]?.yt||"",prevWeights:null,prevNote:""})));setTargetMuscles([custom.name]);}
     else{if(!muscles.length)return;setSession(buildSession(muscles,log,profile));setTargetMuscles(muscles);}
     setSelectingMuscles(false);setNoteAdvice({});setSavedFlash(null);
-    if(voiceOn&&log.length>0){setTimeout(async()=>{try{const lastSame=log.find(e=>(e.targetMuscles||[]).some(m=>muscles.includes(m)));if(lastSame){const top=lastSame.exercises.slice(0,2).map(e=>{const maxW=e.weights?Math.max(0,...e.weights.filter(w=>w>0)):0;return maxW>0?`${e.name} ${maxW}kg`:e.name;}).join(", ");const txt=await ai(`Finn geeft een korte gesproken briefing voor de training. Vorige keer: ${top}. Geef een motiverende aanwijzing van MAX 2 zinnen. Noem een concreet gewicht of doel voor vandaag. Nederlands.`);speak(txt);}}catch(e){}},500);}
+    if(voiceOn&&log.length>0){setTimeout(async()=>{try{const lastSame=log.find(e=>(e.targetMuscles||[]).some(m=>muscles.includes(m)));if(lastSame){const top=lastSame.exercises.slice(0,2).map(e=>{const maxW=e.weights?Math.max(0,...e.weights.filter(w=>w>0)):0;return maxW>0?`${e.name} ${maxW}kg`:e.name;}).join(", ");const txt=await ai(`Roan geeft een korte gesproken briefing voor de training. Vorige keer: ${top}. Geef een motiverende aanwijzing van MAX 2 zinnen. Noem een concreet gewicht of doel voor vandaag. Nederlands.`);speak(txt);}}catch(e){}},500);}
   }
   function setW2(ei,si,v){setSession(p=>p.map((e,i)=>i!==ei?e:{...e,weights:e.weights.map((w,j)=>j===si?v:w)}));}
   function setN(ei,v){setSession(p=>p.map((e,i)=>i!==ei?e:{...e,note:v}));}
   function markSave(ei){setSession(p=>p.map((e,i)=>i!==ei?e:{...e,saved:true}));setSavedFlash(ei);setTimeout(()=>setSavedFlash(null),1500);}
   function removeExercise(ei){setSession(p=>p.filter((_,i)=>i!==ei));}
-  async function submitNote(ei){const ex=session[ei];if(!ex.note.trim())return;if(coachLevel==="weinig")return;setNoteLoading(p=>({...p,[ei]:true}));const intensity=coachLevel==="personal"?"Geef uitgebreid technisch advies, specifieke verbeterpunten en motivatie. Max 4 zinnen.":"Motiveer kort en persoonlijk. Max 2 zinnen.";const txt=await ai(`Finn coacht ${profile?.name} (${profile?.level||"beginner"}, ${profile?.age||30} jaar, doel: ${profile?.goal}). Oefening: ${ex.name}. Notitie: "${ex.note}". ${intensity} NL.`);setNoteAdvice(p=>({...p,[ei]:{text:txt}}));setNoteLoading(p=>({...p,[ei]:false}));}
+  async function submitNote(ei){const ex=session[ei];if(!ex.note.trim())return;if(coachLevel==="weinig")return;setNoteLoading(p=>({...p,[ei]:true}));const intensity=coachLevel==="personal"?"Geef uitgebreid technisch advies, specifieke verbeterpunten en motivatie. Max 4 zinnen.":"Motiveer kort en persoonlijk. Max 2 zinnen.";const txt=await ai(`Roan coacht ${profile?.name} (${profile?.level||"beginner"}, ${profile?.age||30} jaar, doel: ${profile?.goal}). Oefening: ${ex.name}. Notitie: "${ex.note}". ${intensity} NL.`);setNoteAdvice(p=>({...p,[ei]:{text:txt}}));setNoteLoading(p=>({...p,[ei]:false}));}
   function wisselOefening(ei,newName){const db=EX_DB[newName]||{};const oldName=session[ei].name;const swaps=LS.get("fitcoach_swaps")||{};swaps[oldName]=newName;LS.set("fitcoach_swaps",swaps);setSession(p=>p.map((e,i)=>i!==ei?e:{...e,name:newName,unit:db.unit||"kg",info:db.info||"",yt:db.yt||"",note:"",saved:false}));setWisselIndex(null);}
 
   function saveWorkout(){
@@ -1181,7 +1212,7 @@ function App(){
                       const diffKey="fitcoach_difficulty";const diffs=LS.get(diffKey)||{};
                       (feedbackModal.entry.targetMuscles||[]).forEach(m=>{diffs[m]=opt.v;});LS.set(diffKey,diffs);
                       const ex=feedbackModal.entry.exercises.slice(0,3).map(e=>{const maxW=Math.max(0,...(e.weights||[]).filter(w=>w>0));return maxW>0?`${e.name} ${maxW}${e.unit||"kg"}`:e.name;}).join(", ");
-                      const prompt=`Finn geeft KORTE motiverende feedback (2-3 zinnen) na een ${opt.v} training. Gebruiker: ${profile.name}, doel: ${profile.goal}, niveau: ${profile.level}. Training: ${feedbackModal.workout}. Oefeningen: ${ex}. Beoordeling: ${opt.v}. ${opt.v==="zwaar"?"Geef herstel-advies.":opt.v==="makkelijk"?"Stel voor om gewicht/sets te verhogen.":"Moedig aan en geef één specifieke tip."} Sluit af met wat je aanraadt voor de volgende sessie. NL.`;
+                      const prompt=`Roan geeft KORTE motiverende feedback (2-3 zinnen) na een ${opt.v} training. Gebruiker: ${profile.name}, doel: ${profile.goal}, niveau: ${profile.level}. Training: ${feedbackModal.workout}. Oefeningen: ${ex}. Beoordeling: ${opt.v}. ${opt.v==="zwaar"?"Geef herstel-advies.":opt.v==="makkelijk"?"Stel voor om gewicht/sets te verhogen.":"Moedig aan en geef één specifieke tip."} Sluit af met wat je aanraadt voor de volgende sessie. NL.`;
                       const reply=await ai(prompt);setFeedbackReply(reply);setFeedbackLoading(false);
                     }} style={{padding:"16px 8px",borderRadius:14,border:"1px solid #1C1C1C",background:"#111",cursor:"pointer",textAlign:"center"}}>
                       <div style={{fontSize:28,marginBottom:6}}>{opt.icon}</div>
@@ -1189,12 +1220,12 @@ function App(){
                     </button>
                   ))}
                 </div>
-                {feedbackLoading&&<div style={{textAlign:"center",padding:"16px 0",color:"#555",fontSize:13}}>Finn denkt na...</div>}
+                {feedbackLoading&&<div style={{textAlign:"center",padding:"16px 0",color:"#555",fontSize:13}}>Roan denkt na...</div>}
                 <button onClick={()=>{setFeedbackModal(null);setTab("Home");}} style={{width:"100%",padding:"13px",borderRadius:12,border:"1px solid #1C1C1C",background:"none",color:"#444",fontSize:13,cursor:"pointer"}}>Overslaan</button>
               </>
             ):(
               <>
-                <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:20}}><FinnImg size={44}/><div><div style={{fontSize:14,fontWeight:900}}>Finn's feedback</div><div style={{fontSize:11,color:"#555"}}>{feedbackModal.workout}</div></div></div>
+                <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:20}}><FinnImg size={44} emotion="victory"/><div><div style={{fontSize:14,fontWeight:900}}>Roan's feedback</div><div style={{fontSize:11,color:"#555"}}>{feedbackModal.workout}</div></div></div>
                 <div style={{fontSize:14,lineHeight:1.8,color:"#ccc",marginBottom:24,padding:"16px",background:"#111",borderRadius:14,border:"1px solid #1C1C1C"}}>{feedbackReply}</div>
                 <button onClick={()=>{setFeedbackModal(null);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),2500);setTab("Home");}} style={{width:"100%",padding:"16px",borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:15,fontWeight:900,cursor:"pointer"}}>Naar Home</button>
               </>
@@ -1509,7 +1540,7 @@ function App(){
                           <button onClick={()=>markSave(ei)} style={{width:"100%",padding:"10px",borderRadius:12,border:"none",cursor:"pointer",background:ex.saved?LIME:"#1C1C1C",color:ex.saved?"#000":"#666",fontSize:13,fontWeight:800,marginBottom:10}}>{ex.saved?"✓ Opgeslagen":"Oefening opslaan"}</button>
                           <div style={{display:"flex",gap:8}}>
                             <input value={ex.note} onChange={e=>setN(ei,e.target.value)} placeholder="Notitie..." style={{flex:1,padding:"10px 12px",borderRadius:12,border:"1px solid #1C1C1C",background:"#111",color:"#fff",fontSize:12,outline:"none",minWidth:0}}/>
-                            <button onClick={()=>submitNote(ei)} disabled={!ex.note.trim()||noteLoading[ei]} style={{padding:"10px 14px",borderRadius:12,border:"none",fontWeight:700,fontSize:11,cursor:ex.note.trim()?"pointer":"default",background:ex.note.trim()?ORANGE:"#1C1C1C",color:ex.note.trim()?"#fff":"#444",opacity:noteLoading[ei]?0.5:1,flexShrink:0}}>{noteLoading[ei]?"...":"Finn"}</button>
+                            <button onClick={()=>submitNote(ei)} disabled={!ex.note.trim()||noteLoading[ei]} style={{padding:"10px 14px",borderRadius:12,border:"none",fontWeight:700,fontSize:11,cursor:ex.note.trim()?"pointer":"default",background:ex.note.trim()?ORANGE:"#1C1C1C",color:ex.note.trim()?"#fff":"#444",opacity:noteLoading[ei]?0.5:1,flexShrink:0}}>{noteLoading[ei]?"...":"Roan"}</button>
                           </div>
                           {noteAdvice[ei]&&<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:12,marginTop:8,fontSize:12,lineHeight:1.7,color:"#bbb"}}>{noteAdvice[ei].text}</div>}
                           {wisselIndex===ei&&alts.length>0&&(
@@ -1669,10 +1700,10 @@ function App(){
               {(()=>{const weekStart=new Date(TODAY);weekStart.setDate(TODAY.getDate()-TODAY.getDay());const cheatKey="fitcoach_cheat_"+fmtDate(weekStart);const hadCheat=LS.get(cheatKey);if(!hadCheat&&(TODAY.getDay()===5||TODAY.getDay()===6))return<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div><div style={{fontSize:12,color:ORANGE,fontWeight:700,marginBottom:2}}>Cheatdag voorstel</div><div style={{fontSize:11,color:"#555"}}>Je doet het goed deze week. Gun jezelf iets lekkers.</div></div><button onClick={()=>LS.set(cheatKey,true)} style={{padding:"6px 12px",borderRadius:8,border:"none",background:ORANGE,color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer"}}>Deal!</button></div>;return null;})()}
             </div>
             <div style={{display:"flex",gap:8,marginBottom:16}}>
-              <button onClick={()=>{setRecipeTab(!recipeTab);if(!recipeTab&&!recipe)getRecipe();}} style={{flex:1,padding:14,borderRadius:14,border:`1px solid ${recipeTab?ORANGE:"#222"}`,background:recipeTab?"rgba(255,107,43,0.08)":"none",color:recipeTab?ORANGE:"#888",fontSize:13,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between"}}><span>Recept van Finn</span><span>{recipeTab?"↑":"↓"}</span></button>
+              <button onClick={()=>{setRecipeTab(!recipeTab);if(!recipeTab&&!recipe)getRecipe();}} style={{flex:1,padding:14,borderRadius:14,border:`1px solid ${recipeTab?ORANGE:"#222"}`,background:recipeTab?"rgba(255,107,43,0.08)":"none",color:recipeTab?ORANGE:"#888",fontSize:13,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between"}}><span>Recept van Roan</span><span>{recipeTab?"↑":"↓"}</span></button>
               <button onClick={()=>setFoodSubTab("recepten")} style={{padding:"14px 16px",borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>Alle recepten</button>
             </div>
-            {recipeTab&&<div style={{...S.card,padding:16,marginBottom:16}}>{loadingRecipe?<div style={{textAlign:"center",padding:20,color:"#555"}}>Finn maakt een recept...</div>:<div><div style={{fontSize:13,lineHeight:1.8,color:"#bbb",whiteSpace:"pre-wrap"}}>{recipe}</div><div style={{display:"flex",gap:8,marginTop:12}}><button onClick={getRecipe} style={{padding:"9px 16px",borderRadius:10,border:"1px solid #222",background:"none",color:"#888",fontSize:12,cursor:"pointer"}}>Nieuw recept</button><button onClick={()=>{if(!recipe)return;const newR={id:Date.now(),text:recipe,date:TODAY_KEY};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"9px 16px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:LIME,fontSize:12,cursor:"pointer",fontWeight:700}}>Opslaan</button></div></div>}</div>}
+            {recipeTab&&<div style={{...S.card,padding:16,marginBottom:16}}>{loadingRecipe?<div style={{textAlign:"center",padding:20,color:"#555"}}>Roan maakt een recept...</div>:<div><div style={{fontSize:13,lineHeight:1.8,color:"#bbb",whiteSpace:"pre-wrap"}}>{recipe}</div><div style={{display:"flex",gap:8,marginTop:12}}><button onClick={getRecipe} style={{padding:"9px 16px",borderRadius:10,border:"1px solid #222",background:"none",color:"#888",fontSize:12,cursor:"pointer"}}>Nieuw recept</button><button onClick={()=>{if(!recipe)return;const newR={id:Date.now(),text:recipe,date:TODAY_KEY};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"9px 16px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:LIME,fontSize:12,cursor:"pointer",fontWeight:700}}>Opslaan</button></div></div>}</div>}
             {MEALS.map(meal=>{
               const items=selFood[meal]||[];const mKcal=items.reduce((s,i)=>s+(i.kcal||0),0),mProt=items.reduce((s,i)=>s+(i.prot||0),0);
               const customFoods=LS.get("fitcoach_custom_foods")||{};const snelkeuzes=[...(customFoods[meal]||[]),...QUICK_FOODS[meal]].filter((v,i,a)=>a.indexOf(v)===i).slice(0,6);
@@ -1692,7 +1723,7 @@ function App(){
                 </div>
               </div>);
             })}
-            <button onClick={async()=>{setLoadingFA(true);setFoodAdvice("");const ms=MEALS.map(m=>{const its=selFood[m]||[];return its.length?`${m}: ${its.map(i=>i.desc).join(", ")}`:`${m}: leeg`;}).join("\n");const txt=await ai(`Finn, coach voor ${profile?.name} (fase: ${fase}).\n${ms}\nTotaal: ${selTotals.kcal}/${kcalT}kcal. Geef voedingsadvies. NL, max 180w.`);setFoodAdvice(txt);setLoadingFA(false);}} disabled={loadingFA} style={{width:"100%",padding:14,borderRadius:14,border:"none",cursor:"pointer",background:ORANGE,color:"#fff",fontSize:14,fontWeight:800,marginBottom:12,opacity:loadingFA?0.7:1}}>{loadingFA?"Finn analyseert...":"Vraag voedingsadvies aan Finn"}</button>
+            <button onClick={async()=>{setLoadingFA(true);setFoodAdvice("");const ms=MEALS.map(m=>{const its=selFood[m]||[];return its.length?`${m}: ${its.map(i=>i.desc).join(", ")}`:`${m}: leeg`;}).join("\n");const txt=await ai(`Finn, coach voor ${profile?.name} (fase: ${fase}).\n${ms}\nTotaal: ${selTotals.kcal}/${kcalT}kcal. Geef voedingsadvies. NL, max 180w.`);setFoodAdvice(txt);setLoadingFA(false);}} disabled={loadingFA} style={{width:"100%",padding:14,borderRadius:14,border:"none",cursor:"pointer",background:ORANGE,color:"#fff",fontSize:14,fontWeight:800,marginBottom:12,opacity:loadingFA?0.7:1}}>{loadingFA?"Roan analyseert...":"Vraag voedingsadvies aan Roan"}</button>
             {foodAdvice&&<div style={{...S.card,padding:16,fontSize:13,lineHeight:1.8,color:"#bbb",marginBottom:12}}>{foodAdvice}</div>}
           </>}
 
@@ -1715,7 +1746,7 @@ function App(){
                 </div>
               )}
               <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{["Hoog eiwit","Snel & makkelijk","Vegetarisch","Bulken","Afvallen"].map(s=><button key={s} onClick={async()=>{setWeekMenuLoading(true);const txt=await ai(`Weekmenu voor ${profile.name}, stijl: "${s}". Fase: ${fase}. Elke dag ander eiwit. NL. ALLEEN JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"6px 14px",borderRadius:20,border:"1px solid #222",background:"#111",color:"#666",fontSize:11,cursor:"pointer",fontWeight:600,opacity:weekMenuLoading?0.5:1}}>{s}</button>)}</div>
-              {weekMenuLoading&&<div style={{...S.card,padding:24,textAlign:"center"}}><div style={{fontSize:13,color:"#555"}}>Finn maakt jouw weekmenu...</div></div>}
+              {weekMenuLoading&&<div style={{...S.card,padding:24,textAlign:"center"}}><div style={{fontSize:13,color:"#555"}}>Roan maakt jouw weekmenu...</div></div>}
               {!weekMenuLoading&&weekMenu?(
                 <div>
                   <div style={{display:"flex",gap:8,marginBottom:12}}>
@@ -1743,7 +1774,7 @@ function App(){
                 </div>
               ):!weekMenuLoading&&(
                 <div style={{...S.card,padding:24,textAlign:"center"}}>
-                  <div style={{fontSize:13,color:"#444",marginBottom:6}}>Finn maakt een persoonlijk weekmenu</div>
+                  <div style={{fontSize:13,color:"#444",marginBottom:6}}>Roan maakt een persoonlijk weekmenu</div>
                   <div style={{fontSize:11,color:"#333",marginBottom:16}}>Stel voorkeuren in of kies een stijl hierboven</div>
                   <button onClick={async()=>{setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar, ${persons} ${persons===1?"persoon":"personen"}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Cheatdag op ${cheatDag}. Elke dag ander eiwit. Vis max 1x. NL. ALLEEN JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{padding:"12px 28px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>Genereer weekmenu</button>
                 </div>
@@ -1778,7 +1809,7 @@ function App(){
             <div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
                 <div style={{fontSize:13,fontWeight:800}}>Opgeslagen recepten</div>
-                <button onClick={async()=>{const txt=await ai(`Één gezond recept voor ${profile.name}, fase: ${fase}, doel: ${profile.goal}. NL, max 150 woorden.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"7px 14px",borderRadius:10,border:`1px solid ${ORANGE}`,background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:11,fontWeight:700,cursor:"pointer"}}>+ Finn recept</button>
+                <button onClick={async()=>{const txt=await ai(`Één gezond recept voor ${profile.name}, fase: ${fase}, doel: ${profile.goal}. NL, max 150 woorden.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"7px 14px",borderRadius:10,border:`1px solid ${ORANGE}`,background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:11,fontWeight:700,cursor:"pointer"}}>+ Roan recept</button>
               </div>
               <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{["Hoog eiwit ontbijt","Snelle lunch","Post-workout maaltijd","Laag carb diner"].map(s=><button key={s} onClick={async()=>{const txt=await ai(`Recept: ${s}. Voor ${profile.name}, fase: ${fase}. NL, max 120 woorden.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY,tag:s};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"6px 12px",borderRadius:20,border:"1px solid #222",background:"#111",color:"#666",fontSize:11,cursor:"pointer",fontWeight:600}}>{s}</button>)}</div>
               {savedRecipes.length===0?<div style={{...S.card,padding:20,textAlign:"center"}}><div style={{fontSize:12,color:"#444",marginBottom:4}}>Geen recepten opgeslagen</div></div>:savedRecipes.map(r=><div key={r.id} style={{...S.card,padding:16,marginBottom:8}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><div style={{display:"flex",gap:8,alignItems:"center"}}><div style={{fontSize:10,color:"#444"}}>{r.date}</div>{r.tag&&<div style={{fontSize:9,color:ORANGE,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{r.tag}</div>}</div><button onClick={()=>{const u=savedRecipes.filter(x=>x.id!==r.id);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{background:"none",border:"none",color:"#333",fontSize:14,cursor:"pointer"}}>×</button></div><div style={{fontSize:12,lineHeight:1.7,color:"#bbb",whiteSpace:"pre-wrap"}}>{r.text}</div></div>)}
@@ -1791,17 +1822,26 @@ function App(){
       {tab==="Coach"&&(
         <div style={{padding:"24px 16px",display:"flex",flexDirection:"column",alignItems:"center"}}>
           <div style={{...S.lbl,color:LIME,marginBottom:4,alignSelf:"flex-start"}}>Jouw coach</div>
-          <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:24,alignSelf:"flex-start"}}>Meet Finn</div>
-          <div style={{marginBottom:24,position:"relative",display:"flex",justifyContent:"center"}}>
-            <div style={{width:220,height:280,animation:"finnFloat 3s ease-in-out infinite"}}><img src={FINN_IMG} alt="Finn" style={{width:"100%",height:"100%",objectFit:"contain",objectPosition:"top center",filter:"drop-shadow(0 12px 32px rgba(255,107,43,0.4))"}}/></div>
-            <div style={{position:"absolute",top:8,right:40,background:LIME,borderRadius:99,padding:"4px 12px",fontSize:10,fontWeight:800,color:"#000"}}>Online</div>
+          <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:24,alignSelf:"flex-start"}}>Meet Roan</div>
+          <div style={{marginBottom:16,position:"relative",display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center"}}>
+            <div style={{position:"relative"}}>
+              <FinnImg size={200} emotion="cool"/>
+              <div style={{position:"absolute",top:8,right:-10,background:LIME,borderRadius:99,padding:"4px 12px",fontSize:10,fontWeight:800,color:"#000"}}>Online</div>
+            </div>
+            <div style={{fontSize:28,fontWeight:900,letterSpacing:-1,color:"#fff",marginTop:8}}>Roan</div>
+            <div style={{fontSize:13,color:"#555",marginTop:2}}>Jouw persoonlijke AI coach</div>
           </div>
-          <div style={{...S.card,padding:20,marginBottom:16,width:"100%",textAlign:"center"}}><div style={{fontSize:16,fontWeight:800,marginBottom:8}}>Finn, jouw persoonlijke AI coach</div><div style={{fontSize:13,color:"#666",lineHeight:1.8}}>Ik ken jouw trainingen, voeding en doelen. Ik geef je altijd persoonlijk advies.</div></div>
+          <div style={{...S.card,padding:16,marginBottom:16,width:"100%"}}>
+            <div style={{display:"flex",gap:10,alignItems:"center"}}>
+              <div style={{width:8,height:8,borderRadius:"50%",background:LIME,flexShrink:0}}/>
+              <div style={{fontSize:13,color:"#888",lineHeight:1.7}}>Ik ken jouw trainingen, voeding en doelen. Stel me een vraag of geef me een opdracht — ik voer het uit.</div>
+            </div>
+          </div>
           <div style={{width:"100%",marginBottom:16}}>
-            <div style={{...S.lbl,marginBottom:12}}>Vraag Finn iets</div>
+            <div style={{...S.lbl,marginBottom:12}}>Vraag Roan iets</div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>{["Motiveer me!","Wat eten vandaag?","Analyseer mijn week","Maak een schema","Ik ben moe","Hoe val ik af?"].map(q=><button key={q} onClick={()=>openFinnWith(q)} style={{padding:"12px 14px",borderRadius:14,border:"1px solid #1C1C1C",background:"#141414",color:"#888",fontSize:12,cursor:"pointer",fontWeight:600,textAlign:"left"}}>{q}</button>)}</div>
           </div>
-          <button onClick={()=>openFinnWith(null)} style={{width:"100%",padding:16,borderRadius:16,border:"none",cursor:"pointer",background:ORANGE,color:"#fff",fontSize:15,fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",gap:12}}><FinnImg size={32}/>Chat met Finn</button>
+          <button onClick={()=>openFinnWith(null)} style={{width:"100%",padding:16,borderRadius:16,border:"none",cursor:"pointer",background:ORANGE,color:"#fff",fontSize:15,fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",gap:12}}><FinnImg size={32}/>Chat met Roan</button>
         </div>
       )}
 
