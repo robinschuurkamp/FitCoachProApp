@@ -88,8 +88,20 @@ const ROAN_IMGS={
   strong:"https://i.postimg.cc/YLtXQWzt/Ontwerp-zonder-titel-8-removebg-preview.png",
 };
 
-const APP_VERSION="1.6";
+const APP_VERSION="1.7";
 const CHANGELOG=[
+  {
+    version:"1.7",
+    title:"Roan is hier!",
+    items:[
+      "Finn is vervangen door Roan — jouw nieuwe energieke AI coach met eigen karakter",
+      "Roan heeft 4 emoties: cool, sterk, overwinning en lachen — wisselt automatisch",
+      "Rustdag op Home — herstel tips in plaats van trainingsadvies",
+      "Roan voert nu commando's uit: weekmenu maken, boodschappen genereren, navigeren",
+      "Voeding tabs in 2x2 raster voor betere leesbaarheid",
+      "Teksten leesbaarder gemaakt door betere kleurcontrasten",
+    ]
+  },
   {
     version:"1.6",
     title:"Streak, water & records",
@@ -129,7 +141,33 @@ const LS={get:(k)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):n
 function fmtDate(d){const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0');return`${dd}/${mm}/${d.getFullYear()}`;}
 function parseDate(s){const p=s.split('/');return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));}
 async function resizeImg(file){return new Promise(res=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const max=220,ratio=Math.min(max/img.width,max/img.height),c=document.createElement('canvas');c.width=img.width*ratio;c.height=img.height*ratio;c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.75));};img.src=e.target.result;};r.readAsDataURL(file);});}
-async function ai(prompt){try{const r=await fetch(WORKER,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:800,messages:[{role:"user",content:prompt}]})});const d=await r.json();return d.content?.[0]?.text||"";}catch(e){return"Verbindingsfout.";}}
+async function ai(prompt){
+  try{
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),15000);
+    const r=await fetch(WORKER,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:800,messages:[{role:"user",content:prompt}]}),
+      signal:controller.signal
+    });
+    clearTimeout(timeout);
+    if(!r.ok){console.error("Worker error:",r.status,r.statusText);return"Roan is even niet beschikbaar ("+r.status+"). Probeer het opnieuw.";}
+    const d=await r.json();
+    console.log("Worker response:",JSON.stringify(d).slice(0,200));
+    // Support both Anthropic format {content:[{text}]} and direct text
+    if(d.content?.[0]?.text)return d.content[0].text;
+    if(d.text)return d.text;
+    if(d.response)return d.response;
+    if(d.result)return d.result;
+    if(typeof d==="string")return d;
+    console.error("Unknown response format:",d);
+    return"Roan heeft geen antwoord. Probeer het opnieuw.";
+  }catch(e){
+    if(e.name==="AbortError")return"Roan reageert te langzaam. Probeer het opnieuw.";
+    return"Verbindingsfout. Controleer je internet en probeer opnieuw.";
+  }
+}
 
 function speak(txt){
   if(!window.speechSynthesis)return;
@@ -746,6 +784,7 @@ function FinnPopup({onClose,pendingMsg,profile,log,food,onNavigate,onGenerateMen
   const [input,setInput]=useState("");
   const [msgs,setMsgs]=useState([{r:"a",t:`Hey ${profile?.name||""}! Roan hier. Ik kan je coachen, een weekmenu maken of je door de app sturen. Wat wil je?`}]);
   const [loading,setLoading]=useState(false);
+  const [currentEmotion,setCurrentEmotion]=useState("cool");
   const endRef=useRef(null);
   useEffect(()=>{endRef.current?.scrollIntoView({behavior:"smooth"});},[msgs,loading]);
   useEffect(()=>{if(pendingMsg)doSend(pendingMsg);},[]);
@@ -788,7 +827,12 @@ function FinnPopup({onClose,pendingMsg,profile,log,food,onNavigate,onGenerateMen
 Geef motiverende, persoonlijke adviezen. Max 3 zinnen. NL.
 Gebruiker: ${txt}
 Roan:`;
-    const reply=await ai(prompt);
+    let reply="";
+    try{
+      reply=await ai(prompt);
+    }catch(e){
+      reply="Oeps, er ging iets mis. Probeer het opnieuw!";
+    }
     // Bepaal emotie op basis van antwoord
     const rl=reply.toLowerCase();
     let emotion="cool";
