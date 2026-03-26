@@ -761,11 +761,14 @@ function AuthScreen({onAuth}){
   async function handleForgot(){if(!email){setErr("Vul eerst je email in.");return;}await sb.auth.resetPasswordForEmail(email);setOk("Reset link verstuurd naar "+email);}
   const inputStyle={width:"100%",padding:"16px",borderRadius:14,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:15,outline:"none",marginBottom:10,boxSizing:"border-box"};
   return(
-    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"flex-end",padding:"0 24px 52px",background:"#0D0D0D"}}>
+    <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",justifyContent:"flex-end",background:"#0D0D0D",position:"relative"}}>
+      <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?w=800&q=85" alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}}/>
+      <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(0,0,0,0.2) 0%,rgba(13,13,13,0.97) 65%,#0D0D0D 100%)"}}/>
+      <div style={{position:"relative",padding:"0 24px 52px"}}>
       <div style={{marginBottom:32}}>
-        <div style={{fontSize:11,letterSpacing:3,color:"#444",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>FitCoach Pro</div>
-        <div style={{fontSize:40,fontWeight:900,letterSpacing:-2,lineHeight:1,marginBottom:8}}>{mode==="login"?"Welkom terug.":"Account aanmaken."}</div>
-        <div style={{fontSize:14,color:"#555"}}>{mode==="login"?"Log in om verder te gaan":"Gratis beginnen met Finn"}</div>
+        <div style={{fontSize:13,letterSpacing:3,color:LIME,fontWeight:700,textTransform:"uppercase",marginBottom:12}}>FitCoach Pro</div>
+        <div style={{fontSize:40,fontWeight:900,letterSpacing:-1.5,lineHeight:1.05,marginBottom:12,color:"#fff"}}>{mode==="login"?"Welkom terug.":"Train slimmer. Leef beter."}</div>
+        <div style={{fontSize:14,color:"rgba(255,255,255,0.45)"}}>{mode==="login"?"Log in om verder te gaan met Finn":"Maak gratis een account aan"}</div>
       </div>
       <div style={{marginBottom:16}}>
         <input value={email} onChange={e=>setEmail(e.target.value)} placeholder="Email" type="email" style={inputStyle}/>
@@ -787,6 +790,7 @@ function AuthScreen({onAuth}){
         </button>
         {mode==="login"&&<button onClick={handleForgot} style={{background:"none",border:"none",color:"#333",fontSize:12,cursor:"pointer"}}>Wachtwoord vergeten</button>}
       </div>
+    </div>
     </div>
   );
 }
@@ -812,14 +816,11 @@ function WhatsNewModal({onClose}){
 }
 
 function Onboarding({onComplete}){
-  const [step,setStep]=useState(0);
+  const [step,setStep]=useState(1);
   const [p,setP]=useState({name:"",age:"",weight:"",goalWeight:"",goal:"afvallen",level:"beginner",sportType:"kracht",trainingLoc:"gym",equipmentPref:"mixed",fase:"onderhoud",fotoUrl:"",trainDays:3,trainDayNames:["ma","di","do"],coachLevel:"regelmatig"});
   const u=(k,v)=>setP(prev=>({...prev,[k]:v}));
   const inp={width:"100%",padding:"15px 16px",borderRadius:14,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:15,outline:"none",marginBottom:14,boxSizing:"border-box"};
   async function handlePhoto(e){const f=e.target.files[0];if(!f)return;const b=await resizeImg(f);u("fotoUrl",b);}
-  if(step===0)return(
-    <div style={{minHeight:"100vh",position:"relative",overflow:"hidden"}}><img src={P.onboard} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/><div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(13,13,13,0.95) 60%,#0D0D0D 100%)"}}/><div style={{position:"relative",display:"flex",flexDirection:"column",justifyContent:"flex-end",minHeight:"100vh",padding:"0 24px 52px"}}><div style={{animation:"slideUp .6s cubic-bezier(.16,1,.3,1)"}}><div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:16}}><span style={{color:"#fff"}}>FitCoach</span><span style={{color:LIME}}>Pro</span></div><div style={{fontSize:40,fontWeight:900,lineHeight:1.05,letterSpacing:-1,marginBottom:16}}>Train slimmer.<br/>Leef beter.</div><div style={{display:"flex",alignItems:"center",gap:12,background:"rgba(255,107,43,0.12)",border:"1px solid rgba(255,107,43,0.25)",borderRadius:14,padding:"12px 14px",marginBottom:32}}><FinnImg size={52}/><div style={{fontSize:13,color:"rgba(255,255,255,0.7)"}}>"Klaar om jouw beste zelf te worden?"</div></div><button onClick={()=>setStep(1)} style={{width:"100%",padding:18,borderRadius:18,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>Begin nu</button></div></div></div>
-  );
   const prog=step/7*100;
   return(
     <div style={{background:"#0D0D0D",minHeight:"100vh",maxWidth:480,margin:"0 auto"}}>
