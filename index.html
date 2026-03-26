@@ -88,8 +88,28 @@ const ROAN_IMGS={
   strong:"https://i.postimg.cc/YLtXQWzt/Ontwerp-zonder-titel-8-removebg-preview.png",
 };
 
-const APP_VERSION="1.8";
+const APP_VERSION="2.0";
 const CHANGELOG=[
+  {
+    version:"2.0",
+    title:"Muziek & boodschappen",
+    items:[
+      "Muziek widget op Home — open Spotify, Apple Music of YouTube direct",
+      "Boodschappenlijst: zelf items toevoegen en verwijderen",
+      "Oefeningen zoeken en eigen oefeningen toevoegen tijdens training",
+    ]
+  },
+  {
+    version:"1.9",
+    title:"Oefeningen & snellere Roan",
+    items:[
+      "Oefeningen zoeken en wisselen tijdens training — zoek in 130+ oefeningen",
+      "Eigen oefeningen toevoegen — Roan kent ze meteen",
+      "Roan reageert sneller dan voorheen",
+      "Rustdag tip wisselt elke dag",
+      "Roan weet op de homepagina dat het een rustdag is",
+    ]
+  },
   {
     version:"1.8",
     title:"Roan is nu echt slim",
@@ -158,7 +178,7 @@ async function ai(prompt){
     const r=await fetch(WORKER,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:800,messages:[{role:"user",content:prompt}]}),
+      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:400,messages:[{role:"user",content:prompt}]}),
       signal:controller.signal
     });
     clearTimeout(timeout);
@@ -840,6 +860,7 @@ Je hebt uitgebreide kennis over: krachttraining, voeding, cardio, HIIT, suppleme
 Je KAN ook taken uitvoeren in de app: weekmenu maken, boodschappenlijst genereren, naar tabs navigeren.
 
 Gebruikersinfo: ${getCtx()}
+Beschikbare oefeningen in de app (selectie): ${Object.keys(EX_DB).slice(0,50).join(", ")}
 
 Regels:
 - Blijf altijd in karakter als Roan, nooit als AI
@@ -1131,6 +1152,7 @@ function App(){
   const [customName,setCustomName]=useState("");
   const [customExercises,setCustomExercises]=useState([{name:"",sets:"3",reps:"10",weights:""}]);
   const [wisselIndex,setWisselIndex]=useState(null);
+  const [wisselSearch,setWisselSearch]=useState(null);
   const [voiceOn,setVoiceOn]=useState(()=>LS.get("fitcoach_voice")!==false);
   const [feedbackModal,setFeedbackModal]=useState(null);
   const [feedbackLoading,setFeedbackLoading]=useState(false);
@@ -1173,11 +1195,18 @@ function App(){
   let finnBericht=dayPool[weekNum%dayPool.length](profile?.name||"");
   if(profile){try{
     const yk=fmtDate(new Date(TODAY.getTime()-86400000)),yLog=log.find(e=>e.date===yk);
-    if(log[0]){const d=parseDate(log[0].date),since=Math.floor((TODAY-d)/86400000);
+    const trainDayNames2=profile.trainDayNames||["ma","di","do"];
+    const dayKeys2=["zo","ma","di","wo","do","vr","za"];
+    const todayKey2=dayKeys2[TODAY.getDay()];
+    const isRestDay=!trainDayNames2.includes(todayKey2);
+    if(isRestDay){
+      finnBericht=`Rustdag vandaag ${profile.name}! Je lichaam herstelt nu. Geen training, wel goed eten en hydrateren.`;
+    } else if(log[0]){
+      const d=parseDate(log[0].date),since=Math.floor((TODAY-d)/86400000);
       if(since>=3)finnBericht=`${profile.name}, het is al ${since} dagen geleden. Je lichaam mist de training! Vandaag kom je terug.`;
       else if(yLog)finnBericht=`Super gedaan gisteren ${profile.name}! Die ${yLog.workout} training was geweldig. Vandaag ook?`;
+      else if(streak>=3)finnBericht=`${streak} dagen op rij ${profile.name}! Je bent on fire. Houd het vol!`;
     }
-    if(streak>=3)finnBericht=`${streak} dagen op rij ${profile.name}! Je bent on fire. Houd het vol!`;
   }catch(e){}}
 
   useEffect(()=>{if(profile){LS.set("fitcoach_profile",profile);syncToSupabase(profile,null,null);}},[profile]);
@@ -1188,6 +1217,11 @@ function App(){
 
   function openFinnWith(msg){setPendingMsg(msg||null);setShowFinn(true);}
   const swapMemory=LS.get("fitcoach_swaps")||{};
+  // Laad eigen oefeningen uit localStorage
+  useEffect(()=>{
+    const custom=LS.get("fitcoach_custom_ex")||{};
+    Object.entries(custom).forEach(([naam,data])=>{if(!EX_DB[naam])EX_DB[naam]=data;});
+  },[]);
   const coachLevel=profile?.coachLevel||"regelmatig";
 
   function startSess(muscles,custom){
@@ -1307,8 +1341,17 @@ function App(){
           <div style={{position:"relative",height:300,overflow:"hidden"}}>
             <img src={P.hero} alt="" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}}/>
             <div style={{position:"absolute",inset:0,background:"linear-gradient(160deg,rgba(0,0,0,0.2) 0%,rgba(13,13,13,0.98) 85%)"}}/>
-            <button onClick={()=>setShowSettings(true)} style={{position:"absolute",top:16,right:16,width:42,height:42,borderRadius:"50%",background:"rgba(0,0,0,0.5)",border:"1px solid rgba(255,255,255,0.1)",backdropFilter:"blur(8px)",display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",overflow:"hidden"}}>
-              {profile.fotoUrl?<img src={profile.fotoUrl} alt="profiel" style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:14,color:"#fff"}}>⚙</span>}
+            <button onClick={()=>setShowSettings(true)} style={{position:"absolute",top:16,right:16,display:"flex",alignItems:"center",gap:8,padding:"8px 12px 8px 8px",borderRadius:50,background:"rgba(0,0,0,0.6)",border:"1px solid rgba(255,255,255,0.15)",backdropFilter:"blur(12px)",cursor:"pointer"}}>
+              <div style={{width:30,height:30,borderRadius:"50%",overflow:"hidden",flexShrink:0,border:`1.5px solid ${LIME}`}}>
+                {profile.fotoUrl
+                  ?<img src={profile.fotoUrl} alt="profiel" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
+                  :<div style={{width:"100%",height:"100%",background:"#1C1C1C",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>👤</div>
+                }
+              </div>
+              <div style={{textAlign:"left"}}>
+                <div style={{fontSize:11,fontWeight:800,color:"#fff",lineHeight:1}}>{profile.name}</div>
+                <div style={{fontSize:9,color:LIME,fontWeight:600,marginTop:2}}>Instellingen</div>
+              </div>
             </button>
             <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"0 20px 24px"}}>
               <div style={{...S.lbl,color:"rgba(200,241,56,0.8)",marginBottom:6}}>{DAY_NL.toUpperCase()} · {sportType.toUpperCase()}</div>
@@ -1372,9 +1415,32 @@ function App(){
                 <div key={s.l} style={{...S.card,padding:"14px 10px",textAlign:"center"}}><div style={{...S.lbl,marginBottom:6}}>{s.l}</div><div style={{fontSize:18,fontWeight:800,color:s.c}}>{s.v}</div></div>
               ))}
             </div>
-            <button onClick={()=>setTab("Training")} style={{width:"100%",padding:17,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:800,marginBottom:16}}>
+            <button onClick={()=>setTab("Training")} style={{width:"100%",padding:17,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:800,marginBottom:12}}>
               {sportType==="hiit"?"Start HIIT":sportType==="cardio"?"Start Cardio":"Start Training"}
             </button>
+
+            {/* Muziek widget */}
+            <div style={{...S.card,padding:"14px 16px",marginBottom:16}}>
+              <div style={{...S.lbl,marginBottom:10}}>Muziek voor je training</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                <a href="spotify:playlist:37i9dQZF1DX70RN3TfWWJh" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:12,background:"#1DB954",textDecoration:"none",cursor:"pointer"}}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                  <div><div style={{fontSize:12,fontWeight:800,color:"#fff"}}>Spotify</div><div style={{fontSize:10,color:"rgba(255,255,255,0.7)"}}>Gym workout</div></div>
+                </a>
+                <a href="https://music.apple.com/nl/playlist/gym-workout/pl.u-leyl0JpTmqjKR" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:12,background:"#fc3c44",textDecoration:"none",cursor:"pointer"}}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M23.994 6.124a9.23 9.23 0 00-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043a5.022 5.022 0 00-1.877-.726 10.496 10.496 0 00-1.564-.15c-.04-.003-.083-.01-.124-.013H5.986c-.152.01-.303.017-.455.026C4.87.19 4.228.305 3.62.507a4.905 4.905 0 00-2.08 1.336 5.026 5.026 0 00-1.24 2.29A9.56 9.56 0 000 5.773v12.553a9.23 9.23 0 00.24 2.189c.317 1.31 1.062 2.31 2.18 3.043a5.022 5.022 0 001.877.726 10.5 10.5 0 001.565.15c.04.003.083.01.124.012h12.023c.152-.01.303-.017.455-.025 1.161-.1 1.803-.215 2.411-.417a4.902 4.902 0 002.08-1.336 5.026 5.026 0 001.24-2.29 9.56 9.56 0 00.305-2.236V6.124zm-8.413 6.37a2.724 2.724 0 01-1.365 2.373 2.64 2.64 0 01-1.449.303c-.96 0-1.73-.768-1.73-1.718s.77-1.718 1.73-1.718c.237 0 .462.05.666.136V8.37l4.906-1.348v2.18l-2.758.757v2.535z"/></svg>
+                  <div><div style={{fontSize:12,fontWeight:800,color:"#fff"}}>Apple Music</div><div style={{fontSize:10,color:"rgba(255,255,255,0.7)"}}>Gym workout</div></div>
+                </a>
+                <a href="https://www.youtube.com/results?search_query=gym+workout+music+mix" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:12,background:"#FF0000",textDecoration:"none",cursor:"pointer"}}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+                  <div><div style={{fontSize:12,fontWeight:800,color:"#fff"}}>YouTube</div><div style={{fontSize:10,color:"rgba(255,255,255,0.7)"}}>Workout mix</div></div>
+                </a>
+                <a href="https://open.spotify.com/playlist/37i9dQZF1DX70RN3TfWWJh" target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:10,padding:"12px 14px",borderRadius:12,background:"#333",textDecoration:"none",cursor:"pointer",border:"1px solid #444"}}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="#C8F138"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                  <div><div style={{fontSize:12,fontWeight:800,color:"#fff"}}>Eigen playlist</div><div style={{fontSize:10,color:"#888"}}>Plak jouw link</div></div>
+                </a>
+              </div>
+            </div>
 
             {/* Weekplanning */}
             {(()=>{
@@ -1420,7 +1486,7 @@ function App(){
                 {icon:"😴",title:"Vroeg slapen",desc:"Spieren groeien tijdens slaap. Probeer 8 uur te slapen vanavond."},
                 {icon:"🥩",title:"Eet voldoende eiwit",desc:"Rustdag betekent niet minder eten. Je lichaam heeft bouwstoffen nodig voor herstel."},
               ];
-              const tip=RUSTDAG_TIPS[weekNum%RUSTDAG_TIPS.length];
+              const tip=RUSTDAG_TIPS[TODAY.getDay()%RUSTDAG_TIPS.length];
               if(!isTrainDay) return(
                 <div style={{marginBottom:24}}>
                   {last&&<div style={{...S.card,padding:14,marginBottom:12,background:"rgba(200,241,56,0.05)",border:"1px solid rgba(200,241,56,0.15)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:"#888"}}>{last.day} · {dgl===0?"Vandaag":dgl===1?"Gisteren":`${dgl} dagen geleden`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
@@ -1610,12 +1676,56 @@ function App(){
                             <button onClick={()=>submitNote(ei)} disabled={!ex.note.trim()||noteLoading[ei]} style={{padding:"10px 14px",borderRadius:12,border:"none",fontWeight:700,fontSize:11,cursor:ex.note.trim()?"pointer":"default",background:ex.note.trim()?ORANGE:"#1C1C1C",color:ex.note.trim()?"#fff":"#444",opacity:noteLoading[ei]?0.5:1,flexShrink:0}}>{noteLoading[ei]?"...":"Roan"}</button>
                           </div>
                           {noteAdvice[ei]&&<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:12,marginTop:8,fontSize:12,lineHeight:1.7,color:"#bbb"}}>{noteAdvice[ei].text}</div>}
-                          {wisselIndex===ei&&alts.length>0&&(
+                          {wisselIndex===ei&&(
                             <div style={{marginTop:12,background:"#1C1C1C",borderRadius:14,padding:14}}>
-                              <div style={{...S.lbl,marginBottom:10}}>Wissel oefening</div>
+                              <div style={{...S.lbl,marginBottom:10}}>Wissel of voeg toe</div>
                               {swapMemory[ex.name]&&<div style={{background:"rgba(200,241,56,0.06)",borderRadius:10,padding:"8px 12px",marginBottom:10,fontSize:12,color:LIME}}>Eerder gewisseld naar: <strong>{swapMemory[ex.name]}</strong></div>}
-                              <div style={{display:"flex",flexDirection:"column",gap:6}}>{[...new Set([swapMemory[ex.name],...alts].filter(Boolean))].slice(0,6).map(name=><button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:`1px solid ${name===swapMemory[ex.name]?"rgba(200,241,56,0.2)":"#333"}`,background:name===swapMemory[ex.name]?"rgba(200,241,56,0.04)":"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:"#888"}}>{EX_DB[name]?.muscle}</span></button>)}</div>
-                              <button onClick={()=>setWisselIndex(null)} style={{width:"100%",marginTop:10,padding:"9px",borderRadius:10,border:"1px solid #333",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Annuleren</button>
+                              
+                              {/* Zoek in alle oefeningen */}
+                              <input 
+                                placeholder="Zoek oefening of typ zelf..." 
+                                onChange={e=>{
+                                  const q=e.target.value.toLowerCase();
+                                  if(q.length<2)return;
+                                  // Show matching exercises from DB
+                                  const matches=Object.keys(EX_DB).filter(n=>n.toLowerCase().includes(q)).slice(0,8);
+                                  setWisselSearch({q:e.target.value,results:matches});
+                                }}
+                                style={{width:"100%",padding:"10px 12px",borderRadius:10,border:"1px solid #333",background:"#111",color:"#fff",fontSize:13,outline:"none",marginBottom:10,boxSizing:"border-box"}}
+                              />
+                              
+                              {/* Zoekresultaten */}
+                              {wisselSearch?.results?.length>0&&<div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:10}}>
+                                {wisselSearch.results.map(name=><button key={name} onClick={()=>{wisselOefening(ei,name);setWisselSearch(null);}} style={{padding:"10px 14px",borderRadius:10,border:"1px solid #444",background:"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:"#888"}}>{EX_DB[name]?.muscle}</span></button>)}
+                              </div>}
+
+                              {/* Eigen oefening toevoegen */}
+                              <div style={{borderTop:"1px solid #333",paddingTop:10,marginBottom:10}}>
+                                <div style={{fontSize:11,color:"#888",marginBottom:8}}>Oefening niet gevonden? Voeg zelf toe:</div>
+                                <input 
+                                  id={`custom-ex-${ei}`}
+                                  placeholder="Naam eigen oefening..." 
+                                  style={{width:"100%",padding:"10px 12px",borderRadius:10,border:"1px solid #333",background:"#111",color:"#fff",fontSize:13,outline:"none",marginBottom:8,boxSizing:"border-box"}}
+                                />
+                                <button onClick={()=>{
+                                  const naam=document.getElementById(`custom-ex-${ei}`)?.value?.trim();
+                                  if(!naam)return;
+                                  // Add to EX_DB
+                                  EX_DB[naam]={muscle:EX_DB[ex.name]?.muscle||"full body",unit:EX_DB[ex.name]?.unit||"kg",rest:60,info:`Eigen oefening: ${naam}`,yt:naam.replace(/ /g,"+")};
+                                  // Save to localStorage
+                                  const custom=LS.get("fitcoach_custom_ex")||{};
+                                  custom[naam]=EX_DB[naam];
+                                  LS.set("fitcoach_custom_ex",custom);
+                                  wisselOefening(ei,naam);
+                                  setWisselSearch(null);
+                                }} style={{width:"100%",padding:"9px",borderRadius:10,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer"}}>Toevoegen & wisselen</button>
+                              </div>
+
+                              {/* Suggesties op basis van spiergroep */}
+                              {alts.length>0&&!wisselSearch?.results?.length&&<><div style={{fontSize:11,color:"#888",marginBottom:8}}>Suggesties ({EX_DB[ex.name]?.muscle}):</div>
+                              <div style={{display:"flex",flexDirection:"column",gap:6}}>{[...new Set([swapMemory[ex.name],...alts].filter(Boolean))].slice(0,5).map(name=><button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:`1px solid ${name===swapMemory[ex.name]?"rgba(200,241,56,0.2)":"#333"}`,background:name===swapMemory[ex.name]?"rgba(200,241,56,0.04)":"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:"#888"}}>{EX_DB[name]?.muscle}</span></button>)}</div></>}
+                              
+                              <button onClick={()=>{setWisselIndex(null);setWisselSearch(null);}} style={{width:"100%",marginTop:10,padding:"9px",borderRadius:10,border:"1px solid #333",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Sluiten</button>
                             </div>
                           )}
                         </div>
@@ -1859,16 +1969,33 @@ function App(){
                 </div>
               </div>
               {!weekMenu&&<div style={{...S.card,padding:"10px 14px",marginBottom:14,display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{fontSize:11,color:"#555"}}>Maak eerst een weekmenu voor een slimme lijst</div><button onClick={()=>setFoodSubTab("weekmenu")} style={{padding:"5px 10px",borderRadius:8,border:`1px solid ${LIME}`,background:"none",color:LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>Weekmenu →</button></div>}
+              {/* Zelf item toevoegen */}
+              {(()=>{
+                const [newItem,setNewItem]=React.useState("");
+                return(
+                  <div style={{display:"flex",gap:8,marginBottom:12}}>
+                    <input 
+                      value={newItem} 
+                      onChange={e=>setNewItem(e.target.value)}
+                      onKeyDown={e=>{if(e.key==="Enter"&&newItem.trim()){const u=[...shoppingList,{name:newItem.trim(),checked:false}];setShoppingList(u);LS.set("fitcoach_shopping",u);setNewItem("");}}}
+                      placeholder="Item toevoegen..." 
+                      style={{flex:1,padding:"11px 14px",borderRadius:12,border:"1px solid #222",background:"#111",color:"#fff",fontSize:13,outline:"none"}}
+                    />
+                    <button onClick={()=>{if(!newItem.trim())return;const u=[...shoppingList,{name:newItem.trim(),checked:false}];setShoppingList(u);LS.set("fitcoach_shopping",u);setNewItem("");}} style={{padding:"11px 16px",borderRadius:12,border:"none",background:LIME,color:"#000",fontWeight:800,fontSize:16,cursor:"pointer"}}>+</button>
+                  </div>
+                );
+              })()}
               {shoppingList.length>0?(
                 <div style={{...S.card,padding:14}}>
                   {shoppingList.map((item,i)=>(
-                    <div key={i} onClick={()=>{const u=[...shoppingList];u[i]={...u[i],checked:!u[i].checked};setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{display:"flex",alignItems:"center",gap:12,paddingBottom:11,marginBottom:11,borderBottom:i<shoppingList.length-1?"1px solid #111":"none",cursor:"pointer"}}>
-                      <div style={{width:20,height:20,borderRadius:5,border:`1.5px solid ${item.checked?LIME:"#333"}`,background:item.checked?"rgba(200,241,56,0.15)":"none",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:LIME,flexShrink:0}}>{item.checked?"✓":""}</div>
-                      <div style={{fontSize:13,color:item.checked?"#444":"#ccc",textDecoration:item.checked?"line-through":"none",flex:1}}>{item.name}</div>
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:12,paddingBottom:11,marginBottom:11,borderBottom:i<shoppingList.length-1?"1px solid #111":"none"}}>
+                      <div onClick={()=>{const u=[...shoppingList];u[i]={...u[i],checked:!u[i].checked};setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{width:20,height:20,borderRadius:5,border:`1.5px solid ${item.checked?LIME:"#333"}`,background:item.checked?"rgba(200,241,56,0.15)":"none",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:LIME,flexShrink:0,cursor:"pointer"}}>{item.checked?"✓":""}</div>
+                      <div onClick={()=>{const u=[...shoppingList];u[i]={...u[i],checked:!u[i].checked};setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{fontSize:13,color:item.checked?"#444":"#ccc",textDecoration:item.checked?"line-through":"none",flex:1,cursor:"pointer"}}>{item.name}</div>
+                      <button onClick={()=>{const u=shoppingList.filter((_,j)=>j!==i);setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{background:"none",border:"none",color:"#444",fontSize:16,cursor:"pointer",padding:"0 4px",flexShrink:0}}>×</button>
                     </div>
                   ))}
                 </div>
-              ):<div style={{...S.card,padding:24,textAlign:"center"}}><div style={{fontSize:13,color:"#444",marginBottom:8}}>Nog geen boodschappenlijst</div><div style={{fontSize:11,color:"#333"}}>Genereer er een op basis van je weekmenu</div></div>}
+              ):<div style={{...S.card,padding:24,textAlign:"center"}}><div style={{fontSize:13,color:"#444",marginBottom:8}}>Nog geen items</div><div style={{fontSize:11,color:"#333"}}>Typ hierboven om te beginnen of genereer via weekmenu</div></div>}
             </div>
           )}
 
