@@ -776,6 +776,7 @@ function FinnPopup({onClose,pendingMsg,profile,log,food,onNavigate,onGenerateMen
   const [input,setInput]=useState("");
   const [msgs,setMsgs]=useState([{r:"a",t:`Hey ${profile?.name||""}! Roan hier. Ik kan je coachen, een weekmenu maken of je door de app sturen. Wat wil je?`}]);
   const [loading,setLoading]=useState(false);
+  const [currentEmotion,setCurrentEmotion]=useState("cool");
   const endRef=useRef(null);
   useEffect(()=>{endRef.current?.scrollIntoView({behavior:"smooth"});},[msgs,loading]);
   useEffect(()=>{if(pendingMsg)doSend(pendingMsg);},[]);
