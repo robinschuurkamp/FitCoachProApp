@@ -903,7 +903,7 @@ function updatePRs(prData,exercises){
 function App(){
   const [sbUser,setSbUser]=useState(null);
   const [authChecked,setAuthChecked]=useState(false);
-  const [profile,setProfile]=useState(()=>LS.get("fitcoach_profile"));
+  const [profile,setProfile]=useState(null); // Profiel alleen laden na login
 
   useEffect(()=>{
     // Timeout fallback: stel authChecked in na 4 seconden als Supabase niet reageert
@@ -918,6 +918,14 @@ function App(){
   },[]);
 
   async function loadFromSupabase(userId){
+    // Laad eerst uit localStorage als fallback
+    const localProfile=LS.get("fitcoach_profile");
+    const localLog=LS.get("fitcoach_log");
+    const localFood=LS.get("fitcoach_food");
+    if(localProfile)setProfile(localProfile);
+    if(localLog)setLog(localLog);
+    if(localFood)setFood(localFood);
+    // Dan Supabase data (overschrijft localStorage als nieuwer)
     const data=await sbLoad("user_data",userId);
     if(data){
       if(data.profile){setProfile(data.profile);LS.set("fitcoach_profile",data.profile);}
