@@ -679,7 +679,7 @@ function buildSession(muscles,log,profile){
   return adjusted;
 }
 
-const S={card:{background:"#141414",borderRadius:20,border:"1px solid #1C1C1C"},lbl:{fontSize:10,color:"#555",fontWeight:700,letterSpacing:2,textTransform:"uppercase"}};
+const S={card:{background:"#141414",borderRadius:20,border:"1px solid #1C1C1C"},lbl:{fontSize:10,color:"#888",fontWeight:700,letterSpacing:2,textTransform:"uppercase"}};
 function FinnImg({size,emotion="cool"}){
   const src=ROAN_IMGS[emotion]||ROAN_IMGS.cool;
   return(
@@ -1251,7 +1251,7 @@ function App(){
           </div>
           <div style={{padding:"0 16px"}}>
             {/* Roan bericht */}
-            <div style={{display:"flex",gap:12,alignItems:"flex-start",background:"rgba(255,107,43,0.07)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:16,padding:14,margin:"16px 0",transform:"translateY(-8px)"}}><FinnImg size={44}/><div><div style={{fontSize:11,color:ORANGE,fontWeight:700,marginBottom:3}}>Roan zegt</div><div style={{fontSize:13,color:"rgba(255,255,255,0.7)",lineHeight:1.6}}>{finnBericht}</div></div></div>
+            <div style={{display:"flex",gap:12,alignItems:"flex-start",background:"rgba(255,107,43,0.07)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:16,padding:14,margin:"16px 0",transform:"translateY(-8px)"}}><FinnImg size={44}/><div><div style={{fontSize:11,color:ORANGE,fontWeight:700,marginBottom:3}}>Roan zegt</div><div style={{fontSize:13,color:"rgba(255,255,255,0.85)",lineHeight:1.6}}>{finnBericht}</div></div></div>
 
             {/* ── v1.6: Streak + Water rij ─────────────────────── */}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
@@ -1394,11 +1394,11 @@ function App(){
       {tab==="Training"&&(
         <div style={{padding:"24px 16px"}}>
           <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.5,marginBottom:2}}>Training</div>
-          <div style={{fontSize:13,color:"#555",marginBottom:12}}><span style={{color:sportType==="hiit"?ORANGE:sportType==="cardio"?"#60a5fa":LIME,fontWeight:700,textTransform:"capitalize"}}>{sportType}</span> · {profile.level||"beginner"}</div>
+          <div style={{fontSize:13,color:"#999",marginBottom:12}}><span style={{color:sportType==="hiit"?ORANGE:sportType==="cardio"?"#60a5fa":LIME,fontWeight:700,textTransform:"capitalize"}}>{sportType}</span> · {profile.level||"beginner"}</div>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
             <div style={{display:"flex",gap:8,flex:1,alignItems:"center"}}>
               <button onClick={()=>setTrainDate(d=>fmtDate(new Date(parseDate(d).getTime()-86400000)))} style={{width:36,height:36,borderRadius:10,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
-              <div style={{flex:1,textAlign:"center"}}><div style={{fontSize:13,fontWeight:700,color:trainDate===TODAY_KEY?LIME:"#888"}}>{trainDate===TODAY_KEY?"Vandaag":trainDate}</div><div style={{fontSize:10,color:"#555"}}>{DAYS[parseDate(trainDate).getDay()]}</div></div>
+              <div style={{flex:1,textAlign:"center"}}><div style={{fontSize:13,fontWeight:700,color:trainDate===TODAY_KEY?LIME:"#888"}}>{trainDate===TODAY_KEY?"Vandaag":trainDate}</div><div style={{fontSize:10,color:"#999"}}>{DAYS[parseDate(trainDate).getDay()]}</div></div>
               <button onClick={()=>{if(trainDate!==TODAY_KEY)setTrainDate(d=>fmtDate(new Date(parseDate(d).getTime()+86400000)));}} disabled={trainDate===TODAY_KEY} style={{width:36,height:36,borderRadius:10,border:"1px solid #222",background:trainDate===TODAY_KEY?"#111":"#141414",color:trainDate===TODAY_KEY?"#333":"#fff",fontSize:18,cursor:trainDate===TODAY_KEY?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>›</button>
             </div>
             {sportType==="hiit"&&<button onClick={()=>{const nv=!voiceOn;setVoiceOn(nv);LS.set("fitcoach_voice",nv);}} style={{marginLeft:10,padding:"8px 12px",borderRadius:10,border:`1px solid ${voiceOn?"rgba(200,241,56,0.3)":"#222"}`,background:voiceOn?"rgba(200,241,56,0.06)":"#111",color:voiceOn?LIME:"#444",fontSize:11,fontWeight:700,cursor:"pointer",flexShrink:0}}>{voiceOn?"Stem aan":"Stem uit"}</button>}
@@ -1547,7 +1547,7 @@ function App(){
                             <div style={{marginTop:12,background:"#1C1C1C",borderRadius:14,padding:14}}>
                               <div style={{...S.lbl,marginBottom:10}}>Wissel oefening</div>
                               {swapMemory[ex.name]&&<div style={{background:"rgba(200,241,56,0.06)",borderRadius:10,padding:"8px 12px",marginBottom:10,fontSize:12,color:LIME}}>Eerder gewisseld naar: <strong>{swapMemory[ex.name]}</strong></div>}
-                              <div style={{display:"flex",flexDirection:"column",gap:6}}>{[...new Set([swapMemory[ex.name],...alts].filter(Boolean))].slice(0,6).map(name=><button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:`1px solid ${name===swapMemory[ex.name]?"rgba(200,241,56,0.2)":"#333"}`,background:name===swapMemory[ex.name]?"rgba(200,241,56,0.04)":"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:"#555"}}>{EX_DB[name]?.muscle}</span></button>)}</div>
+                              <div style={{display:"flex",flexDirection:"column",gap:6}}>{[...new Set([swapMemory[ex.name],...alts].filter(Boolean))].slice(0,6).map(name=><button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:`1px solid ${name===swapMemory[ex.name]?"rgba(200,241,56,0.2)":"#333"}`,background:name===swapMemory[ex.name]?"rgba(200,241,56,0.04)":"#141414",color:"#fff",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:"#888"}}>{EX_DB[name]?.muscle}</span></button>)}</div>
                               <button onClick={()=>setWisselIndex(null)} style={{width:"100%",marginTop:10,padding:"9px",borderRadius:10,border:"1px solid #333",background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>Annuleren</button>
                             </div>
                           )}
@@ -1568,10 +1568,10 @@ function App(){
         <div style={{padding:"24px 16px"}}>
           <div style={{...S.lbl,color:LIME,marginBottom:4}}>Statistieken</div>
           <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:4}}>Voortgang</div>
-          <div style={{fontSize:14,color:"#555",marginBottom:20}}>{profile.name} · {startW}→{goalW}kg</div>
+          <div style={{fontSize:14,color:"#999",marginBottom:20}}>{profile.name} · {startW}→{goalW}kg</div>
 
           {/* ── v1.6: Subtabs voor gewicht vs lichaamsmetingen ─── */}
-          <div style={{display:"flex",gap:4,background:"#111",borderRadius:12,padding:4,marginBottom:20}}>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,background:"#111",borderRadius:12,padding:8,marginBottom:20}}>
             {[{k:"gewicht",l:"Gewicht"},{k:"lichaam",l:"Metingen"},{k:"trainings",l:"Trainingen"},{k:"records",l:"PR Records"}].map(t=>(
               <button key={t.k} onClick={()=>setMeasSubTab(t.k)} style={{flex:1,padding:"8px 4px",borderRadius:10,border:"none",cursor:"pointer",background:measSubTab===t.k?"#1C1C1C":"none",color:measSubTab===t.k?"#fff":"#555",fontSize:10,fontWeight:measSubTab===t.k?700:400,transition:"all .15s"}}>{t.l}</button>
             ))}
@@ -1671,9 +1671,9 @@ function App(){
         <div style={{padding:"24px 16px"}}>
           <div style={{...S.lbl,color:LIME,marginBottom:4}}>Voeding</div>
           <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:16}}>Voeding</div>
-          <div style={{display:"flex",gap:4,background:"#111",borderRadius:12,padding:4,marginBottom:20}}>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,background:"#111",borderRadius:12,padding:8,marginBottom:20}}>
             {[{k:"dagelijks",l:"Dagelijks"},{k:"weekmenu",l:"Weekmenu"},{k:"boodschappen",l:"Boodschappen"},{k:"recepten",l:"Recepten"}].map(t=>(
-              <button key={t.k} onClick={()=>setFoodSubTab(t.k)} style={{flex:1,padding:"9px 4px",borderRadius:10,border:"none",cursor:"pointer",background:foodSubTab===t.k?"#1C1C1C":"none",color:foodSubTab===t.k?"#fff":"#555",fontSize:10,fontWeight:foodSubTab===t.k?700:400}}>{t.l}</button>
+              <button key={t.k} onClick={()=>setFoodSubTab(t.k)} style={{width:"calc(50% - 4px)",padding:"11px 8px",borderRadius:10,border:"none",cursor:"pointer",background:foodSubTab===t.k?"#1C1C1C":"none",color:foodSubTab===t.k?"#fff":"#888",fontSize:13,fontWeight:foodSubTab===t.k?700:400}}>{t.l}</button>
             ))}
           </div>
 
@@ -1715,7 +1715,7 @@ function App(){
                 </div>
                 <div style={{padding:14}}>
                   <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>{snelkeuzes.map(q=><button key={q} onClick={()=>addFood(meal,q)} style={{padding:"5px 10px",borderRadius:20,border:"1px solid #222",background:"#1C1C1C",color:"#888",fontSize:10,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>{q}</button>)}</div>
-                  {items.map((item,idx)=><div key={idx} style={{display:"flex",alignItems:"center",background:"#1C1C1C",borderRadius:12,padding:"10px 12px",marginBottom:8}}><div style={{flex:1}}><div style={{fontSize:13,fontWeight:700,marginBottom:3}}>{item.desc}</div><div style={{display:"flex",gap:8,fontSize:11,color:"#555"}}><span>{item.kcal}kcal</span><span>{item.prot}g eiwit</span><span>{item.carbs}g koolh</span><span>{item.fat}g vet</span></div></div><button onClick={()=>remFood(meal,idx)} style={{background:"none",border:"none",color:"#555",fontSize:18,cursor:"pointer",padding:"0 4px",marginLeft:8}}>×</button></div>)}
+                  {items.map((item,idx)=><div key={idx} style={{display:"flex",alignItems:"center",background:"#1C1C1C",borderRadius:12,padding:"10px 12px",marginBottom:8}}><div style={{flex:1}}><div style={{fontSize:13,fontWeight:700,marginBottom:3}}>{item.desc}</div><div style={{display:"flex",gap:8,fontSize:11,color:"#999"}}><span>{item.kcal}kcal</span><span>{item.prot}g eiwit</span><span>{item.carbs}g koolh</span><span>{item.fat}g vet</span></div></div><button onClick={()=>remFood(meal,idx)} style={{background:"none",border:"none",color:"#555",fontSize:18,cursor:"pointer",padding:"0 4px",marginLeft:8}}>×</button></div>)}
                   <div style={{display:"flex",gap:8}}>
                     <input value={foodInput[meal]} onChange={e=>setFoodInput(p=>({...p,[meal]:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&addFood(meal,null)} placeholder="Toevoegen bijv. '150g kip'..." style={{flex:1,padding:"11px 14px",borderRadius:12,border:"1px solid #1C1C1C",background:"#111",color:"#fff",fontSize:13,outline:"none"}}/>
                     <button onClick={()=>addFood(meal,null)} disabled={foodLoading[meal]} style={{width:44,height:44,borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontWeight:900,fontSize:18,opacity:foodLoading[meal]?0.5:1,flexShrink:0}}>{foodLoading[meal]?"·":"+"}</button>
@@ -1857,7 +1857,7 @@ function App(){
           <button key={t.id} onClick={()=>{
             if(t.id==="Training"&&tab==="Training"&&!selectingMuscles){setSelectingMuscles(true);setSession(null);setTargetMuscles([]);}
             else{setTab(t.id);}
-          }} style={{flex:1,padding:"12px 4px 10px",border:"none",background:"none",cursor:"pointer",color:tab===t.id?(t.id==="Coach"?ORANGE:LIME):"#333",display:"flex",flexDirection:"column",alignItems:"center",gap:4,transition:"color .15s"}}>
+          }} style={{flex:1,padding:"12px 4px 10px",border:"none",background:"none",cursor:"pointer",color:tab===t.id?(t.id==="Coach"?ORANGE:LIME):"#777",display:"flex",flexDirection:"column",alignItems:"center",gap:4,transition:"color .15s"}}>
             {t.svg}
             <div style={{fontSize:9,fontWeight:700,letterSpacing:0.5}}>{t.id.toUpperCase()}</div>
           </button>
