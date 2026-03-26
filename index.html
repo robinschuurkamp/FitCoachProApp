@@ -24,6 +24,15 @@ input[type=number]{-moz-appearance:textfield}
 </style>
 </head>
 <body>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('/sw.js').then(()=>{
+      console.log('SW registered');
+    }).catch(()=>{});
+  });
+}
+</script>
 <div id="root"></div>
 <div id="installModal">
   <div style="background:#141414;border-radius:24px 24px 0 0;width:100%;max-width:480px;padding:28px 24px 40px;border-top:1px solid #1C1C1C">
@@ -709,15 +718,56 @@ function VolumeBarChart({log}){
   );
 }
 
-function FinnPopup({onClose,pendingMsg,profile,log,food}){
+function FinnPopup({onClose,pendingMsg,profile,log,food,onNavigate,onGenerateMenu,onGenerateShopping}){
   const [input,setInput]=useState("");
-  const [msgs,setMsgs]=useState([{r:"a",t:`Hey! Finn hier. Ik coach ${profile?.name||"jou"} persoonlijk. Wat kan ik voor je doen?`}]);
+  const [msgs,setMsgs]=useState([{r:"a",t:`Hey ${profile?.name||""}! Finn hier. Ik kan je coachen, een weekmenu maken of je door de app sturen. Wat wil je?`}]);
   const [loading,setLoading]=useState(false);
   const endRef=useRef(null);
   useEffect(()=>{endRef.current?.scrollIntoView({behavior:"smooth"});},[msgs,loading]);
   useEffect(()=>{if(pendingMsg)doSend(pendingMsg);},[]);
   function getCtx(){const lw=log.slice(0,5).map(e=>`${e.day}: ${e.workout}`).join(", ")||"Geen trainingen";const tf=food[TODAY_KEY]||{};const tk=MEALS.reduce((s,m)=>s+(tf[m]||[]).reduce((a,i)=>a+(i.kcal||0),0),0);return`Naam:${profile?.name} Doel:${profile?.goal} Fase:${profile?.fase||"onderhoud"} Sport:${profile?.sportType||"kracht"} Level:${profile?.level||"beginner"} Gewicht:${profile?.weight}kg Trainingen:${lw} Vandaag:${tk}kcal`;}
-  async function doSend(txt){if(!txt?.trim()||loading)return;const nc=[...msgs,{r:"u",t:txt}];setMsgs(nc);setLoading(true);const reply=await ai(`Jij bent Finn, persoonlijke AI fitnesscoach. Gebruikersinfo: ${getCtx()}\nGeef motiverende, persoonlijke adviezen op maat. Max 3 zinnen. Nederlands.\nGebruiker: ${txt}\nFinn:`);setMsgs(p=>[...p,{r:"a",t:reply}]);setLoading(false);}
+  function detectAndExecute(txt){
+    const t=txt.toLowerCase();
+    if((t.includes("weekmenu")||t.includes("maak een menu")||t.includes("menu maken"))&&onGenerateMenu){
+      setMsgs(p=>[...p,{r:"a",t:"Ik maak nu een weekmenu voor je op basis van jouw doelen. Even geduld..."}]);
+      setTimeout(()=>{onGenerateMenu();onNavigate("Voeding");onClose();},1200);
+      return true;
+    }
+    if((t.includes("boodschappen")||t.includes("boodschappenlijst"))&&onGenerateShopping){
+      setMsgs(p=>[...p,{r:"a",t:"Ik open je boodschappenlijst en genereer die voor je. Even geduld..."}]);
+      setTimeout(()=>{onGenerateShopping();onNavigate("Voeding");onClose();},1200);
+      return true;
+    }
+    if(t.includes("training")&&!t.includes("laatste")&&!t.includes("vorige")){
+      setMsgs(p=>[...p,{r:"a",t:"Ik stuur je naar Training. Let's go!"}]);
+      setTimeout(()=>{onNavigate("Training");onClose();},1000);
+      return true;
+    }
+    if(t.includes("voeding")||t.includes("eten")||t.includes("dieet")){
+      setMsgs(p=>[...p,{r:"a",t:"Ik stuur je naar Voeding."}]);
+      setTimeout(()=>{onNavigate("Voeding");onClose();},1000);
+      return true;
+    }
+    if(t.includes("voortgang")||t.includes("gewicht")||t.includes("progressie")||t.includes("resultaat")){
+      setMsgs(p=>[...p,{r:"a",t:"Ik stuur je naar Voortgang."}]);
+      setTimeout(()=>{onNavigate("Voortgang");onClose();},1000);
+      return true;
+    }
+    return false;
+  }
+  async function doSend(txt){
+    if(!txt?.trim()||loading)return;
+    const nc=[...msgs,{r:"u",t:txt}];setMsgs(nc);
+    if(detectAndExecute(txt))return;
+    setLoading(true);
+    const prompt=`Jij bent Finn, persoonlijke AI fitnesscoach. Je KAN taken uitvoeren voor de gebruiker zoals weekmenu maken, boodschappenlijst genereren, naar tabs navigeren. Gebruikersinfo: ${getCtx()}
+Geef motiverende, persoonlijke adviezen. Max 3 zinnen. NL.
+Gebruiker: ${txt}
+Finn:`;
+    const reply=await ai(prompt);
+    setMsgs(p=>[...p,{r:"a",t:reply}]);
+    setLoading(false);
+  }
   function send(){if(!input.trim()||loading)return;const m=input.trim();setInput("");doSend(m);}
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:200,display:"flex",alignItems:"flex-end"}} onClick={onClose}>
@@ -1089,7 +1139,31 @@ function App(){
       {infoEx&&<ExInfo ex={infoEx} onClose={()=>setInfoEx(null)}/>}
       {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)} onLogout={async()=>{await sb.auth.signOut();setSbUser(null);setShowSettings(false);}}/>}
       {showWhatsNew&&<WhatsNewModal onClose={()=>{setShowWhatsNew(false);LS.set("fitcoach_seen_version",APP_VERSION);}}/>}
-      {showFinn&&<FinnPopup onClose={()=>{setShowFinn(false);setPendingMsg(null);}} pendingMsg={pendingMsg} profile={profile} log={log} food={food}/>}
+      {showFinn&&<FinnPopup 
+        onClose={()=>{setShowFinn(false);setPendingMsg(null);}} 
+        pendingMsg={pendingMsg} 
+        profile={profile} 
+        log={log} 
+        food={food}
+        onNavigate={(t)=>{setTab(t);}}
+        onGenerateMenu={async()=>{
+          setWeekMenuLoading(true);
+          const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";
+          const avoid=foodPrefs.dislikes?`Niet: ${foodPrefs.dislikes}.`:"";
+          const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}. Doel: ${profile.goal}. Fase: ${profile.fase||"onderhoud"}. ${prefs} ${avoid} Elke dag ander eiwit. Vis max 1x. NL. ALLEEN JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);
+          try{const m=JSON.parse(txt.replace(/\`\`\`json|\`\`\`/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}
+          setWeekMenuLoading(false);
+          setFoodSubTab("weekmenu");
+        }}
+        onGenerateShopping={async()=>{
+          setGenShoppingLoading(true);
+          const menu=weekMenu?JSON.stringify(weekMenu):`gezonde maaltijden voor ${profile.goal}`;
+          const txt=await ai(`Boodschappenlijst voor 1 persoon: ${menu}. Geef hoeveelheden. ALLEEN JSON array: ["500g kipfilet",...]. Max 25 items.`);
+          try{const list=JSON.parse(txt.replace(/\`\`\`json|\`\`\`/g,"").trim());setShoppingList(list.map(l=>({name:l,checked:false})));LS.set("fitcoach_shopping",list.map(l=>({name:l,checked:false})));}catch(e){}
+          setGenShoppingLoading(false);
+          setFoodSubTab("boodschappen");
+        }}
+      />}
       {savedBanner&&<div style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",zIndex:100,background:LIME,color:"#000",padding:"14px 28px",borderRadius:"0 0 20px 20px",fontWeight:800,fontSize:14,maxWidth:480,width:"100%",textAlign:"center"}}>Training opgeslagen!</div>}
 
       {/* FEEDBACK MODAL */}
@@ -1237,6 +1311,36 @@ function App(){
             {(()=>{
               const last=log[0];const dgl=last?Math.floor((TODAY-parseDate(last.date))/86400000):null;
               const volg=(()=>{if(!last)return MUSCLE_GROUPS[0];const lm=last.targetMuscles||[];const all=MUSCLE_GROUPS.filter(m=>m!=="full body");const li=all.findIndex(m=>lm.includes(m));return all[(li+1)%all.length];})();
+              const trainDayNames=profile.trainDayNames||["ma","di","do"];
+              const dayKeys=["zo","ma","di","wo","do","vr","za"];
+              const todayKey=dayKeys[TODAY.getDay()];
+              const isTrainDay=trainDayNames.includes(todayKey);
+              const RUSTDAG_TIPS=[
+                {icon:"🚶",title:"Actief herstel",desc:"Een rustige wandeling van 20-30 minuten verhoogt de doorbloeding en versnelt herstel."},
+                {icon:"🧘",title:"Stretchen",desc:"10 minuten stretchen vandaag vermindert spierpijn en verbetert flexibiliteit."},
+                {icon:"💧",title:"Hydrateer extra",desc:"Op rustdagen herstellen je spieren. Drink minimaal 2,5 liter water vandaag."},
+                {icon:"😴",title:"Vroeg slapen",desc:"Spieren groeien tijdens slaap. Probeer 8 uur te slapen vanavond."},
+                {icon:"🥩",title:"Eet voldoende eiwit",desc:"Rustdag betekent niet minder eten. Je lichaam heeft bouwstoffen nodig voor herstel."},
+              ];
+              const tip=RUSTDAG_TIPS[weekNum%RUSTDAG_TIPS.length];
+              if(!isTrainDay) return(
+                <div style={{marginBottom:24}}>
+                  {last&&<div style={{...S.card,padding:14,marginBottom:12,background:"rgba(200,241,56,0.05)",border:"1px solid rgba(200,241,56,0.15)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:"#888"}}>{last.day} · {dgl===0?"Vandaag":dgl===1?"Gisteren":`${dgl} dagen geleden`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
+                  <div style={{...S.card,padding:20,background:"rgba(96,165,250,0.05)",border:"1px solid rgba(96,165,250,0.15)"}}>
+                    <div style={{fontSize:11,color:"#60a5fa",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>Rustdag — herstel</div>
+                    <div style={{fontSize:32,marginBottom:8}}>{tip.icon}</div>
+                    <div style={{fontSize:16,fontWeight:900,color:"#fff",marginBottom:6}}>{tip.title}</div>
+                    <div style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.7,marginBottom:16}}>{tip.desc}</div>
+                    <div style={{borderTop:"1px solid #1C1C1C",paddingTop:14}}>
+                      <div style={{fontSize:11,color:"#555",marginBottom:8}}>Volgende training</div>
+                      <div style={{display:"flex",alignItems:"center",gap:10}}>
+                        <div style={{width:36,height:36,borderRadius:10,overflow:"hidden",flexShrink:0}}><img src={P[volg]} alt={volg} style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>
+                        <div><div style={{fontSize:13,fontWeight:800,color:"#ccc"}}>{MUSCLE_META[volg]?.label}</div><div style={{fontSize:11,color:"#444"}}>{MUSCLE_META[volg]?.sub}</div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
               return(<div style={{marginBottom:24}}>
                 {last&&<div style={{...S.card,padding:14,marginBottom:12,background:"rgba(200,241,56,0.05)",border:"1px solid rgba(200,241,56,0.15)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:"#888"}}>{last.day} · {dgl===0?"Vandaag":dgl===1?"Gisteren":`${dgl} dagen geleden`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
                 <button onClick={()=>{setTargetMuscles([volg]);startSess([volg]);setTab("Training");}} style={{width:"100%",height:160,borderRadius:18,border:`2px solid ${LIME}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left",marginBottom:10}}>
