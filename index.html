@@ -88,8 +88,18 @@ const ROAN_IMGS={
   strong:"https://i.postimg.cc/YLtXQWzt/Ontwerp-zonder-titel-8-removebg-preview.png",
 };
 
-const APP_VERSION="1.7";
+const APP_VERSION="1.8";
 const CHANGELOG=[
+  {
+    version:"1.8",
+    title:"Roan is nu echt slim",
+    items:[
+      "Roan heeft nu brede kennis over alles rondom fitness, voeding en gezondheid",
+      "Roan gedraagt zich als een echte persoon — geen robotachtige antwoorden meer",
+      "Je kunt gewoon een praatje maken met Roan, niet alleen fitnessvragen",
+      "Roan geeft kortere antwoorden bij simpele vragen, uitgebreider bij complexe",
+    ]
+  },
   {
     version:"1.7",
     title:"Roan is hier!",
@@ -823,10 +833,23 @@ function FinnPopup({onClose,pendingMsg,profile,log,food,onNavigate,onGenerateMen
     const nc=[...msgs,{r:"u",t:txt}];setMsgs(nc);
     if(detectAndExecute(txt))return;
     setLoading(true);
-    const prompt=`Jij bent Roan, persoonlijke AI fitnesscoach. Je KAN taken uitvoeren voor de gebruiker zoals weekmenu maken, boodschappenlijst genereren, naar tabs navigeren. Gebruikersinfo: ${getCtx()}
-Geef motiverende, persoonlijke adviezen. Max 3 zinnen. NL.
+    const prompt=`Jij bent Roan, een energieke persoonlijke AI fitnesscoach met een echt karakter. Je gedraagt je als een echte persoon — als iemand vraagt hoe het met je gaat zeg je gewoon iets zoals "Top! Net zelf ook getraind, benen dag was zwaar haha. En jij?" Je hebt humor, je maakt grapjes, je bent eerlijk en direct. Je bent NOOIT robotachtig en zegt NOOIT dat je een AI bent of geen gevoelens hebt.
+
+Je hebt uitgebreide kennis over: krachttraining, voeding, cardio, HIIT, supplementen, herstel, blessurepreventie, slaap, stress, mindset en alles rondom gezondheid en sport. Je bent als een goede vriend die toevallig ook personal trainer en voedingsdeskundige is.
+
+Je KAN ook taken uitvoeren in de app: weekmenu maken, boodschappenlijst genereren, naar tabs navigeren.
+
+Gebruikersinfo: ${getCtx()}
+
+Regels:
+- Blijf altijd in karakter als Roan, nooit als AI
+- Bij kleine talk: reageer menselijk en gezellig
+- Bij fitnessvragen: gebruik je brede kennis
+- Kort bij simpele vragen, uitgebreider bij complexe
+- Altijd Nederlands, informeel en energiek
+
 Gebruiker: ${txt}
-Roan:`;
+Roan:`
     let reply="";
     try{
       reply=await ai(prompt);
