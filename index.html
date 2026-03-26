@@ -195,31 +195,34 @@ const LS={get:(k)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):n
 function fmtDate(d){const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0');return`${dd}/${mm}/${d.getFullYear()}`;}
 function parseDate(s){const p=s.split('/');return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));}
 async function resizeImg(file){return new Promise(res=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const max=220,ratio=Math.min(max/img.width,max/img.height),c=document.createElement('canvas');c.width=img.width*ratio;c.height=img.height*ratio;c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.75));};img.src=e.target.result;};r.readAsDataURL(file);});}
-async function ai(prompt){
+async function ai(prompt, onChunk){
   try{
     const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),15000);
+    const timeout=setTimeout(()=>controller.abort(),20000);
     const r=await fetch(WORKER,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:400,messages:[{role:"user",content:prompt}]}),
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:400,messages:[{role:"user",content:prompt}]}),
       signal:controller.signal
     });
     clearTimeout(timeout);
-    if(!r.ok){console.error("Worker error:",r.status,r.statusText);return"Roan is even niet beschikbaar ("+r.status+"). Probeer het opnieuw.";}
-    const d=await r.json();
-    console.log("Worker response:",JSON.stringify(d).slice(0,200));
-    // Support both Anthropic format {content:[{text}]} and direct text
-    if(d.content?.[0]?.text)return d.content[0].text;
-    if(d.text)return d.text;
-    if(d.response)return d.response;
-    if(d.result)return d.result;
-    if(typeof d==="string")return d;
-    console.error("Unknown response format:",d);
-    return"Roan heeft geen antwoord. Probeer het opnieuw.";
+    if(!r.ok)return"Roan is even niet beschikbaar. Probeer het opnieuw.";
+    
+    // Streaming lezen
+    const reader=r.body.getReader();
+    const decoder=new TextDecoder();
+    let full="";
+    while(true){
+      const {done,value}=await reader.read();
+      if(done)break;
+      const chunk=decoder.decode(value,{stream:true});
+      full+=chunk;
+      if(onChunk)onChunk(full);
+    }
+    return full||"Roan heeft geen antwoord. Probeer het opnieuw.";
   }catch(e){
     if(e.name==="AbortError")return"Roan reageert te langzaam. Probeer het opnieuw.";
-    return"Verbindingsfout. Controleer je internet en probeer opnieuw.";
+    return"Verbindingsfout. Controleer je internet.";
   }
 }
 
@@ -896,9 +899,14 @@ Regels:
 
 Gebruiker: ${txt}
 Roan:`
+    // Streaming - voeg leeg bericht toe en update live
+    const streamId=Date.now();
+    setMsgs(p=>[...p,{r:"a",t:"...",emotion:"cool",id:streamId}]);
     let reply="";
     try{
-      reply=await ai(prompt);
+      reply=await ai(prompt,(partial)=>{
+        setMsgs(p=>p.map(m=>m.id===streamId?{...m,t:partial}:m));
+      });
     }catch(e){
       reply="Oeps, er ging iets mis. Probeer het opnieuw!";
     }
@@ -909,7 +917,7 @@ Roan:`
     else if(rl.includes("haha")||rl.includes("grappig")||rl.includes("lach"))emotion="laugh";
     else if(rl.includes("sterk")||rl.includes("trainen")||rl.includes("spieren")||rl.includes("knallen"))emotion="strong";
     setCurrentEmotion(emotion);
-    setMsgs(p=>[...p,{r:"a",t:reply,emotion}]);
+    setMsgs(p=>p.map(m=>m.id===streamId?{...m,t:reply,emotion}:m));
     setLoading(false);
   }
   function send(){if(!input.trim()||loading)return;const m=input.trim();setInput("");doSend(m);}
