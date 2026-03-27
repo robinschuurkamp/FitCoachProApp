@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
+<meta charset="UTF-8">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#C8F138">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="FitCoachPro">
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>FitCoach Pro</title>
 <style>
@@ -552,6 +552,13 @@ const EX_PHOTOS={
 "Triceps Dips":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
 "Close Grip Bench Press":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
 "Overhead Triceps Extension":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Overhead Tricep Extension":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"EZ Bar Curl":"https://images.unsplash.com/photo-1581009137042-c552e485697a?w=500&q=80",
+"Cable Curl":"https://images.unsplash.com/photo-1581009137042-c552e485697a?w=500&q=80",
+"Reverse Curl":"https://images.unsplash.com/photo-1581009137042-c552e485697a?w=500&q=80",
+"Tricep Kickback":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Diamond Push-up":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Close Grip Push-up":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
 "Bent-over Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80",
 "Seated Cable Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80",
 "Lat Pulldown":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80",
@@ -953,7 +960,7 @@ function VolumeBarChart({log}){
         ))}
       </div>
       <div style={{display:"flex",gap:5}}>
-        {weeks.map((w,i)=><div key={i} style={{flex:1,textAlign:"center",fontSize:8,color:w.isCurrentWeek?"#fff":isDark?"#333":"#666",fontWeight:w.isCurrentWeek?700:400}}>{w.label}</div>)}
+        {weeks.map((w,i)=><div key={i} style={{flex:1,textAlign:"center",fontSize:8,color:w.isCurrentWeek?isDark?"#fff":"#111":isDark?"#333":"#555",fontWeight:w.isCurrentWeek?700:400}}>{w.label}</div>)}
       </div>
     </div>
   );
@@ -1044,7 +1051,7 @@ Roan:`
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}><div style={{display:"flex",gap:12,alignItems:"center"}}><FinnImg size={50}/><div><div style={{fontSize:16,fontWeight:900}}>Roan</div><div style={{fontSize:11,color:"#555"}}>AI Coach · Kent jouw data</div></div></div><button onClick={onClose} style={{background:isDark?"#1C1C1C":"#E8E8E0",border:`1px solid ${isDark?"#333":"#D0D0C8"}`,color:isDark?"#aaa":"#555",width:36,height:36,borderRadius:"50%",cursor:"pointer",fontSize:18,fontWeight:300,lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button></div>
         <div style={{flex:1,overflowY:"auto",display:"flex",flexDirection:"column",gap:10,paddingBottom:8}}>
           {msgs.map((m,i)=>m.r==="a"
-            ?<div key={i} style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{background:isDark?"#1C1C1C":"#E8E8E0",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"10px 14px",maxWidth:"80%",fontSize:13,color:"rgba(255,255,255,0.85)",lineHeight:1.7}}>{m.t}</div></div>
+            ?<div key={i} style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{background:isDark?"#1C1C1C":"#E8E8E0",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"10px 14px",maxWidth:"80%",fontSize:13,color:isDark?"rgba(255,255,255,0.85)":"#222",lineHeight:1.7}}>{m.t}</div></div>
             :<div key={i} style={{display:"flex",justifyContent:"flex-end"}}><div style={{background:ORANGE,borderRadius:"16px 16px 4px 16px",padding:"10px 14px",maxWidth:"75%",fontSize:13,color:TEXT}}>{m.t}</div></div>
           )}
           {loading&&<div style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{background:isDark?"#1C1C1C":"#E8E8E0",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"12px 16px",display:"flex",gap:5}}>{[0,1,2].map(d=><div key={d} style={{width:6,height:6,borderRadius:"50%",background:ORANGE,animation:"pulse 1.2s infinite",animationDelay:`${d*.2}s`}}/>)}</div></div>}
@@ -1221,6 +1228,7 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
   const txt=isDark?"#fff":"#111";
   const txt2=isDark?"#888":"#555";
   const txt3=isDark?"#444":"#aaa";
+  const S={lbl:{fontSize:10,color:txt3,fontWeight:700,letterSpacing:2,textTransform:"uppercase"},card:{background:bg,borderRadius:20,border:`1px solid ${border}`}};
   function u(k,v){setP(p=>({...p,[k]:v}));}
   const inp={width:"100%",padding:"13px 14px",borderRadius:12,border:`1px solid ${border}`,background:bg2,color:txt,fontSize:14,outline:"none",marginBottom:10,boxSizing:"border-box"};
   const row=(icon,title,sub,onClick)=>(
@@ -1823,7 +1831,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
       {tab==="Home"&&(
         <div>
           <div style={{position:"relative",height:300,overflow:"hidden"}}>
-            <img src={P.hero} alt="" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}}/>
+            <img src={isDark?P.hero:"https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=85"} alt="" style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center top"}}/>
             <div style={{position:"absolute",inset:0,background:"linear-gradient(160deg,rgba(0,0,0,0.2) 0%,rgba(13,13,13,0.98) 85%)"}}/>
             <button onClick={()=>setShowSettings(true)} style={{position:"absolute",top:16,right:16,display:"flex",alignItems:"center",gap:8,padding:"8px 12px 8px 8px",borderRadius:50,background:"rgba(0,0,0,0.6)",border:"1px solid rgba(255,255,255,0.15)",backdropFilter:"blur(12px)",cursor:"pointer"}}>
               <div style={{width:30,height:30,borderRadius:"50%",overflow:"hidden",flexShrink:0,border:`1.5px solid ${LIME}`}}>
@@ -1845,7 +1853,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
           </div>
           <div style={{padding:"0 16px"}}>
             {/* Roan bericht */}
-            <div style={{display:"flex",gap:12,alignItems:"flex-start",background:isDark?"rgba(255,107,43,0.07)":"rgba(255,107,43,0.05)",border:"1px solid rgba(255,107,43,0.2)",borderRadius:16,padding:14,margin:"16px 0",transform:"translateY(-8px)"}}><FinnImg size={44}/><div><div style={{fontSize:11,color:ORANGE,fontWeight:700,marginBottom:3}}>Roan zegt</div><div style={{fontSize:13,color:"rgba(255,255,255,0.85)",lineHeight:1.6}}>{finnBericht}</div></div></div>
+            <div style={{display:"flex",gap:12,alignItems:"flex-start",background:isDark?"rgba(255,107,43,0.07)":"rgba(255,107,43,0.05)",border:"1px solid rgba(255,107,43,0.2)",borderRadius:16,padding:14,margin:"16px 0",transform:"translateY(-8px)"}}><FinnImg size={44}/><div><div style={{fontSize:11,color:ORANGE,fontWeight:700,marginBottom:3}}>Roan zegt</div><div style={{fontSize:13,color:isDark?"rgba(255,255,255,0.85)":"#222",lineHeight:1.6}}>{finnBericht}</div></div></div>
 
             {/* ── v1.6: Streak + Water rij ─────────────────────── */}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
@@ -1861,7 +1869,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                     const d=new Date(TODAY.getTime()-i*86400000);
                     const key=fmtDate(d);
                     const hasLog=log.some(e=>e.date===key);
-                    return<div key={i} style={{width:14,height:14,borderRadius:3,background:hasLog?"rgba(200,241,56,0.8)":"#1C1C1C",border:`1px solid ${hasLog?LIME:"#222"}`}}/>;
+                    return<div key={i} style={{width:14,height:14,borderRadius:3,background:hasLog?"rgba(200,241,56,0.8)":isDark?"#1C1C1C":"#FFFFFF",border:`1px solid ${hasLog?LIME:isDark?"#222":"#333"}`}}/>;
                   }).reverse()}
                 </div>
                 {streak>=3&&<div style={{fontSize:9,color:LIME,marginTop:4,fontWeight:700}}>On fire!</div>}
@@ -1876,7 +1884,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 </div>
                 <div style={{display:"flex",gap:2,marginBottom:6}}>
                   {[...Array(WATER_GOAL)].map((_,i)=>(
-                    <div key={i} onClick={()=>i<todayWater?removeWater():addWater(1)} style={{flex:1,height:16,borderRadius:2,background:i<todayWater?"#60a5fa":"#1C1C1C",border:`1px solid ${i<todayWater?"#3b82f6":"#222"}`,cursor:"pointer",transition:"background .2s"}}/>
+                    <div key={i} onClick={()=>i<todayWater?removeWater():addWater(1)} style={{flex:1,height:16,borderRadius:2,background:i<todayWater?"#60a5fa":isDark?"#1C1C1C":"#E0E0D8",border:`1px solid ${i<todayWater?"#3b82f6":isDark?"#222":"#B0B0A8"}`,cursor:"pointer",transition:"background .2s"}}/>
                   ))}
                 </div>
                 <div style={{display:"flex",gap:6}}>
@@ -1942,7 +1950,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                       return(
                         <div key={dag} style={{flex:1,textAlign:"center"}}>
                           <div style={{fontSize:9,color:isToday?"#fff":isDark?"#333":"#666",fontWeight:isToday?800:400,marginBottom:4}}>{dag}</div>
-                          <div style={{width:"100%",aspectRatio:"1",borderRadius:8,background:hasDone?"rgba(200,241,56,0.15)":isToday&&isTrainDay?"rgba(200,241,56,0.08)":!isTrainDay?"#0D0D0D":"#111",border:`1px solid ${hasDone?LIME:isToday&&isTrainDay?LIME+"44":!isTrainDay?"transparent":"#1C1C1C"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:hasDone?LIME:isToday?"#fff":isDark?"#333":"#666"}}>
+                          <div style={{width:"100%",aspectRatio:"1",borderRadius:8,background:hasDone?"rgba(200,241,56,0.15)":isToday&&isTrainDay?"rgba(200,241,56,0.08)":!isTrainDay?isDark?"#0D0D0D":"#F0F0E8":isDark?"#111":"#FFFFFF",border:`1px solid ${hasDone?LIME:isToday&&isTrainDay?LIME+"44":!isTrainDay?"transparent":isDark?"#1C1C1C":"#333"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:hasDone?LIME:isToday?isDark?"#fff":"#000":isDark?"#333":"#666"}}>
                             {hasDone?"✓":!isTrainDay?"·":isToday?"→":""}
                           </div>
                           <div style={{fontSize:8,color:hasDone?LIME:!isTrainDay?"#222":isToday?isDark?"#888":"#666":isDark?"#333":"#666",marginTop:3,fontWeight:700}}>{hasDone?"Klaar":!isTrainDay?"Rust":isToday?"Vandaag":""}</div>
@@ -2012,9 +2020,9 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                   <img src={P[volg]} alt={volg} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
                   <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(0,0,0,0.05),rgba(0,0,0,0.8))"}}/>
                   <div style={{position:"relative",padding:"20px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-                    <div style={{fontSize:11,color:"rgba(255,255,255,0.6)",marginBottom:4}}>Tik om te starten</div>
-                    <div style={{fontSize:22,fontWeight:900,color:TEXT,marginBottom:4}}>{MUSCLE_META[volg]?.label}</div>
-                    <div style={{fontSize:11,color:"rgba(255,255,255,0.6)",marginBottom:10}}>{MUSCLE_META[volg]?.sub}</div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.8)",marginBottom:4}}>Tik om te starten</div>
+                    <div style={{fontSize:22,fontWeight:900,color:"#ffffff",marginBottom:4}}>{MUSCLE_META[volg]?.label}</div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.8)",marginBottom:10}}>{MUSCLE_META[volg]?.sub}</div>
                     <div style={{display:"inline-flex",alignItems:"center",gap:6,background:LIME,borderRadius:99,padding:"8px 18px",width:"fit-content"}}>
                       <span style={{fontSize:13,fontWeight:800,color:"#000"}}>Ga naar training →</span>
                     </div>
