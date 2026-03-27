@@ -1240,6 +1240,7 @@ function App(){
   const [showSettings,setShowSettings]=useState(false);
   const [showFinn,setShowFinn]=useState(false);
   const [finnKey,setFinnKey]=useState(0);
+  const [showFeedbackRequest,setShowFeedbackRequest]=useState(false);
   const [foodSubTab,setFoodSubTab]=useState("dagelijks");
   const [pendingMsg,setPendingMsg]=useState(null);
   const [recipe,setRecipe]=useState("");
@@ -1337,6 +1338,10 @@ function App(){
 
   function saveWorkout(){
     if(!session?.length)return;
+    // Feedback trigger elke 5 trainingen
+    const wCount=(LS.get("fitcoach_workout_count")||0)+1;
+    LS.set("fitcoach_workout_count",wCount);
+    if(wCount%5===0)setTimeout(()=>setShowFeedbackRequest(true),2000);
     const dateObj=parseDate(trainDate),dayName=DAYS[dateObj.getDay()];
     const entry={date:trainDate,day:dayName,workout:targetMuscles.map(m=>muscleLabel(m)).join(" + "),exercises:session.map(e=>({name:e.name,weights:[...e.weights],reps:e.reps,note:e.note,unit:e.unit||"kg"})),targetMuscles,id:Date.now()};
     const updated=[entry,...log].slice(0,100);
@@ -1368,15 +1373,18 @@ function App(){
     <div style={{background:"#0D0D0D",minHeight:"100vh",maxWidth:480,margin:"0 auto",paddingBottom:80}}>
       {/* Persistent workout banner - always visible when training is active */}
       {session&&session.length>0&&tab!=="Training"&&(
-        <div onClick={()=>setTab("Training")} style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,zIndex:50,background:"#0D0D0D",borderBottom:`2px solid ${LIME}`,padding:"10px 16px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:8,height:8,borderRadius:"50%",background:LIME,animation:"pulse 1.5s infinite"}}/>
+        <div style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,zIndex:50,background:"#0D0D0D",borderBottom:`2px solid ${LIME}`,padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,flex:1}}>
+            <div style={{width:8,height:8,borderRadius:"50%",background:LIME,animation:"pulse 1.5s infinite",flexShrink:0}}/>
             <div>
               <div style={{fontSize:12,fontWeight:800,color:LIME}}>Training bezig</div>
-              <div style={{fontSize:11,color:"#666"}}>{session.filter(e=>Object.values(e.setsDone||{}).some(Boolean)).length}/{session.length} oefeningen · tik om terug te gaan</div>
+              <div style={{fontSize:10,color:"#555"}}>{session.filter(e=>Object.values(e.setsDone||{}).some(Boolean)).length}/{session.length} oefeningen</div>
             </div>
           </div>
-          <div style={{background:LIME,color:"#000",padding:"6px 14px",borderRadius:99,fontSize:12,fontWeight:800}}>Doorgaan →</div>
+          <div style={{display:"flex",gap:6,alignItems:"center"}}>
+            <button onClick={()=>setTab("Training")} style={{background:LIME,color:"#000",padding:"6px 12px",borderRadius:99,fontSize:11,fontWeight:800,border:"none",cursor:"pointer"}}>Doorgaan →</button>
+            <button onClick={()=>{if(window.confirm("Training stoppen? Voortgang gaat verloren."))setSession(null);}} style={{background:"#1C1C1C",color:"#ef4444",padding:"6px 10px",borderRadius:99,fontSize:11,fontWeight:800,border:"1px solid #333",cursor:"pointer"}}>Stop</button>
+          </div>
         </div>
       )}
       {/* Add top padding when banner is visible */}
@@ -1384,6 +1392,57 @@ function App(){
       {infoEx&&<ExInfo ex={infoEx} onClose={()=>setInfoEx(null)}/>}
       {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)} onLogout={async()=>{await sb.auth.signOut();setSbUser(null);setShowSettings(false);}}/>}
       {showWhatsNew&&<WhatsNewModal onClose={()=>{setShowWhatsNew(false);LS.set("fitcoach_seen_version",APP_VERSION);}}/>}
+      {/* Feedback request modal */}
+      {showFeedbackRequest&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:300,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
+          <div style={{background:"#141414",borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,padding:"28px 24px 40px",border:"1px solid #1C1C1C"}}>
+            <div style={{textAlign:"center",marginBottom:24}}>
+              <div style={{fontSize:40,marginBottom:12}}>⭐</div>
+              <div style={{fontSize:22,fontWeight:900,marginBottom:8}}>Wat vind je van FitCoach Pro?</div>
+              <div style={{fontSize:14,color:"#555",lineHeight:1.6}}>Jouw feedback helpt ons de app beter te maken. Duurt 30 seconden.</div>
+            </div>
+            {(()=>{
+              const [fbScore,setFbScore]=React.useState(null);
+              const [fbText,setFbText]=React.useState("");
+              const [fbSent,setFbSent]=React.useState(false);
+              if(fbSent)return(
+                <div style={{textAlign:"center",padding:"20px 0"}}>
+                  <div style={{fontSize:40,marginBottom:12}}>🙏</div>
+                  <div style={{fontSize:16,fontWeight:800,marginBottom:8}}>Bedankt voor je feedback!</div>
+                  <div style={{fontSize:13,color:"#555",marginBottom:20}}>Dit helpt ons de app beter te maken.</div>
+                  <button onClick={()=>setShowFeedbackRequest(false)} style={{background:LIME,color:"#000",padding:"12px 24px",borderRadius:12,border:"none",fontWeight:800,cursor:"pointer"}}>Sluiten</button>
+                </div>
+              );
+              return(<>
+                <div style={{display:"flex",gap:8,marginBottom:16,justifyContent:"center"}}>
+                  {[{s:5,e:"😍"},{s:4,e:"👍"},{s:3,e:"😐"},{s:2,e:"👎"}].map(({s,e})=>(
+                    <button key={s} onClick={()=>setFbScore(s)} style={{width:60,height:60,borderRadius:14,border:`2px solid ${fbScore===s?LIME:"#222"}`,background:fbScore===s?"rgba(200,241,56,0.1)":"#111",fontSize:28,cursor:"pointer"}}>
+                      {e}
+                    </button>
+                  ))}
+                </div>
+                {fbScore&&<>
+                  <textarea
+                    value={fbText}
+                    onChange={e=>setFbText(e.target.value)}
+                    placeholder="Wat kan er beter? Of wat vind je super? (optioneel)"
+                    style={{width:"100%",padding:"12px 14px",borderRadius:12,border:"1px solid #222",background:"#111",color:"#fff",fontSize:13,outline:"none",resize:"none",height:80,marginBottom:12,boxSizing:"border-box"}}
+                  />
+                  <button onClick={async()=>{
+                    await fetch("https://ujbgkilppibfdirxackk.supabase.co/rest/v1/feedback",{
+                      method:"POST",
+                      headers:{"Content-Type":"application/json","apikey":"sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h","Authorization":"Bearer sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h"},
+                      body:JSON.stringify({user_id:sbUser?.id,score:fbScore,comment:fbText,created_at:new Date().toISOString()})
+                    }).catch(()=>{});
+                    setFbSent(true);
+                  }} style={{width:"100%",padding:14,borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:14,fontWeight:800,cursor:"pointer",marginBottom:8}}>Verstuur feedback</button>
+                </>}
+                <button onClick={()=>setShowFeedbackRequest(false)} style={{width:"100%",padding:12,borderRadius:12,border:"none",background:"none",color:"#333",fontSize:12,cursor:"pointer"}}>Misschien later</button>
+              </>);
+            })()}
+          </div>
+        </div>
+      )}
       {showFinn&&<FinnPopup 
         key={finnKey}
         onClose={()=>{setShowFinn(false);setPendingMsg(null);}} 
@@ -1725,7 +1784,10 @@ setFeedbackReply(reply);setFeedbackLoading(false);
             <div>
               <div style={{...S.card,padding:16,marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <div><div style={{...S.lbl,color:sportType==="hiit"?ORANGE:LIME,marginBottom:4}}>Vandaag</div><div style={{fontSize:16,fontWeight:800}}>{targetMuscles.map(m=>muscleLabel(m)).join(" + ")}</div></div>
-                <button onClick={()=>{setSelectingMuscles(true);setSession(null);setTargetMuscles([]);}} style={{padding:"9px 16px",borderRadius:10,border:"1px solid #222",background:"none",color:"#777",fontSize:12,fontWeight:700,cursor:"pointer"}}>← Terug</button>
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={()=>setTab("Home")} style={{padding:"8px 12px",borderRadius:10,border:"1px solid #222",background:"none",color:"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>⏸ Pauze</button>
+                  <button onClick={()=>{if(window.confirm("Training stoppen?")){{setSession(null);setSelectingMuscles(true);setTargetMuscles([]);}}}} style={{padding:"8px 12px",borderRadius:10,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:12,fontWeight:700,cursor:"pointer"}}>■ Stop</button>
+                </div>
               </div>
               {!showWarmup?(
                 <div style={{...S.card,padding:16,marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -1991,13 +2053,31 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               <div style={{...S.card,padding:16}}>
                 {Object.entries(prData).sort((a,b)=>b[1].date.localeCompare(a[1].date)).map(([name,pr],i,arr)=>(
                   <div key={name} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:i<arr.length-1?"1px solid #111":"none"}}>
-                    <div>
+                    <div style={{flex:1}}>
                       <div style={{fontSize:13,fontWeight:700,color:"#ccc",marginBottom:2}}>{name}</div>
                       <div style={{fontSize:10,color:"#444"}}>{pr.date}</div>
                     </div>
-                    <div style={{textAlign:"right"}}>
-                      <div style={{fontSize:20,fontWeight:900,color:LIME,letterSpacing:-0.5}}>{pr.weight}</div>
-                      <div style={{fontSize:10,color:"#555"}}>{pr.unit}</div>
+                    <div style={{display:"flex",alignItems:"center",gap:10}}>
+                      <div style={{textAlign:"right"}}>
+                        <div style={{fontSize:20,fontWeight:900,color:LIME,letterSpacing:-0.5}}>{pr.weight}</div>
+                        <div style={{fontSize:10,color:"#555"}}>{pr.unit}</div>
+                      </div>
+                      <button onClick={()=>{
+                        const nieuw=window.prompt(`Nieuw PR voor ${name} (${pr.unit}):`, pr.weight);
+                        if(nieuw&&!isNaN(parseFloat(nieuw))){
+                          const updated={...prData,[name]:{...pr,weight:parseFloat(nieuw)}};
+                          setPrData(updated);
+                          LS.set("fitcoach_prs",updated);
+                        }
+                      }} style={{background:"#1C1C1C",border:"1px solid #333",color:"#666",width:28,height:28,borderRadius:8,cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",justifyContent:"center"}}>✏️</button>
+                      <button onClick={()=>{
+                        if(window.confirm(`PR van ${name} verwijderen?`)){
+                          const updated={...prData};
+                          delete updated[name];
+                          setPrData(updated);
+                          LS.set("fitcoach_prs",updated);
+                        }
+                      }} style={{background:"#1C1C1C",border:"1px solid #333",color:"#ef4444",width:28,height:28,borderRadius:8,cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
                     </div>
                   </div>
                 ))}
