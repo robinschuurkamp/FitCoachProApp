@@ -1443,7 +1443,7 @@ function ExInfo({ex,onClose}){
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.88)",zIndex:99,display:"flex",alignItems:"flex-end"}} onClick={onClose}>
       <div onClick={e=>e.stopPropagation()} style={{background:CARD_BG,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,margin:"0 auto",maxHeight:"82vh",overflowY:"auto",animation:"slideUp .35s cubic-bezier(.16,1,.3,1)"}}>
-        <div style={{height:200,position:"relative",overflow:"hidden",borderRadius:"24px 24px 0 0",background:isDark?"#1C1C1C":"#E8E8E0"}}>{EX_PHOTOS[ex.name]&&<img src={EX_PHOTOS[ex.name]} alt={ex.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>e.target.style.display="none"}/>}<div style={{position:"absolute",inset:0,background:isDark?"linear-gradient(to bottom,transparent 30%,#141414)":"linear-gradient(to bottom,transparent 30%,rgba(0,0,0,0.75))"}}/></div>
+        <div style={{height:200,position:"relative",overflow:"hidden",borderRadius:"24px 24px 0 0",background:isDark?"#1C1C1C":"#E8E8E0"}}>{(EX_PHOTOS[ex.name]||P[EX_DB[ex.name]?.muscle]||P["full body"])&&<img src={EX_PHOTOS[ex.name]||P[EX_DB[ex.name]?.muscle]||P["full body"]} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>e.target.style.display="none"}/>}<div style={{position:"absolute",inset:0,background:isDark?"linear-gradient(to bottom,transparent 30%,#141414)":"linear-gradient(to bottom,transparent 30%,rgba(0,0,0,0.75))"}}/></div>
         <div style={{padding:24}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}><div style={{fontSize:22,fontWeight:900,color:TEXT}}>{ex.name}</div><button onClick={onClose} style={{width:36,height:36,borderRadius:"50%",background:isDark?"#1C1C1C":"#E8E8E0",border:"none",color:TEXT,fontSize:18,cursor:"pointer"}}>×</button></div><div style={{background:isDark?"#1C1C1C":"#F0F0E8",borderRadius:14,padding:16,marginBottom:16}}><div style={{fontSize:14,color:isDark?"#bbb":"#333",lineHeight:1.8}}>{db.info||"Voer de oefening gecontroleerd uit."}</div></div>{db.yt&&<a href={`https://www.youtube.com/results?search_query=${db.yt}`} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",justifyContent:"center",background:"#FF0000",borderRadius:14,padding:14,color:TEXT,fontWeight:700,fontSize:14,textDecoration:"none"}}>Bekijk op YouTube</a>}</div>
       </div>
     </div>
@@ -1843,7 +1843,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 }
               </div>
               <div style={{textAlign:"left"}}>
-                <div style={{fontSize:11,fontWeight:800,color:TEXT,lineHeight:1}}>{profile.name}</div>
+                <div style={{fontSize:11,fontWeight:800,color:"#ffffff",lineHeight:1}}>{profile.name}</div>
                 <div style={{fontSize:9,color:LIME,fontWeight:600,marginTop:2}}>Instellingen</div>
               </div>
             </button>
@@ -2137,7 +2137,8 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                     const unit=ex.unit||"kg",opts=getSetValueOptions(unit);
                     const maxNow=Math.max(0,...ex.weights.filter(w=>w>0)),maxPrev=ex.prevWeights?Math.max(0,...ex.prevWeights.filter(w=>w>0)):0;
                     const isPR=maxNow>0&&maxPrev>0&&maxNow>maxPrev;
-                    const photo=EX_PHOTOS[ex.name],exMuscle=EX_DB[ex.name]?.muscle||"";
+                    const exMuscle=EX_DB[ex.name]?.muscle||"full body";
+                    const photo=EX_PHOTOS[ex.name]||P[exMuscle]||P["full body"];
                     const alts=Object.entries(EX_DB).filter(([n,db])=>db.muscle===exMuscle&&n!==ex.name).map(([n])=>n);
                     const defaultRest=Math.min(90,EX_DB[ex.name]?.rest||60),restSecs=ex.restSecs!=null?ex.restSecs:defaultRest;
                     // Check PR badge
@@ -2150,13 +2151,13 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                             <div style={{fontSize:72,filter:"drop-shadow(0 4px 12px rgba(200,241,56,0.5))"}}>✓</div>
                           </div>}
                           {photo&&<img src={photo} alt={ex.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 30%"}} onError={e=>e.target.style.display="none"}/>}
-                          <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 40%,#141414)"}}/>
+                          <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 30%,rgba(0,0,0,0.85))"}}/>
                           <div style={{position:"absolute",bottom:12,left:16,right:12,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
                             <div><div style={{fontSize:17,fontWeight:900,color:"#ffffff"}}>{ex.name}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.7)",marginTop:2}}>{ex.weights.length} sets · {ex.reps}</div></div>
                             <div style={{display:"flex",gap:6}}>
-                              <button onClick={()=>setInfoEx(ex)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:TEXT,width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:13,fontWeight:700}}>i</button>
-                              <button onClick={()=>setWisselIndex(wisselIndex===ei?null:ei)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:TEXT,padding:"6px 10px",borderRadius:20,cursor:"pointer",fontSize:11,fontWeight:700}}>↕</button>
-                              <button onClick={()=>removeExercise(ei)} style={{background:"rgba(239,68,68,0.7)",border:"none",color:TEXT,width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:14,fontWeight:700}}>×</button>
+                              <button onClick={()=>setInfoEx(ex)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#ffffff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:13,fontWeight:700}}>i</button>
+                              <button onClick={()=>setWisselIndex(wisselIndex===ei?null:ei)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#ffffff",padding:"6px 10px",borderRadius:20,cursor:"pointer",fontSize:11,fontWeight:700}}>↕</button>
+                              <button onClick={()=>removeExercise(ei)} style={{background:"rgba(239,68,68,0.7)",border:"none",color:"#ffffff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:14,fontWeight:700}}>×</button>
                             </div>
                           </div>
                         </div>
