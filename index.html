@@ -88,8 +88,51 @@ const ROAN_IMGS={
   strong:"https://i.postimg.cc/YLtXQWzt/Ontwerp-zonder-titel-8-removebg-preview.png",
 };
 
-const APP_VERSION="2.4";
+const APP_VERSION="2.5";
+const TRANSLATIONS={
+  nl:{
+    home:"Home",training:"Training",voeding:"Voeding",voortgang:"Voortgang",coach:"Coach",
+    instellingen:"Instellingen",opslaan:"Opslaan",annuleren:"Annuleren",uitloggen:"Uitloggen",
+    vandaag:"Vandaag",gisteren:"Gisteren",dagenGeleden:"dagen geleden",
+    trainBezig:"Training bezig",doorgaan:"Doorgaan",stop:"Stop",
+    roanZegt:"Roan zegt",chatRoan:"Chat met Roan",
+    dagdoel:"Dagdoel",gegeten:"Vandaag gegeten",
+    volgendeTraining:"Volgende training",laasteTraining:"Laatste training",
+    gaTraining:"Ga naar training →",rustdag:"Rustdag — herstel",
+  },
+  en:{
+    home:"Home",training:"Training",voeding:"Nutrition",voortgang:"Progress",coach:"Coach",
+    instellingen:"Settings",opslaan:"Save",annuleren:"Cancel",uitloggen:"Log out",
+    vandaag:"Today",gisteren:"Yesterday",dagenGeleden:"days ago",
+    trainBezig:"Workout in progress",doorgaan:"Continue",stop:"Stop",
+    roanZegt:"Roan says",chatRoan:"Chat with Roan",
+    dagdoel:"Daily goal",gegeten:"Eaten today",
+    volgendeTraining:"Next workout",laasteTraining:"Last workout",
+    gaTraining:"Go to workout →",rustdag:"Rest day — recovery",
+  },
+  de:{
+    home:"Home",training:"Training",voeding:"Ernährung",voortgang:"Fortschritt",coach:"Coach",
+    instellingen:"Einstellungen",opslaan:"Speichern",annuleren:"Abbrechen",uitloggen:"Abmelden",
+    vandaag:"Heute",gisteren:"Gestern",dagenGeleden:"Tage her",
+    trainBezig:"Training läuft",doorgaan:"Weiter",stop:"Stopp",
+    roanZegt:"Roan sagt",chatRoan:"Chat mit Roan",
+    dagdoel:"Tagesziel",gegeten:"Heute gegessen",
+    volgendeTraining:"Nächstes Training",laasteTraining:"Letztes Training",
+    gaTraining:"Zum Training →",rustdag:"Ruhetag — Erholung",
+  }
+};
 const CHANGELOG=[
+  {
+    version:"2.5",
+    title:"Instellingen & thema's",
+    items:[
+      "Licht thema beschikbaar — wit met lime groen",
+      "Taal kiezen: Nederlands, Engels of Duits",
+      "Accountbeheer: wachtwoord wijzigen, account verwijderen",
+      "FAQ, Hulp en Privacybeleid toegevoegd",
+      "BMI en BMR berekening in instellingen",
+    ]
+  },
   {
     version:"2.4",
     title:"Workout altijd zichtbaar",
@@ -493,7 +536,56 @@ const EX_DB={
   "Thoracic Rotation":{muscle:"rug",unit:"reps",rest:0,info:"Zit op knieën. Handen achter je hoofd. Roteer je bovenrug zo ver mogelijk naar links en rechts.",yt:"thoracic+rotation+stretch"}
 };
 
-const EX_PHOTOS={"Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Bench Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80","Pull-ups":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80","Shoulder Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80","Barbell Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Bent-over Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80","Leg Press":"https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?w=500&q=80","Plank":"https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=500&q=80","Dips":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80","Hip Thrust":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80","Lateral Raises":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Romanian Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80","Leg Extension":"https://images.unsplash.com/photo-1564227901-6b1d20bebe9d?w=500&q=80","Leg Curl":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Calf Raises":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Bulgarian Split Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80","Incline Dumbbell Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Cable Fly":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80","Push-up":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Lat Pulldown":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80","Seated Cable Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80","Hammer Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Triceps Pushdown":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Skull Crushers":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Incline Dumbbell Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Concentration Curl":"https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500&q=80","Glute Bridge":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80","Crunches":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Leg Raises":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Mountain Climber":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80","Arnold Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80","Face Pulls":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80","Burpee":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Jump Squat":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","High Knees":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Box Jump":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Jumping Jacks":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Kettlebell Swing":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80","Battle Ropes":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80","Skipping":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80","Hardlopen":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80","Roeien (machine)":"https://images.unsplash.com/photo-1530822847156-5df684ec5ee1?w=500&q=80","Stationary Bike":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80"};
+const EX_PHOTOS={
+"Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80",
+"Bench Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80",
+"Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80",
+"Pull-ups":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80",
+"Shoulder Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80",
+"Barbell Curl":"https://images.unsplash.com/photo-1581009137042-c552e485697a?w=500&q=80",
+"Hammer Curl":"https://images.unsplash.com/photo-1581009137042-c552e485697a?w=500&q=80",
+"Incline Dumbbell Curl":"https://images.unsplash.com/photo-1581009137042-c552e485697a?w=500&q=80",
+"Concentration Curl":"https://images.unsplash.com/photo-1581009137042-c552e485697a?w=500&q=80",
+"Preacher Curl":"https://images.unsplash.com/photo-1581009137042-c552e485697a?w=500&q=80",
+"Triceps Pushdown":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Skull Crushers":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Triceps Dips":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Close Grip Bench Press":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Overhead Triceps Extension":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Bent-over Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80",
+"Seated Cable Row":"https://images.unsplash.com/photo-1591117207239-788bf8de6c3b?w=500&q=80",
+"Lat Pulldown":"https://images.unsplash.com/photo-1604247584233-99c80a8b5bb8?w=500&q=80",
+"Leg Press":"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&q=80",
+"Leg Extension":"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&q=80",
+"Leg Curl":"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&q=80",
+"Bulgarian Split Squat":"https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=500&q=80",
+"Calf Raises":"https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&q=80",
+"Romanian Deadlift":"https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=500&q=80",
+"Hip Thrust":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80",
+"Glute Bridge":"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=500&q=80",
+"Lateral Raises":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80",
+"Arnold Press":"https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&q=80",
+"Face Pulls":"https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&q=80",
+"Dips":"https://images.unsplash.com/photo-1598971639058-fab3c3109a34?w=500&q=80",
+"Plank":"https://images.unsplash.com/photo-1566241440091-ec10de8db2e1?w=500&q=80",
+"Crunches":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
+"Leg Raises":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
+"Mountain Climber":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
+"Push-up":"https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=500&q=80",
+"Incline Dumbbell Press":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80",
+"Cable Fly":"https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&q=80",
+"Burpee":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80",
+"Jump Squat":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80",
+"High Knees":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80",
+"Box Jump":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80",
+"Jumping Jacks":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80",
+"Kettlebell Swing":"https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=500&q=80",
+"Battle Ropes":"https://images.unsplash.com/photo-1535743686920-55e4145369b9?w=500&q=80",
+"Skipping":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80",
+"Hardlopen":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80",
+"Roeien (machine)":"https://images.unsplash.com/photo-1530822847156-5df684ec5ee1?w=500&q=80",
+"Stationary Bike":"https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=500&q=80"
+};
 
 const WV={
 benen:[
@@ -1103,7 +1195,7 @@ function Onboarding({onComplete}){
   );
 }
 
-function SettingsModal({profile,onSave,onClose,onLogout}){
+function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setLang,sbUser}){
   const [p,setP]=useState({...profile});
   const u=(k,v)=>setP(prev=>({...prev,[k]:v}));
   const inp={width:"100%",padding:"13px 14px",borderRadius:12,border:"1px solid #222",background:"#111",color:"#fff",fontSize:14,outline:"none",marginBottom:12,boxSizing:"border-box"};
@@ -1116,9 +1208,139 @@ function SettingsModal({profile,onSave,onClose,onLogout}){
         <div style={{...S.card,padding:16,marginBottom:16}}><div style={{...S.lbl,marginBottom:12}}>Gegevens</div><div style={{...S.lbl,marginBottom:6}}>Naam</div><input style={inp} placeholder="Voornaam" value={p.name||""} onChange={e=>u("name",e.target.value)}/><div style={{...S.lbl,marginBottom:8}}>Geslacht</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>{[{v:"man",l:"Man"},{v:"vrouw",l:"Vrouw"},{v:"ander",l:"Anders"}].map(g=><button key={g.v} onClick={()=>u("gender",g.v)} style={{padding:"9px 6px",borderRadius:10,border:`1.5px solid ${p.gender===g.v?LIME:"#222"}`,background:p.gender===g.v?"rgba(200,241,56,0.08)":"#111",color:p.gender===g.v?LIME:"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>{g.l}</button>)}</div><div style={{...S.lbl,marginBottom:6}}>Huidig gewicht (kg)</div><input style={inp} type="number" placeholder="bijv. 80" value={p.weight||""} onChange={e=>u("weight",e.target.value)}/><input style={inp} type="number" placeholder="Lengte (cm)" value={p.height||""} onChange={e=>u("height",e.target.value)}/><div style={{...S.lbl,marginBottom:6}}>Doelgewicht (kg)</div><input style={inp} type="number" placeholder="bijv. 75" value={p.goalWeight||""} onChange={e=>u("goalWeight",e.target.value)}/><div style={{...S.lbl,marginBottom:8}}>Doel</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>{[{v:"afvallen",l:"Afvallen"},{v:"spiermassa",l:"Spiermassa"},{v:"fitter",l:"Fitter worden"},{v:"gezonder",l:"Gezonder leven"}].map(g=><button key={g.v} onClick={()=>u("goal",g.v)} style={{padding:"10px",borderRadius:12,border:`1.5px solid ${p.goal===g.v?LIME:"#222"}`,background:p.goal===g.v?"rgba(200,241,56,0.08)":"#111",color:p.goal===g.v?LIME:"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>{g.l}</button>)}</div></div>
         <div style={{...S.card,padding:16,marginBottom:16}}><div style={{...S.lbl,marginBottom:12}}>Training instellingen</div><div style={{...S.lbl,marginBottom:8}}>Sport type</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>{[{v:"kracht",l:"Kracht"},{v:"hiit",l:"HIIT"},{v:"cardio",l:"Cardio"},{v:"gemixed",l:"Gemixed"}].map(s=><button key={s.v} onClick={()=>u("sportType",s.v)} style={{padding:"10px",borderRadius:12,border:`1.5px solid ${p.sportType===s.v?LIME:"#222"}`,background:p.sportType===s.v?"rgba(200,241,56,0.08)":"#111",color:p.sportType===s.v?LIME:"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>{s.l}</button>)}</div><div style={{...S.lbl,marginBottom:8}}>Niveau</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>{[{v:"beginner",l:"Beginner"},{v:"gemiddeld",l:"Gemiddeld"},{v:"gevorderd",l:"Gevorderd"}].map(l=><button key={l.v} onClick={()=>u("level",l.v)} style={{padding:"9px 6px",borderRadius:10,border:`1.5px solid ${p.level===l.v?LIME:"#222"}`,background:p.level===l.v?"rgba(200,241,56,0.08)":"#111",color:p.level===l.v?LIME:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{l.l}</button>)}</div><div style={{...S.lbl,marginBottom:8}}>Coaching intensiteit</div><div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>{[{v:"weinig",l:"Weinig"},{v:"regelmatig",l:"Regelmatig"},{v:"personal",l:"Personal"}].map(c=><button key={c.v} onClick={()=>u("coachLevel",c.v)} style={{padding:"9px 6px",borderRadius:10,border:`1.5px solid ${p.coachLevel===c.v?ORANGE:"#222"}`,background:p.coachLevel===c.v?"rgba(255,107,43,0.08)":"#111",color:p.coachLevel===c.v?ORANGE:"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{c.l}</button>)}</div><div style={{...S.lbl,marginBottom:8}}>Trainingsdagen</div><div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:5}}>{[{k:"ma",l:"Ma"},{k:"di",l:"Di"},{k:"wo",l:"Wo"},{k:"do",l:"Do"},{k:"vr",l:"Vr"},{k:"za",l:"Za"},{k:"zo",l:"Zo"}].map(d=>{const sel=(p.trainDayNames||[]).includes(d.k);return<button key={d.k} onClick={()=>{const cur=p.trainDayNames||[];u("trainDayNames",sel?cur.filter(x=>x!==d.k):[...cur,d.k]);}} style={{padding:"10px 2px",borderRadius:8,border:`1px solid ${sel?LIME:"#222"}`,background:sel?"rgba(200,241,56,0.1)":"#111",color:sel?LIME:"#444",fontSize:11,fontWeight:700,cursor:"pointer"}}>{d.l}</button>;})}</div></div>
         <div style={{...S.card,padding:16,marginBottom:16}}><div style={{...S.lbl,marginBottom:12}}>Fase</div><div style={{display:"flex",flexDirection:"column",gap:8}}>{FASE_OPTIES.map(f=><button key={f.v} onClick={()=>u("fase",f.v)} style={{padding:"12px 14px",borderRadius:12,border:`1.5px solid ${p.fase===f.v?f.c:"#222"}`,background:p.fase===f.v?f.c+"18":"#111",cursor:"pointer",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div><div style={{fontSize:13,fontWeight:700,color:p.fase===f.v?f.c:"#fff",marginBottom:2}}>{f.l}</div><div style={{fontSize:11,color:"#555"}}>{f.d}</div></div>{p.fase===f.v&&<div style={{width:20,height:20,borderRadius:"50%",background:f.c,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:"#000",fontWeight:900}}>✓</div>}</button>)}</div></div>
+        {/* Extra instellingen */}
+        <div style={{...S.card,padding:16,marginBottom:16}}>
+          <div style={{...S.lbl,marginBottom:12}}>Voorkeuren</div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:"1px solid #1C1C1C"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>Stem van Roan</div><div style={{fontSize:11,color:"#444"}}>Roan spreekt feedback uit</div></div>
+            <div onClick={()=>u("voiceOn",!p.voiceOn)} style={{width:44,height:24,borderRadius:99,background:p.voiceOn!==false?LIME:"#222",cursor:"pointer",position:"relative",transition:"background .2s"}}>
+              <div style={{position:"absolute",top:3,left:p.voiceOn!==false?22:3,width:18,height:18,borderRadius:"50%",background:"#fff",transition:"left .2s"}}/>
+            </div>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:"1px solid #1C1C1C"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>Eenheden</div><div style={{fontSize:11,color:"#444"}}>Gewicht eenheid</div></div>
+            <div style={{display:"flex",gap:6}}>
+              {["kg","lbs"].map(u2=><button key={u2} onClick={()=>u("unit",u2)} style={{padding:"5px 12px",borderRadius:8,border:`1px solid ${p.unit===u2||(!p.unit&&u2==="kg")?LIME:"#222"}`,background:"none",color:p.unit===u2||(!p.unit&&u2==="kg")?LIME:"#555",fontSize:12,fontWeight:700,cursor:"pointer"}}>{u2}</button>)}
+            </div>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>Trainingsdagen p/w</div><div style={{fontSize:11,color:"#444"}}>Huidig: {(profile?.trainDayNames||["ma","di","do"]).length} dagen</div></div>
+            <div style={{fontSize:12,color:"#555"}}>→ Pas aan in profiel</div>
+          </div>
+        </div>
+
+        <div style={{...S.card,padding:16,marginBottom:16}}>
+          <div style={{...S.lbl,marginBottom:12}}>Account</div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:"1px solid #1C1C1C"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>E-mailadres</div><div style={{fontSize:11,color:"#444"}}>{sbUser?.email||"Niet ingelogd"}</div></div>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:"1px solid #1C1C1C"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>Data wissen</div><div style={{fontSize:11,color:"#444"}}>Verwijder al je trainingen en voeding</div></div>
+            <button onClick={()=>{if(window.confirm("Weet je het zeker? Dit verwijdert AL je data!")){{LS.set("fitcoach_log",[]);LS.set("fitcoach_food",{});LS.set("fitcoach_prs",{});onClose();}}}} style={{padding:"5px 12px",borderRadius:8,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:11,fontWeight:700,cursor:"pointer"}}>Wissen</button>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>App versie</div><div style={{fontSize:11,color:"#444"}}>FitCoach Pro v{APP_VERSION}</div></div>
+            <div style={{fontSize:11,color:"#333"}}>© 2026</div>
+          </div>
+        </div>
+
+        <div style={{...S.card,padding:16,marginBottom:16}}>
+          <div style={{...S.lbl,marginBottom:12}}>Lichaamsgegevens</div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:"1px solid #1C1C1C"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>BMI</div><div style={{fontSize:11,color:"#444"}}>Op basis van lengte en gewicht</div></div>
+            <div style={{fontSize:16,fontWeight:900,color:LIME}}>{profile?.height&&profile?.weight?((profile.weight/(profile.height/100)**2).toFixed(1)):"–"}</div>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:"1px solid #1C1C1C"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>BMR</div><div style={{fontSize:11,color:"#444"}}>Basaal metabolisme</div></div>
+            <div style={{fontSize:14,fontWeight:800,color:"#ccc"}}>{profile?.weight&&profile?.height&&profile?.age?(()=>{const bmr=profile.gender==="vrouw"?447.6+(9.25*profile.weight)+(3.1*profile.height)-(4.33*profile.age):88.36+(13.4*profile.weight)+(4.8*profile.height)-(5.7*profile.age);return Math.round(bmr)+"kcal";})():"–"}</div>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>Ideaal gewicht</div><div style={{fontSize:11,color:"#444"}}>Op basis van lengte</div></div>
+            <div style={{fontSize:14,fontWeight:800,color:"#ccc"}}>{profile?.height?(()=>{const h=profile.height/100;const min=(18.5*h*h).toFixed(0);const max=(24.9*h*h).toFixed(0);return min+"-"+max+"kg";})():"–"}</div>
+          </div>
+        </div>
+
+        {/* Thema */}
+        <div style={{...S.card,padding:16,marginBottom:16}}>
+          <div style={{...S.lbl,marginBottom:12}}>Thema</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+            <button onClick={()=>setTheme("dark")} style={{padding:"12px",borderRadius:12,border:`2px solid ${theme==="dark"?LIME:"#222"}`,background:theme==="dark"?"rgba(200,241,56,0.07)":"#111",cursor:"pointer",textAlign:"center"}}>
+              <div style={{fontSize:20,marginBottom:4}}>🌙</div>
+              <div style={{fontSize:12,fontWeight:700,color:theme==="dark"?LIME:"#555"}}>Donker</div>
+            </button>
+            <button onClick={()=>setTheme("light")} style={{padding:"12px",borderRadius:12,border:`2px solid ${theme==="light"?LIME:"#222"}`,background:theme==="light"?"rgba(200,241,56,0.07)":"#111",cursor:"pointer",textAlign:"center"}}>
+              <div style={{fontSize:20,marginBottom:4}}>☀️</div>
+              <div style={{fontSize:12,fontWeight:700,color:theme==="light"?LIME:"#555"}}>Licht</div>
+            </button>
+          </div>
+        </div>
+
+        {/* Taal */}
+        <div style={{...S.card,padding:16,marginBottom:16}}>
+          <div style={{...S.lbl,marginBottom:12}}>Taal / Language / Sprache</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+            {[{v:"nl",l:"🇳🇱 NL"},{v:"en",l:"🇬🇧 EN"},{v:"de",l:"🇩🇪 DE"}].map(lg=>(
+              <button key={lg.v} onClick={()=>setLang(lg.v)} style={{padding:"10px 6px",borderRadius:12,border:`1.5px solid ${lang===lg.v?LIME:"#222"}`,background:lang===lg.v?"rgba(200,241,56,0.08)":"#111",color:lang===lg.v?LIME:"#555",fontSize:13,fontWeight:700,cursor:"pointer"}}>{lg.l}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Accountbeheer */}
+        <div style={{...S.card,padding:16,marginBottom:16}}>
+          <div style={{...S.lbl,marginBottom:12}}>Accountbeheer</div>
+          <div style={{paddingBottom:12,marginBottom:12,borderBottom:"1px solid #1C1C1C"}}>
+            <div style={{fontSize:11,color:"#444",marginBottom:4}}>Gekoppeld e-mailadres</div>
+            <div style={{fontSize:14,fontWeight:700,color:"#ccc"}}>{sbUser?.email||"Niet ingelogd"}</div>
+          </div>
+          <button onClick={async()=>{
+            const nieuw=window.prompt("Nieuw wachtwoord (minimaal 6 tekens):");
+            if(nieuw&&nieuw.length>=6){
+              const {error}=await sb.auth.updateUser({password:nieuw});
+              if(error)alert("Fout: "+error.message);
+              else alert("Wachtwoord gewijzigd!");
+            }
+          }} style={{width:"100%",padding:"11px",borderRadius:10,border:"1px solid #222",background:"none",color:"#888",fontSize:13,cursor:"pointer",marginBottom:8,textAlign:"left",fontWeight:600}}>🔑 Wachtwoord wijzigen</button>
+          <button onClick={async()=>{
+            if(window.confirm("Account PERMANENT verwijderen? Al je data gaat verloren!")){
+              if(window.confirm("Weet je het ZEKER? Dit kan niet ongedaan worden.")){
+                await sb.auth.signOut();
+                setSbUser&&setSbUser(null);
+                alert("Account verwijderd. Neem contact op via info@fitcoachpro.nl voor definitieve verwijdering.");
+              }
+            }
+          }} style={{width:"100%",padding:"11px",borderRadius:10,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600}}>🗑 Account verwijderen</button>
+        </div>
+
+        {/* FAQ / Hulp / Privacy */}
+        <div style={{...S.card,padding:16,marginBottom:16}}>
+          <div style={{...S.lbl,marginBottom:12}}>Informatie</div>
+          {[
+            {icon:"❓",title:"FAQ",sub:"Veelgestelde vragen",content:"Hoe reset ik mijn wachtwoord? → Instellingen → Wachtwoord wijzigen. | Trainingsdagen aanpassen? → Instellingen → Trainingsdagen. | Offline gebruiken? Ja! | Hoe werkt Roan? AI coach die jouw data bijhoudt."},
+            {icon:"🆘",title:"Hulp",sub:"Ondersteuning en contact",content:"Probleem of vraag? Email: support@fitcoachpro.nl | Website: www.fitcoachpro.nl | We reageren binnen 24 uur op werkdagen."},
+            {icon:"🔒",title:"Privacy",sub:"Privacybeleid",content:"FitCoach Pro deelt jouw data NOOIT met derden. Data wordt veilig opgeslagen. Account + data verwijderbaar via instellingen. Volledig beleid: www.fitcoachpro.nl/privacy"},
+          ].map(({icon,title,sub,content:c})=>(
+            <div key={title} onClick={()=>alert(`${icon} ${title}
+
+${c}`)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:"1px solid #1C1C1C",cursor:"pointer"}}>
+              <div style={{display:"flex",gap:10,alignItems:"center"}}>
+                <div style={{fontSize:20}}>{icon}</div>
+                <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>{title}</div><div style={{fontSize:11,color:"#444"}}>{sub}</div></div>
+              </div>
+              <div style={{color:"#333",fontSize:16}}>›</div>
+            </div>
+          ))}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer"}} onClick={()=>alert("FitCoach Pro v"+APP_VERSION+" | Robin Schuurkamp | © 2026 | fitcoachpro.nl")}>
+            <div style={{display:"flex",gap:10,alignItems:"center"}}>
+              <div style={{fontSize:20}}>ℹ️</div>
+              <div><div style={{fontSize:13,fontWeight:700,color:"#ccc"}}>Over FitCoach Pro</div><div style={{fontSize:11,color:"#444"}}>Versie {APP_VERSION}</div></div>
+            </div>
+            <div style={{color:"#333",fontSize:16}}>›</div>
+          </div>
+        </div>
+
         <button onClick={()=>onSave(p)} style={{width:"100%",padding:16,borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:15,fontWeight:800,cursor:"pointer",marginBottom:12}}>Opslaan</button>
         <button onClick={onClose} style={{width:"100%",padding:14,borderRadius:14,border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer",marginBottom:12}}>Annuleren</button>
-        <button onClick={onLogout} style={{width:"100%",padding:13,borderRadius:14,border:"1px solid #2a0000",background:"none",color:"#444",fontSize:13,cursor:"pointer",marginBottom:20}}>Uitloggen</button>
+        <button onClick={onLogout} style={{width:"100%",padding:13,borderRadius:14,border:"1px solid rgba(239,68,68,0.2)",background:"none",color:"#ef4444",fontSize:13,cursor:"pointer",marginBottom:20}}>Uitloggen</button>
       </div>
     </div>
   );
@@ -1240,6 +1462,16 @@ function App(){
   const [showSettings,setShowSettings]=useState(false);
   const [showFinn,setShowFinn]=useState(false);
   const [finnKey,setFinnKey]=useState(0);
+  const [theme,setTheme]=useState(()=>LS.get("fitcoach_theme")||"dark");
+  const [lang,setLang]=useState(()=>LS.get("fitcoach_lang")||"nl");
+  const T=TRANSLATIONS[lang]||TRANSLATIONS.nl;
+  const isDark=theme==="dark";
+  const BG=isDark?"#0D0D0D":"#F5F5F0";
+  const CARD_BG=isDark?"#141414":"#FFFFFF";
+  const BORDER=isDark?"#1C1C1C":"#E0E0D8";
+  const TEXT=isDark?"#ffffff":"#111111";
+  const TEXT2=isDark?"#888888":"#555555";
+  const TEXT3=isDark?"#444444":"#999999";
   const [showFeedbackRequest,setShowFeedbackRequest]=useState(false);
   const [foodSubTab,setFoodSubTab]=useState("dagelijks");
   const [pendingMsg,setPendingMsg]=useState(null);
@@ -1370,7 +1602,7 @@ function App(){
   if(!profile)return<Onboarding onComplete={p=>setProfile(p)}/>;
 
   return(
-    <div style={{background:"#0D0D0D",minHeight:"100vh",maxWidth:480,margin:"0 auto",paddingBottom:80}}>
+    <div style={{background:BG,minHeight:"100vh",maxWidth:480,margin:"0 auto",paddingBottom:80,color:TEXT}}>
       {/* Persistent workout banner - always visible when training is active */}
       {session&&session.length>0&&tab!=="Training"&&(
         <div style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,zIndex:50,background:"#0D0D0D",borderBottom:`2px solid ${LIME}`,padding:"10px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
@@ -1390,7 +1622,7 @@ function App(){
       {/* Add top padding when banner is visible */}
       {session&&session.length>0&&tab!=="Training"&&<div style={{height:52}}/>}
       {infoEx&&<ExInfo ex={infoEx} onClose={()=>setInfoEx(null)}/>}
-      {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)} onLogout={async()=>{await sb.auth.signOut();setSbUser(null);setShowSettings(false);}}/>}
+      {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)} onLogout={async()=>{await sb.auth.signOut();setSbUser(null);setShowSettings(false);}} theme={theme} setTheme={(t)=>{setTheme(t);LS.set("fitcoach_theme",t);}} lang={lang} setLang={(l)=>{setLang(l);LS.set("fitcoach_lang",l);}} sbUser={sbUser}/>}
       {showWhatsNew&&<WhatsNewModal onClose={()=>{setShowWhatsNew(false);LS.set("fitcoach_seen_version",APP_VERSION);}}/>}
       {/* Feedback request modal */}
       {showFeedbackRequest&&(
