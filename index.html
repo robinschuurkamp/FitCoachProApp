@@ -884,7 +884,18 @@ function buildSession(muscles,log,profile){
   return adjusted;
 }
 
-const S={card:{background:CARD_BG,borderRadius:20,border:`1px solid ${BORDER}`},lbl:{fontSize:10,color:TEXT3,fontWeight:700,letterSpacing:2,textTransform:"uppercase"}};
+// Global theme vars - updated when theme changes
+let _theme=localStorage.getItem("fitcoach_theme")||"dark";
+let _isDark=_theme==="dark";
+let BG=_isDark?"#0D0D0D":"#F5F5F0";
+let CARD_BG=_isDark?"#141414":"#FFFFFF";
+let BORDER=_isDark?"#1C1C1C":"#E0E0D8";
+let TEXT=_isDark?"#ffffff":"#111111";
+let TEXT2=_isDark?"#888888":"#555555";
+let TEXT3=_isDark?"#444444":"#999999";
+function updateThemeVars(t){_theme=t;_isDark=t==="dark";BG=_isDark?"#0D0D0D":"#F5F5F0";CARD_BG=_isDark?"#141414":"#FFFFFF";BORDER=_isDark?"#1C1C1C":"#E0E0D8";TEXT=_isDark?"#ffffff":"#111111";TEXT2=_isDark?"#888888":"#555555";TEXT3=_isDark?"#444444":"#999999";}
+
+function makeS(CARD_BG,BORDER,TEXT3){return {card:{background:CARD_BG,borderRadius:20,border:`1px solid ${BORDER}`},lbl:{fontSize:10,color:TEXT3,fontWeight:700,letterSpacing:2,textTransform:"uppercase"}};}
 function FinnImg({size,emotion="cool"}){
   const src=ROAN_IMGS[emotion]||ROAN_IMGS.cool;
   return(
@@ -948,6 +959,7 @@ function VolumeBarChart({log}){
 }
 
 function FinnPopup({onClose,pendingMsg,profile,log,food,onNavigate,onGenerateMenu,onGenerateShopping}){
+  const S=makeS("#141414","#1C1C1C","#444444");
   const [input,setInput]=useState("");
   const [msgs,setMsgs]=useState([{r:"a",t:`Hey ${profile?.name||""}! Roan hier. Ik kan je coachen, een weekmenu maken of je door de app sturen. Wat wil je?`}]);
   const [loading,setLoading]=useState(false);
@@ -1102,6 +1114,7 @@ function AuthScreen({onAuth}){
 }
 
 function WhatsNewModal({onClose}){
+  const S=makeS("#141414","#1C1C1C","#444444");
   const [visible,setVisible]=useState(false);
   useEffect(()=>{setTimeout(()=>setVisible(true),50);},[]);
   const latest=CHANGELOG[0];
@@ -1122,6 +1135,7 @@ function WhatsNewModal({onClose}){
 }
 
 function Onboarding({onComplete}){
+  const S=makeS("#141414","#1C1C1C","#444444");
   const [step,setStep]=useState(1);
   const [p,setP]=useState({name:"",age:"",weight:"",goalWeight:"",goal:"afvallen",level:"beginner",sportType:"kracht",trainingLoc:"gym",equipmentPref:"mixed",fase:"onderhoud",fotoUrl:"",trainDays:3,trainDayNames:["ma","di","do"],coachLevel:"regelmatig"});
   const u=(k,v)=>setP(prev=>({...prev,[k]:v}));
@@ -1532,12 +1546,8 @@ function App(){
   const [lang,setLang]=useState(()=>LS.get("fitcoach_lang")||"nl");
   const T=TRANSLATIONS[lang]||TRANSLATIONS.nl;
   const isDark=theme==="dark";
-  const BG=isDark?"#0D0D0D":"#F5F5F0";
-  const CARD_BG=isDark?"#141414":"#FFFFFF";
-  const BORDER=isDark?"#1C1C1C":"#E0E0D8";
-  const TEXT=isDark?"#ffffff":"#111111";
-  const TEXT2=isDark?"#888888":"#555555";
-  const TEXT3=isDark?"#444444":"#999999";
+  updateThemeVars(theme);
+  const S=makeS(CARD_BG,BORDER,TEXT3);
   const [showFeedbackRequest,setShowFeedbackRequest]=useState(false);
   const [foodSubTab,setFoodSubTab]=useState("dagelijks");
   const [pendingMsg,setPendingMsg]=useState(null);
@@ -1688,7 +1698,7 @@ function App(){
       {/* Add top padding when banner is visible */}
       {session&&session.length>0&&tab!=="Training"&&<div style={{height:52}}/>}
       {infoEx&&<ExInfo ex={infoEx} onClose={()=>setInfoEx(null)}/>}
-      {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)} onLogout={async()=>{await sb.auth.signOut();setSbUser(null);setShowSettings(false);}} theme={theme} setTheme={(t)=>{setTheme(t);LS.set("fitcoach_theme",t);}} lang={lang} setLang={(l)=>{setLang(l);LS.set("fitcoach_lang",l);}} sbUser={sbUser}/>}
+      {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)} onLogout={async()=>{await sb.auth.signOut();setSbUser(null);setShowSettings(false);}} theme={theme} setTheme={(t)=>{setTheme(t);LS.set("fitcoach_theme",t);updateThemeVars(t);}} lang={lang} setLang={(l)=>{setLang(l);LS.set("fitcoach_lang",l);}} sbUser={sbUser}/>}
       {showWhatsNew&&<WhatsNewModal onClose={()=>{setShowWhatsNew(false);LS.set("fitcoach_seen_version",APP_VERSION);}}/>}
       {/* Feedback request modal */}
       {showFeedbackRequest&&(
