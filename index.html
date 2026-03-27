@@ -88,8 +88,18 @@ const ROAN_IMGS={
   strong:"https://i.postimg.cc/YLtXQWzt/Ontwerp-zonder-titel-8-removebg-preview.png",
 };
 
-const APP_VERSION="2.2";
+const APP_VERSION="2.3";
 const CHANGELOG=[
+  {
+    version:"2.3",
+    title:"Fixes & nieuwe splits",
+    items:[
+      "Boodschappenlijst crash opgelost",
+      "Laatste en volgende training samen op Home",
+      "Nieuwe splits: Benen & Schouders, Schouders & Armen, Billen & Benen, Core & Buik",
+      "Ga naar training knop op Home",
+    ]
+  },
   {
     version:"2.2",
     title:"Slimmere onboarding",
@@ -195,7 +205,7 @@ const LS={get:(k)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):n
 function fmtDate(d){const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0');return`${dd}/${mm}/${d.getFullYear()}`;}
 function parseDate(s){const p=s.split('/');return new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));}
 async function resizeImg(file){return new Promise(res=>{const r=new FileReader();r.onload=e=>{const img=new Image();img.onload=()=>{const max=220,ratio=Math.min(max/img.width,max/img.height),c=document.createElement('canvas');c.width=img.width*ratio;c.height=img.height*ratio;c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',0.75));};img.src=e.target.result;};r.readAsDataURL(file);});}
-async function ai(prompt, onChunk){
+async function ai(prompt){
   try{
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),20000);
@@ -206,20 +216,13 @@ async function ai(prompt, onChunk){
       signal:controller.signal
     });
     clearTimeout(timeout);
-    if(!r.ok)return"Roan is even niet beschikbaar. Probeer het opnieuw.";
-    
-    // Streaming lezen
-    const reader=r.body.getReader();
-    const decoder=new TextDecoder();
-    let full="";
-    while(true){
-      const {done,value}=await reader.read();
-      if(done)break;
-      const chunk=decoder.decode(value,{stream:true});
-      full+=chunk;
-      if(onChunk)onChunk(full);
-    }
-    return full||"Roan heeft geen antwoord. Probeer het opnieuw.";
+    if(!r.ok){console.error("Worker error:",r.status);return"Roan is even niet beschikbaar. Probeer het opnieuw.";}
+    const d=await r.json();
+    console.log("Response:",JSON.stringify(d).slice(0,100));
+    if(d.content?.[0]?.text)return d.content[0].text;
+    if(d.text)return d.text;
+    if(d.response)return d.response;
+    return"Roan heeft geen antwoord. Probeer het opnieuw.";
   }catch(e){
     if(e.name==="AbortError")return"Roan reageert te langzaam. Probeer het opnieuw.";
     return"Verbindingsfout. Controleer je internet.";
@@ -318,10 +321,14 @@ const SPLITS_KRACHT=[
   {label:"Push",muscles:["borst","schouders","triceps"],pk:"borst",desc:"Borst · Schouders · Triceps"},
   {label:"Pull",muscles:["rug","biceps"],pk:"rug",desc:"Rug · Biceps"},
   {label:"Legs",muscles:["benen","billen"],pk:"benen",desc:"Quads · Hamstrings · Billen"},
+  {label:"Benen & Schouders",muscles:["benen","schouders"],pk:"benen",desc:"Benen · Schouders · Billen"},
+  {label:"Schouders & Armen",muscles:["schouders","biceps","triceps"],pk:"schouders",desc:"Schouders · Biceps · Triceps"},
   {label:"Borst & Triceps",muscles:["borst","triceps"],pk:"borst",desc:"Borst · Triceps"},
   {label:"Rug & Biceps",muscles:["rug","biceps"],pk:"rug",desc:"Rug · Biceps"},
+  {label:"Billen & Benen",muscles:["billen","benen"],pk:"billen",desc:"Glutes · Quads · Hamstrings"},
   {label:"Full Body",muscles:["full body"],pk:"full body",desc:"Alles in één"},
   {label:"Armen",muscles:["biceps","triceps"],pk:"armen",desc:"Biceps · Triceps"},
+  {label:"Core & Buik",muscles:["buik"],pk:"buik",desc:"Abs · Obliques · Core"},
 ];
 const SPLITS_HIIT=[
   {label:"HIIT Full Body",muscles:["hiit_full"],pk:"hiit",desc:"Volledig lichaam"},
@@ -899,25 +906,19 @@ Regels:
 
 Gebruiker: ${txt}
 Roan:`
-    // Streaming - voeg leeg bericht toe en update live
-    const streamId=Date.now();
-    setMsgs(p=>[...p,{r:"a",t:"...",emotion:"cool",id:streamId}]);
     let reply="";
     try{
-      reply=await ai(prompt,(partial)=>{
-        setMsgs(p=>p.map(m=>m.id===streamId?{...m,t:partial}:m));
-      });
+      reply=await ai(prompt);
     }catch(e){
       reply="Oeps, er ging iets mis. Probeer het opnieuw!";
     }
-    // Bepaal emotie op basis van antwoord
     const rl=reply.toLowerCase();
     let emotion="cool";
     if(rl.includes("geweldig")||rl.includes("top")||rl.includes("super")||rl.includes("pr")||rl.includes("record"))emotion="victory";
     else if(rl.includes("haha")||rl.includes("grappig")||rl.includes("lach"))emotion="laugh";
     else if(rl.includes("sterk")||rl.includes("trainen")||rl.includes("spieren")||rl.includes("knallen"))emotion="strong";
     setCurrentEmotion(emotion);
-    setMsgs(p=>p.map(m=>m.id===streamId?{...m,t:reply,emotion}:m));
+    setMsgs(p=>[...p,{r:"a",t:reply,emotion}]);
     setLoading(false);
   }
   function send(){if(!input.trim()||loading)return;const m=input.trim();setInput("");doSend(m);}
@@ -1198,7 +1199,7 @@ function App(){
   const [session,setSession]=useState(null);
   const [showWarmup,setShowWarmup]=useState(false);
   const [savedRecipes,setSavedRecipes]=useState(()=>LS.get("fitcoach_recipes")||[]);
-  const [shoppingList,setShoppingList]=useState(()=>LS.get("fitcoach_shopping")||[]);
+  const [shoppingList,setShoppingList]=useState(()=>(LS.get("fitcoach_shopping")||[]).map(i=>typeof i==="string"?{name:i,checked:false}:i));
   const [genShoppingLoading,setGenShoppingLoading]=useState(false);
   const [weekMenu,setWeekMenu]=useState(()=>LS.get("fitcoach_weekmenu")||null);
   const [weekMenuLoading,setWeekMenuLoading]=useState(false);
@@ -1591,17 +1592,33 @@ function App(){
                 </div>
               );
               return(<div style={{marginBottom:24}}>
-                {last&&<div style={{...S.card,padding:14,marginBottom:12,background:"rgba(200,241,56,0.05)",border:"1px solid rgba(200,241,56,0.15)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:"#888"}}>{last.day} · {dgl===0?"Vandaag":dgl===1?"Gisteren":`${dgl} dagen geleden`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
-                <button onClick={()=>{setTargetMuscles([volg]);startSess([volg]);setTab("Training");}} style={{width:"100%",height:180,borderRadius:18,border:`2px solid ${LIME}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left",marginBottom:10}}>
+                {/* Laatste + Volgende training bij elkaar */}
+                {last&&(
+                  <div style={{...S.card,padding:14,marginBottom:12,background:"rgba(255,255,255,0.02)",border:"1px solid #1C1C1C"}}>
+                    <div style={{display:"flex",gap:12,alignItems:"center"}}>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:10,color:"#555",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Laatste training</div>
+                        <div style={{fontSize:14,fontWeight:800,color:"#ccc"}}>{last.workout}</div>
+                        <div style={{fontSize:11,color:"#555",marginTop:2}}>{dgl===0?"Vandaag":dgl===1?"Gisteren":`${dgl} dagen geleden`}</div>
+                      </div>
+                      <div style={{width:1,height:40,background:"#1C1C1C"}}/>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Volgende</div>
+                        <div style={{fontSize:14,fontWeight:800,color:"#fff"}}>{MUSCLE_META[volg]?.label}</div>
+                        <div style={{fontSize:11,color:"#555",marginTop:2}}>{MUSCLE_META[volg]?.sub}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <button onClick={()=>{setTargetMuscles([volg]);startSess([volg]);setTab("Training");}} style={{width:"100%",height:160,borderRadius:18,border:`2px solid ${LIME}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left",marginBottom:10}}>
                   <img src={P[volg]} alt={volg} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
                   <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(0,0,0,0.05),rgba(0,0,0,0.8))"}}/>
-                  <div style={{position:"absolute",top:12,right:12,background:LIME,borderRadius:99,padding:"4px 12px",fontSize:10,fontWeight:800,color:"#000"}}>AANBEVOLEN</div>
                   <div style={{position:"relative",padding:"20px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-                    <div style={{fontSize:11,color:"rgba(255,255,255,0.6)",marginBottom:6}}>Tik om te starten</div>
-                    <div style={{fontSize:24,fontWeight:900,color:"#fff",marginBottom:4}}>{MUSCLE_META[volg]?.label}</div>
-                    <div style={{fontSize:12,color:"rgba(255,255,255,0.6)",marginBottom:8}}>{MUSCLE_META[volg]?.sub}</div>
-                    <div style={{display:"inline-flex",alignItems:"center",gap:6,background:LIME,borderRadius:99,padding:"6px 14px",width:"fit-content"}}>
-                      <span style={{fontSize:12,fontWeight:800,color:"#000"}}>Start training →</span>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.6)",marginBottom:4}}>Tik om te starten</div>
+                    <div style={{fontSize:22,fontWeight:900,color:"#fff",marginBottom:4}}>{MUSCLE_META[volg]?.label}</div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.6)",marginBottom:10}}>{MUSCLE_META[volg]?.sub}</div>
+                    <div style={{display:"inline-flex",alignItems:"center",gap:6,background:LIME,borderRadius:99,padding:"8px 18px",width:"fit-content"}}>
+                      <span style={{fontSize:13,fontWeight:800,color:"#000"}}>Ga naar training →</span>
                     </div>
                   </div>
                 </button>
@@ -2065,7 +2082,7 @@ function App(){
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
                 <div><div style={{fontSize:13,fontWeight:800}}>Boodschappenlijst</div><div style={{fontSize:11,color:"#444",marginTop:2}}>{shoppingList.filter(i=>!i.checked).length} items over</div></div>
                 <div style={{display:"flex",gap:8}}>
-                  <button onClick={async()=>{setGenShoppingLoading(true);const menu=weekMenu?JSON.stringify(weekMenu):`gezonde maaltijden voor ${profile.goal}`;const txt=await ai(`Boodschappenlijst voor ${persons} ${persons===1?"persoon":"personen"} voor dit weekmenu: ${menu}. Geef HOEVEELHEDEN erbij (bijv. "500g kipfilet"). Groepeer per categorie. ALLEEN JSON array: ["500g kipfilet",...]. Max 28 items.`);try{const list=JSON.parse(txt.replace(/```json|```/g,"").trim());const items=list.map(l=>({name:l,checked:false}));setShoppingList(items);LS.set("fitcoach_shopping",items);}catch(e){}setGenShoppingLoading(false);}} disabled={genShoppingLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:genShoppingLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{genShoppingLoading?"Bezig...":"Genereer"}</button>
+                  <button onClick={async()=>{setGenShoppingLoading(true);const menu=weekMenu?JSON.stringify(weekMenu):`gezonde maaltijden voor ${profile.goal}`;const txt=await ai(`Boodschappenlijst voor ${persons} ${persons===1?"persoon":"personen"} voor dit weekmenu: ${menu}. Geef HOEVEELHEDEN erbij (bijv. "500g kipfilet"). Groepeer per categorie. ALLEEN JSON array: ["500g kipfilet",...]. Max 28 items.`);try{const raw=JSON.parse(txt.replace(/```json|```/g,"").trim());const items=(Array.isArray(raw)?raw:[]).map(l=>({name:typeof l==="string"?l:l.name||String(l),checked:false}));setShoppingList(items);LS.set("fitcoach_shopping",items);}catch(e){}setGenShoppingLoading(false);}} disabled={genShoppingLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:genShoppingLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{genShoppingLoading?"Bezig...":"Genereer"}</button>
                   {shoppingList.length>0&&<button onClick={()=>{setShoppingList([]);LS.set("fitcoach_shopping",[]);}} style={{padding:"7px 12px",borderRadius:10,border:"1px solid #222",background:"none",color:"#444",fontSize:11,fontWeight:700,cursor:"pointer"}}>Leeg</button>}
                 </div>
               </div>
@@ -2086,7 +2103,7 @@ function App(){
                   {shoppingList.map((item,i)=>(
                     <div key={i} style={{display:"flex",alignItems:"center",gap:12,paddingBottom:11,marginBottom:11,borderBottom:i<shoppingList.length-1?"1px solid #111":"none"}}>
                       <div onClick={()=>{const u=[...shoppingList];u[i]={...u[i],checked:!u[i].checked};setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{width:20,height:20,borderRadius:5,border:`1.5px solid ${item.checked?LIME:"#333"}`,background:item.checked?"rgba(200,241,56,0.15)":"none",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:LIME,flexShrink:0,cursor:"pointer"}}>{item.checked?"✓":""}</div>
-                      <div onClick={()=>{const u=[...shoppingList];u[i]={...u[i],checked:!u[i].checked};setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{fontSize:13,color:item.checked?"#444":"#ccc",textDecoration:item.checked?"line-through":"none",flex:1,cursor:"pointer"}}>{item.name}</div>
+                      <div onClick={()=>{const u=[...shoppingList];u[i]={...u[i],checked:!u[i].checked};setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{fontSize:13,color:item.checked?"#444":"#ccc",textDecoration:item.checked?"line-through":"none",flex:1,cursor:"pointer"}}>{typeof item==="string"?item:item.name}</div>
                       <button onClick={()=>{const u=shoppingList.filter((_,j)=>j!==i);setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{background:"none",border:"none",color:"#444",fontSize:16,cursor:"pointer",padding:"0 4px",flexShrink:0}}>×</button>
                     </div>
                   ))}
