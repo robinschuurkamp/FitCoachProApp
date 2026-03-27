@@ -2090,35 +2090,75 @@ setFeedbackReply(reply);setFeedbackLoading(false);
 
       {/* VOEDING TAB */}
       {tab==="Voeding"&&(
-        <div style={{padding:"24px 16px"}}>
-          <div style={{...S.lbl,color:LIME,marginBottom:4}}>Voeding</div>
-          <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:16}}>Voeding</div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:8,background:"#111",borderRadius:12,padding:8,marginBottom:20}}>
+        <div style={{padding:"16px 16px 0"}}>
+          {/* Header stijl ontwerp 5 */}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+            <div>
+              <div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:2}}>Voeding</div>
+              <div style={{fontSize:28,fontWeight:900,color:"#fff",letterSpacing:-1.5,lineHeight:1}}>{foodDate===TODAY_KEY?"Vandaag":DAYS[parseDate(foodDate).getDay()]}</div>
+            </div>
+            <div style={{display:"flex",gap:6}}>
+              <button onClick={()=>setFoodDate(d=>fmtDate(new Date(parseDate(d).getTime()-86400000)))} style={{width:32,height:32,borderRadius:"50%",border:"1px solid #222",background:"none",color:"#555",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+              <button onClick={()=>{if(foodDate!==TODAY_KEY)setFoodDate(d=>fmtDate(new Date(parseDate(d).getTime()+86400000)));}} disabled={foodDate===TODAY_KEY} style={{width:32,height:32,borderRadius:"50%",border:"1px solid #222",background:"none",color:foodDate===TODAY_KEY?"#333":"#555",fontSize:14,cursor:foodDate===TODAY_KEY?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>›</button>
+            </div>
+          </div>
+          {/* Tabs 2x2 */}
+          <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
             {[{k:"dagelijks",l:"Dagelijks"},{k:"weekmenu",l:"Weekmenu"},{k:"boodschappen",l:"Boodschappen"},{k:"recepten",l:"Recepten"}].map(t=>(
-              <button key={t.k} onClick={()=>setFoodSubTab(t.k)} style={{width:"calc(50% - 4px)",padding:"11px 8px",borderRadius:10,border:"none",cursor:"pointer",background:foodSubTab===t.k?"#1C1C1C":"none",color:foodSubTab===t.k?"#fff":"#888",fontSize:13,fontWeight:foodSubTab===t.k?700:400}}>{t.l}</button>
+              <button key={t.k} onClick={()=>setFoodSubTab(t.k)} style={{width:"calc(50% - 3px)",padding:"10px 8px",borderRadius:10,border:`1px solid ${foodSubTab===t.k?"#333":"#1C1C1C"}`,cursor:"pointer",background:foodSubTab===t.k?"#1C1C1C":"#111",color:foodSubTab===t.k?"#fff":"#555",fontSize:12,fontWeight:foodSubTab===t.k?700:400}}>{t.l}</button>
             ))}
           </div>
 
           {foodSubTab==="dagelijks"&&<>
-            <div style={{display:"flex",gap:8,marginBottom:16,alignItems:"center"}}>
-              <button onClick={()=>setFoodDate(d=>fmtDate(new Date(parseDate(d).getTime()-86400000)))} style={{width:36,height:36,borderRadius:10,border:"1px solid #222",background:"#141414",color:"#fff",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
-              <div style={{flex:1,textAlign:"center"}}><div style={{fontSize:13,fontWeight:700,color:foodDate===TODAY_KEY?LIME:"#888"}}>{foodDate===TODAY_KEY?"Vandaag":foodDate}</div><div style={{fontSize:10,color:"#555"}}>{DAYS[parseDate(foodDate).getDay()]}</div></div>
-              <button onClick={()=>{if(foodDate!==TODAY_KEY)setFoodDate(d=>fmtDate(new Date(parseDate(d).getTime()+86400000)));}} disabled={foodDate===TODAY_KEY} style={{width:36,height:36,borderRadius:10,border:"1px solid #222",background:foodDate===TODAY_KEY?"#111":"#141414",color:foodDate===TODAY_KEY?"#333":"#fff",fontSize:18,cursor:foodDate===TODAY_KEY?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>›</button>
-            </div>
-            <div style={{...S.card,padding:"12px 16px",marginBottom:14,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-              <div><div style={{...S.lbl,marginBottom:2}}>Fase</div><div style={{fontSize:15,fontWeight:800,color:faseObj.c}}>{fase}</div></div>
-              <div style={{textAlign:"right"}}><div style={{fontSize:11,color:"#555",marginBottom:2}}>Dagdoel</div><div style={{fontSize:18,fontWeight:900,color:LIME}}>{kcalT} kcal</div><div style={{fontSize:11,color:"#555"}}>{protT}g eiwit</div></div>
-              <button onClick={()=>setShowSettings(true)} style={{padding:"8px 14px",borderRadius:10,border:"1px solid #222",background:"none",color:"#888",fontSize:11,cursor:"pointer",fontWeight:600}}>Wijzig</button>
-            </div>
-            <div style={{...S.card,padding:24,marginBottom:14}}>
-              <div style={{display:"flex",justifyContent:"space-around",alignItems:"center",marginBottom:16}}>
-                <Ring pct={Math.min(100,selTotals.kcal/kcalT*100)} size={92} stroke={8} color={LIME} value={selTotals.kcal} label="Calorieën"/>
-                <div style={{display:"flex",flexDirection:"column",gap:14}}>
-                  <Ring pct={Math.min(100,selTotals.prot/protT*100)} size={66} stroke={6} color="#60a5fa" value={`${selTotals.prot}g`} label="Eiwit"/>
-                  <Ring pct={Math.min(100,selTotals.carbs/Math.max(1,carbsT)*100)} size={66} stroke={6} color="#f59e0b" value={`${selTotals.carbs}g`} label="Koolh."/>
+            {/* Calorie + macro kaarten stijl ontwerp 4 */}
+            <div style={{padding:"0 0 14px"}}>
+              {/* Vandaag gegeten groot + fase */}
+              <div style={{background:"#141414",borderRadius:14,padding:"14px 16px",marginBottom:10,display:"flex",justifyContent:"space-between",alignItems:"center",border:"1px solid #1C1C1C"}}>
+                <div>
+                  <div style={{fontSize:10,color:"#555",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Vandaag gegeten</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+                    <div style={{fontSize:36,fontWeight:900,color:selTotals.kcal>=kcalT?LIME:"#fff",letterSpacing:-2,lineHeight:1}}>{selTotals.kcal}</div>
+                    <div style={{fontSize:13,color:"#444"}}>/ {kcalT} kcal</div>
+                  </div>
+                  <div style={{background:"#0D0D0D",borderRadius:99,height:3,width:"100%",marginTop:8,maxWidth:160}}>
+                    <div style={{width:`${Math.min(100,selTotals.kcal/kcalT*100)}%`,height:3,borderRadius:99,background:LIME,transition:"width .3s"}}/>
+                  </div>
                 </div>
-                <Ring pct={Math.min(100,selTotals.fat/Math.max(1,fatT)*100)} size={66} stroke={6} color="#a78bfa" value={`${selTotals.fat}g`} label="Vet"/>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:10,color:"#444",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>Fase</div>
+                  <div style={{fontSize:13,fontWeight:800,color:faseObj.c}}>{fase}</div>
+                  <button onClick={()=>setShowSettings(true)} style={{marginTop:6,padding:"4px 10px",borderRadius:8,border:"1px solid #222",background:"none",color:"#555",fontSize:10,cursor:"pointer",fontWeight:600}}>Wijzig</button>
+                </div>
               </div>
+              {/* Macro kaarten stijl ontwerp 4 */}
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+                <div style={{background:"#141414",borderRadius:12,padding:"10px 8px",textAlign:"center",borderTop:`2px solid #60a5fa`}}>
+                  <div style={{fontSize:10,color:"#60a5fa",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>Eiwit</div>
+                  <div style={{fontSize:20,fontWeight:900,color:"#fff"}}>{selTotals.prot}g</div>
+                  <div style={{fontSize:9,color:"#333",marginTop:2}}>{protT}g doel</div>
+                  <div style={{background:"#0D0D0D",borderRadius:99,height:2,marginTop:5}}>
+                    <div style={{width:`${Math.min(100,selTotals.prot/protT*100)}%`,height:2,borderRadius:99,background:"#60a5fa"}}/>
+                  </div>
+                </div>
+                <div style={{background:"#141414",borderRadius:12,padding:"10px 8px",textAlign:"center",borderTop:`2px solid #f59e0b`}}>
+                  <div style={{fontSize:10,color:"#f59e0b",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>Koolh.</div>
+                  <div style={{fontSize:20,fontWeight:900,color:"#fff"}}>{selTotals.carbs}g</div>
+                  <div style={{fontSize:9,color:"#333",marginTop:2}}>{carbsT}g doel</div>
+                  <div style={{background:"#0D0D0D",borderRadius:99,height:2,marginTop:5}}>
+                    <div style={{width:`${Math.min(100,selTotals.carbs/Math.max(1,carbsT)*100)}%`,height:2,borderRadius:99,background:"#f59e0b"}}/>
+                  </div>
+                </div>
+                <div style={{background:"#141414",borderRadius:12,padding:"10px 8px",textAlign:"center",borderTop:`2px solid #a78bfa`}}>
+                  <div style={{fontSize:10,color:"#a78bfa",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>Vet</div>
+                  <div style={{fontSize:20,fontWeight:900,color:"#fff"}}>{selTotals.fat}g</div>
+                  <div style={{fontSize:9,color:"#333",marginTop:2}}>{fatT}g doel</div>
+                  <div style={{background:"#0D0D0D",borderRadius:99,height:2,marginTop:5}}>
+                    <div style={{width:`${Math.min(100,selTotals.fat/Math.max(1,fatT)*100)}%`,height:2,borderRadius:99,background:"#a78bfa"}}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={{...S.card,padding:"12px 16px",marginBottom:14}}>
               {(()=>{const weekStart=new Date(TODAY);weekStart.setDate(TODAY.getDate()-TODAY.getDay());const cheatKey="fitcoach_cheat_"+fmtDate(weekStart);const hadCheat=LS.get(cheatKey);if(!hadCheat&&(TODAY.getDay()===5||TODAY.getDay()===6))return<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div><div style={{fontSize:12,color:ORANGE,fontWeight:700,marginBottom:2}}>Cheatdag voorstel</div><div style={{fontSize:11,color:"#555"}}>Je doet het goed deze week. Gun jezelf iets lekkers.</div></div><button onClick={()=>LS.set(cheatKey,true)} style={{padding:"6px 12px",borderRadius:8,border:"none",background:ORANGE,color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer"}}>Deal!</button></div>;return null;})()}
             </div>
             <div style={{display:"flex",gap:8,marginBottom:16}}>
