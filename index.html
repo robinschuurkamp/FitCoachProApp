@@ -4211,9 +4211,9 @@ setFeedbackReply(reply);setFeedbackLoading(false);
             {/* Calorie + macro kaarten stijl ontwerp 4 */}
             <div style={{padding:"0 0 14px"}}>
               {/* Vandaag gegeten groot + fase */}
-              <div style={{background:CARD_BG,borderRadius:14,padding:"14px 16px",marginBottom:10,display:"flex",justifyContent:"space-between",alignItems:"center",border:`1px solid ${BORDER}`}}>
+              <div style={{background:CARD_BG,borderRadius:14,padding:"14px 16px",marginBottom:10,display:"flex",justifyContent:"space-between",alignItems:"center",border:`2px solid ${LIME}`,boxShadow:`0 0 16px rgba(200,241,56,0.12)`}}>
                 <div>
-                  <div style={{fontSize:10,color:"#555",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Vandaag gegeten</div>
+                  <div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>{T.vandaagGegeten}</div>
                   <div style={{display:"flex",alignItems:"baseline",gap:6}}>
                     <div style={{fontSize:36,fontWeight:900,color:selTotals.kcal>=kcalT?LIME:TEXT,letterSpacing:-2,lineHeight:1}}>{selTotals.kcal}</div>
                     <div style={{fontSize:13,color:isDark?"#444":"#666"}}>/ {kcalT} kcal</div>
