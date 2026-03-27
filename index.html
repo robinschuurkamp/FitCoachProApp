@@ -180,6 +180,7 @@ const TRANSLATIONS={
     roanNietBeschikbaar:"Roan is even niet beschikbaar. Probeer het opnieuw.",
     verbindingsFout:"Verbindingsfout. Controleer je internet.",
     alleSplitsInfo:"Alle splits zijn altijd beschikbaar — je voorkeur bepaalt de volgorde.",
+    settingsTrainingSub:"Sporttype, niveau, trainingsdagen",settingsVoedingSub:"Calorie fase aanpassen",settingsLichaamsSub:"BMI, BMR, TDEE",settingsThemaSub:"Donker of licht thema",settingsInfoSub:"FAQ, Hulp, Privacy",bmiNote:"Minder nauwkeurig voor sporters",streakUitleg:"Dagen op rij getraind",
   },
   en:{
     home:"Home",training:"Training",voeding:"Nutrition",voortgang:"Progress",coach:"Coach",
@@ -258,6 +259,7 @@ const TRANSLATIONS={
     roanNietBeschikbaar:"Roan is temporarily unavailable. Please try again.",
     verbindingsFout:"Connection error. Check your internet.",
     alleSplitsInfo:"All splits are always available — your preference sets the order.",
+    settingsTrainingSub:"Sport type, level, training days",settingsVoedingSub:"Calorie phase",settingsLichaamsSub:"BMI, BMR, TDEE",settingsThemaSub:"Dark or light theme",settingsInfoSub:"FAQ, Help, Privacy",bmiNote:"Less accurate for athletes",streakUitleg:"Consecutive training days",
   },
   de:{
     home:"Home",training:"Training",voeding:"Ernährung",voortgang:"Fortschritt",coach:"Coach",
@@ -336,6 +338,7 @@ const TRANSLATIONS={
     roanNietBeschikbaar:"Roan ist vorübergehend nicht verfügbar. Bitte erneut versuchen.",
     verbindingsFout:"Verbindungsfehler. Internetverbindung prüfen.",
     alleSplitsInfo:"Alle Splits sind immer verfügbar — deine Präferenz bestimmt die Reihenfolge.",
+    settingsTrainingSub:"Sportart, Niveau, Trainingstage",settingsVoedingSub:"Kalorien-Phase",settingsLichaamsSub:"BMI, BMR, TDEE",settingsThemaSub:"Dunkles oder helles Thema",settingsInfoSub:"FAQ, Hilfe, Datenschutz",bmiNote:"Weniger genau für Sportler",streakUitleg:"Aufeinanderfolgende Trainingstage",
   }
 };
 
@@ -1212,27 +1215,27 @@ function FinnPopup({onClose,pendingMsg,profile,log,food,onNavigate,onGenerateMen
     const t=txt.toLowerCase();
     if((t.includes("weekmenu")||t.includes("maak een menu")||t.includes("menu maken"))&&onGenerateMenu){
       setMsgs(p=>[...p,{r:"a",t:"Ik maak nu een weekmenu voor je op basis van jouw doelen. Even geduld..."}]);
-      setTimeout(()=>{onGenerateMenu();onNavigate("Voeding");onClose();},1200);
+      setTimeout(()=>{onGenerateMenu();onNavigate(T.voeding);onClose();},1200);
       return true;
     }
     if((t.includes("boodschappen")||t.includes("boodschappenlijst"))&&onGenerateShopping){
       setMsgs(p=>[...p,{r:"a",t:"Ik open je boodschappenlijst en genereer die voor je. Even geduld..."}]);
-      setTimeout(()=>{onGenerateShopping();onNavigate("Voeding");onClose();},1200);
+      setTimeout(()=>{onGenerateShopping();onNavigate(T.voeding);onClose();},1200);
       return true;
     }
     if(t.includes("training")&&!t.includes("laatste")&&!t.includes("vorige")){
       setMsgs(p=>[...p,{r:"a",t:"Ik stuur je naar Training. Let's go!"}]);
-      setTimeout(()=>{onNavigate("Training");onClose();},1000);
+      setTimeout(()=>{onNavigate(T.training);onClose();},1000);
       return true;
     }
     if(t.includes("voeding")||t.includes("eten")||t.includes("dieet")){
       setMsgs(p=>[...p,{r:"a",t:"Ik stuur je naar Voeding."}]);
-      setTimeout(()=>{onNavigate("Voeding");onClose();},1000);
+      setTimeout(()=>{onNavigate(T.voeding);onClose();},1000);
       return true;
     }
     if(t.includes("voortgang")||t.includes("gewicht")||t.includes("progressie")||t.includes("resultaat")){
       setMsgs(p=>[...p,{r:"a",t:"Ik stuur je naar Voortgang."}]);
-      setTimeout(()=>{onNavigate("Voortgang");onClose();},1000);
+      setTimeout(()=>{onNavigate(T.voortgang);onClose();},1000);
       return true;
     }
     return false;
@@ -1573,7 +1576,7 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
       </div>
       <div style={{...S.lbl,marginBottom:8,color:txt3}}>Wachtwoord wijzigen</div>
       <input id="new-pw-input" type="password" placeholder={T.nieuwWachtwoord} style={{...inp,marginBottom:8}}/>
-      <input id="new-pw2-input" type="password" placeholder="Bevestig wachtwoord" style={inp}/>
+      <input id="new-pw2-input" type="password" placeholder={T.bevestigWachtwoord} style={{...inp,marginBottom:4}}/>
       {pwMsg&&<div style={{fontSize:12,color:pwMsg.includes("gewijzigd")?LIME:"#ef4444",marginBottom:10}}>{pwMsg}</div>}
       <button onClick={async()=>{
         const pw=document.getElementById("new-pw-input")?.value;
@@ -1598,10 +1601,10 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
       <div style={headerStyle}><button onClick={back} style={{background:"none",border:"none",color:LIME,fontSize:16,cursor:"pointer",fontWeight:800,padding:0}}>‹ Terug</button><div style={{fontSize:18,fontWeight:900,color:txt}}>Lichaamsgegevens</div></div>
       <div style={{display:"flex",flexDirection:"column",gap:12}}>
         {[
-          {l:T.bmi,v:profile?.height&&profile?.weight?((profile.weight/(profile.height/100)**2).toFixed(1)):"–",sub:"Body Mass Index"},
+          {l:T.bmi,v:profile?.height&&profile?.weight?((profile.weight/(profile.height/100)**2).toFixed(1)):"–",sub:T.bmiNote},
           {l:T.bmr,v:profile?.weight&&profile?.height&&profile?.age?(()=>{const b=profile.gender==="vrouw"?447.6+(9.25*profile.weight)+(3.1*profile.height)-(4.33*profile.age):88.36+(13.4*profile.weight)+(4.8*profile.height)-(5.7*profile.age);return Math.round(b)+"kcal";})():"–",sub:"Basaal metabolisme"},
           {l:T.tdee,v:profile?.weight&&profile?.height&&profile?.age?(()=>{const b=profile.gender==="vrouw"?447.6+(9.25*profile.weight)+(3.1*profile.height)-(4.33*profile.age):88.36+(13.4*profile.weight)+(4.8*profile.height)-(5.7*profile.age);return Math.round(b*1.55)+"kcal";})():"–",sub:"Dagelijkse verbranding"},
-          {l:T.ideaalGewicht,v:profile?.height?(()=>{const h=profile.height/100;return (18.5*h*h).toFixed(0)+"-"+(24.9*h*h).toFixed(0)+"kg";})():"–",sub:"Gezond gewichtsbereik"},
+          {l:T.ideaalGewicht,v:profile?.height?(()=>{const h=profile.height/100;const low=profile?.gender==="man"?20:18.5;const high=profile?.gender==="man"?27:24.9;return (low*h*h).toFixed(0)+"-"+(high*h*h).toFixed(0)+"kg";})():"–",sub:T.gezondGewichtsbereik},
         ].map(({l,v,sub})=>(
           <div key={l} style={{background:bg2,borderRadius:12,padding:"14px 16px",marginBottom:10,border:`1px solid ${border}`,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <div><div style={{fontSize:13,fontWeight:700,color:txt}}>{l}</div><div style={{fontSize:11,color:txt3}}>{sub}</div></div>
@@ -1644,16 +1647,16 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
       </div>
       {/* Menu items */}
       <div style={{background:bg,borderRadius:16,border:`1px solid ${border}`,padding:"0 16px",marginBottom:16}}>
-        {row("🏋️","Training","Sporttype, niveau, trainingsdagen",()=>setSubPage("training"))}
-        {row("🥗","Voeding & Fase","Calorie fase aanpassen",()=>setSubPage("voeding"))}
-        {row("📊","Lichaamsgegevens","BMI, BMR, TDEE",()=>setSubPage("lichaamsgegevens"))}
+        {row("🏋️",T.trainingInst,T.settingsTrainingSub,()=>setSubPage("training"))}
+        {row("🥗",T.voedingFase,T.settingsVoedingSub,()=>setSubPage("voeding"))}
+        {row("📊",T.lichaamsgegevens,T.settingsLichaamsSub,()=>setSubPage("lichaamsgegevens"))}
       </div>
       <div style={{background:bg,borderRadius:16,border:`1px solid ${border}`,padding:"0 16px",marginBottom:16}}>
-        {row("🎨","Thema & Taal",theme==="dark"?"Donker thema":"Licht thema",()=>setSubPage("thema"))}
+        {row("🎨",T.themaLabel,T.settingsThemaSub,()=>setSubPage("thema"))}
         {row("👤","Account",sbUser?.email,()=>setSubPage("account"))}
       </div>
       <div style={{background:bg,borderRadius:16,border:`1px solid ${border}`,padding:"0 16px",marginBottom:20}}>
-        {row("ℹ️","Informatie","FAQ, Hulp, Privacy",()=>setSubPage("info"))}
+        {row("ℹ️",T.infoLabel,T.settingsInfoSub,()=>setSubPage("info"))}
       </div>
       <button onClick={onLogout} style={{width:"100%",padding:14,borderRadius:14,border:"1px solid rgba(239,68,68,0.2)",background:"none",color:"#ef4444",fontSize:14,fontWeight:700,cursor:"pointer"}}>{T.uitloggen}</button>
     </>);
@@ -2093,7 +2096,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:14}}>
               {/* Streak */}
               <div style={{...S.card,padding:"14px 16px"}}>
-                <div style={{...S.lbl,marginBottom:8}}>{T.streakLabel}</div>
+                <div style={{...S.lbl,marginBottom:2}}>{T.streakLabel}</div><div style={{fontSize:9,color:isDark?"#444":"#888",marginBottom:6}}>{T.streakUitleg}</div>
                 <div style={{display:"flex",alignItems:"baseline",gap:4,marginBottom:6}}>
                   <div style={{fontSize:32,fontWeight:900,color:streak>=3?LIME:TEXT,letterSpacing:-1}}>{streak}</div>
                   <div style={{fontSize:11,color:"#555"}}>dag{streak!==1?"en":""}</div>
