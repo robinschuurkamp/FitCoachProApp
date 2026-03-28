@@ -1317,6 +1317,264 @@ const LOOP_PLANNEN=[
   },
 ];
 
+// ── Zwem Tracker ──────────────────────────────────────────────
+function SwimTracker({onDone,profile}){
+  const [fase,setFase]=useState("setup");
+  const [slag,setSlag]=useState("wisselslag");
+  const [doelBanen,setDoelBanen]=useState(20);
+  const [banen,setBanen]=useState(0);
+  const [elapsed,setElapsed]=useState(0);
+  const [running,setRunning]=useState(false);
+  const [splits,setSplits]=useState([]);
+  const timerRef=useRef(null);
+  const elapsedRef=useRef(0);
+  const gewicht=parseFloat(profile?.weight)||75;
+  const SLAGEN=[{v:"vrije slag",l:"Vrije slag",e:"🏊",cal:0.014},{v:"schoolslag",l:"Schoolslag",e:"🐸",cal:0.012},{v:"rugslag",l:"Rugslag",e:"🔄",cal:0.013},{v:"wisselslag",l:"Wisselslag",e:"⚡",cal:0.015},{v:"borst",l:"Borstcrawl",e:"💪",cal:0.016}];
+  const DOELEN=[10,20,30,40,50,60,80,100];
+  const slagInfo=SLAGEN.find(s=>s.v===slag)||SLAGEN[0];
+  const calPer100m=Math.round(gewicht*slagInfo.cal*100);
+  const totaalM=banen*25;
+  const kcal=Math.round(gewicht*slagInfo.cal*totaalM/100*100);
+  function fmtTime(s){const m=Math.floor(s/60),sec=s%60;return m+":"+String(sec).padStart(2,"0");}
+  function start(){
+    setFase("zwemmen");setRunning(true);setBanen(0);setElapsed(0);elapsedRef.current=0;setSplits([]);
+    timerRef.current=setInterval(()=>{elapsedRef.current+=1;setElapsed(elapsedRef.current);},1000);
+  }
+  function baan(){
+    const nb=banen+1;
+    setBanen(nb);
+    setSplits(p=>[...p,{baan:nb,tijd:elapsedRef.current}]);
+    if(nb>=doelBanen){clearInterval(timerRef.current);setRunning(false);setFase("klaar");}
+  }
+  function stop(){clearInterval(timerRef.current);setRunning(false);setFase("klaar");}
+  useEffect(()=>()=>clearInterval(timerRef.current),[]);
+  const S={card:{background:CARD_BG,borderRadius:16,border:"1px solid "+BORDER}};
+  if(fase==="setup")return(
+    <div>
+      <div style={{fontSize:11,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:14}}>Zwemmen instellen</div>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Slag</div>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {SLAGEN.map(s=>(
+            <button key={s.v} onClick={()=>setSlag(s.v)} style={{padding:"12px 16px",borderRadius:12,border:"1px solid "+(slag===s.v?"#60a5fa":"#1C1C1C"),background:slag===s.v?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",textAlign:"left"}}>
+              <div style={{display:"flex",gap:10,alignItems:"center"}}><span style={{fontSize:20}}>{s.e}</span><span style={{fontSize:13,fontWeight:700,color:slag===s.v?"#60a5fa":TEXT}}>{s.l}</span></div>
+              <span style={{fontSize:11,color:isDark?"#444":"#888"}}>~{Math.round(gewicht*s.cal*100)} kcal/100m</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{marginBottom:20}}>
+        <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Doelantal banen (25m)</div>
+        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+          {DOELEN.map(n=>(
+            <button key={n} onClick={()=>setDoelBanen(n)} style={{flex:"1 0 calc(25% - 6px)",padding:"10px 4px",borderRadius:10,border:"1px solid "+(doelBanen===n?"#60a5fa":"#1C1C1C"),background:doelBanen===n?"rgba(96,165,250,0.08)":"#111",color:doelBanen===n?"#60a5fa":isDark?"#555":"#888",fontSize:12,fontWeight:700,cursor:"pointer",textAlign:"center"}}>
+              {n}<span style={{fontSize:9,display:"block",color:isDark?"#333":"#999"}}>{n*25}m</span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{...S.card,padding:"10px 14px",marginBottom:16,display:"flex",justifyContent:"space-between"}}>
+        <span style={{fontSize:12,color:isDark?"#555":"#888"}}>Geschatte calorieën</span>
+        <span style={{fontSize:14,fontWeight:900,color:"#60a5fa"}}>~{Math.round(gewicht*slagInfo.cal*doelBanen*25/100*100)} kcal</span>
+      </div>
+      <button onClick={start} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:"pointer",background:"#60a5fa",color:"#000",fontSize:16,fontWeight:900}}>🏊 Start zwemmen</button>
+    </div>
+  );
+  if(fase==="zwemmen")return(
+    <div>
+      <div style={{marginBottom:16}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:6}}>
+          <span>Voortgang</span><span>{banen} / {doelBanen} banen</span>
+        </div>
+        <div style={{background:isDark?"#111":"#E8E8E0",borderRadius:99,height:8,overflow:"hidden"}}>
+          <div style={{width:Math.min(100,banen/doelBanen*100)+"%",height:8,background:"#60a5fa",borderRadius:99,transition:"width .3s"}}/>
+        </div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
+        <div style={{...S.card,padding:16,textAlign:"center"}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Banen</div>
+          <div style={{fontSize:48,fontWeight:900,color:"#60a5fa",letterSpacing:-2,lineHeight:1}}>{banen}</div>
+          <div style={{fontSize:11,color:isDark?"#444":"#888"}}>{totaalM}m</div>
+        </div>
+        <div style={{...S.card,padding:16,textAlign:"center"}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Tijd</div>
+          <div style={{fontSize:40,fontWeight:900,letterSpacing:-1,lineHeight:1}}>{fmtTime(elapsed)}</div>
+        </div>
+        <div style={{...S.card,padding:16,textAlign:"center"}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Calorieën</div>
+          <div style={{fontSize:32,fontWeight:900,color:ORANGE,letterSpacing:-1}}>{kcal}</div>
+        </div>
+        <div style={{...S.card,padding:16,textAlign:"center"}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Tempo</div>
+          <div style={{fontSize:24,fontWeight:900,letterSpacing:-1}}>{banen>0&&elapsed>0?Math.floor((elapsed/banen)/60)+":"+String(Math.round((elapsed/banen)%60)).padStart(2,"0"):"–"}</div>
+          <div style={{fontSize:10,color:isDark?"#444":"#888"}}>min/baan</div>
+        </div>
+      </div>
+      <button onClick={baan} style={{width:"100%",padding:22,borderRadius:16,border:"none",cursor:"pointer",background:"#60a5fa",color:"#000",fontSize:18,fontWeight:900,marginBottom:10,letterSpacing:-0.5}}>
+        ✓ Baan {banen+1} klaar
+      </button>
+      <button onClick={stop} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>Stop</button>
+    </div>
+  );
+  // Klaar scherm
+  return(
+    <div style={{textAlign:"center",padding:"24px 0"}}>
+      <div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Zwemtraining klaar 🏊</div>
+      <div style={{fontSize:64,fontWeight:900,letterSpacing:-3,color:"#60a5fa",lineHeight:1,marginBottom:4}}>{banen}</div>
+      <div style={{fontSize:16,color:isDark?"#555":"#888",marginBottom:20}}>banen · {totaalM}m</div>
+      <div style={{display:"flex",justifyContent:"center",gap:24,marginBottom:24}}>
+        {[{l:"Tijd",v:fmtTime(elapsed)},{l:"Calorieën",v:kcal+" kcal"},{l:"Tempo",v:banen>0?Math.floor((elapsed/banen)/60)+":"+String(Math.round((elapsed/banen)%60)).padStart(2,"0")+"  /baan":"–"}].map(s=>(
+          <div key={s.l} style={{textAlign:"center"}}><div style={{fontSize:20,fontWeight:900,color:TEXT}}>{s.v}</div><div style={{fontSize:10,color:"#555",marginTop:2}}>{s.l}</div></div>
+        ))}
+      </div>
+      <button onClick={()=>onDone({sport:"zwemmen",banen,afstand:totaalM,tijd:elapsed,cal:kcal,slag})} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:"pointer",background:"#60a5fa",color:"#000",fontSize:15,fontWeight:900}}>Opslaan</button>
+    </div>
+  );
+}
+
+// ── Spinning / Fietstracker ─────────────────────────────────
+function SpinTracker({onDone,profile}){
+  const [fase,setFase]=useState("setup");
+  const [modus,setModus]=useState("steady");
+  const [doelMinuten,setDoelMinuten]=useState(30);
+  const [weerstand,setWeerstand]=useState(5);
+  const [elapsed,setElapsed]=useState(0);
+  const [running,setRunning]=useState(false);
+  const [intervalFase,setIntervalFase]=useState("werk");
+  const [intervalLeft,setIntervalLeft]=useState(40);
+  const [werkSec,setWerkSec]=useState(40);
+  const [rustSec,setRustSec]=useState(20);
+  const timerRef=useRef(null),intRef=useRef(null),elapsedRef=useRef(0);
+  const gewicht=parseFloat(profile?.weight)||75;
+  const MET=modus==="sprint"?10:modus==="interval"?8:6;
+  const kcal=Math.round(MET*gewicht*3.5/200*(elapsed/60));
+  function fmtTime(s){const m=Math.floor(s/60),sec=s%60;return m+":"+String(sec).padStart(2,"0");}
+  function start(){
+    setFase("fietsen");setRunning(true);setElapsed(0);elapsedRef.current=0;
+    timerRef.current=setInterval(()=>{
+      elapsedRef.current+=1;setElapsed(elapsedRef.current);
+      if(doelMinuten>0&&elapsedRef.current>=doelMinuten*60){clearInterval(timerRef.current);setRunning(false);setFase("klaar");}
+    },1000);
+    if(modus==="interval"){
+      setIntervalLeft(werkSec);setIntervalFase("werk");
+      intRef.current=setInterval(()=>{
+        setIntervalLeft(l=>{
+          if(l<=1){setIntervalFase(f=>{if(f==="werk"){setIntervalLeft(rustSec);return"rust";}else{setIntervalLeft(werkSec);return"werk";}});return 0;}
+          return l-1;
+        });
+      },1000);
+    }
+  }
+  function stop(){clearInterval(timerRef.current);clearInterval(intRef.current);setRunning(false);setFase("klaar");}
+  useEffect(()=>()=>{clearInterval(timerRef.current);clearInterval(intRef.current);},[]);
+  const S={card:{background:CARD_BG,borderRadius:16,border:"1px solid "+BORDER}};
+  if(fase==="setup")return(
+    <div>
+      <div style={{fontSize:11,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:14}}>Spinning instellen</div>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Trainingsmodus</div>
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {[{v:"steady",l:"Steady ride",d:"Constant tempo, vetverbranding",e:"🚴"},{v:"interval",l:"Interval",d:"Afwisselend sprint en herstel",e:"⚡"},{v:"sprint",l:"Sprint ride",d:"Hoge intensiteit, korte sessie",e:"🔥"}].map(m=>(
+            <button key={m.v} onClick={()=>setModus(m.v)} style={{padding:"12px 16px",borderRadius:12,border:"1px solid "+(modus===m.v?"#a78bfa":"#1C1C1C"),background:modus===m.v?"rgba(167,139,250,0.08)":"#111",cursor:"pointer",display:"flex",gap:12,alignItems:"center",textAlign:"left"}}>
+              <span style={{fontSize:22}}>{m.e}</span>
+              <div><div style={{fontSize:13,fontWeight:700,color:modus===m.v?"#a78bfa":TEXT}}>{m.l}</div><div style={{fontSize:11,color:isDark?"#444":"#888"}}>{m.d}</div></div>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Duur (minuten)</div>
+        <div style={{display:"flex",gap:8}}>
+          {[20,30,45,60,90].map(m=>(
+            <button key={m} onClick={()=>setDoelMinuten(m)} style={{flex:1,padding:"10px 4px",borderRadius:10,border:"1px solid "+(doelMinuten===m?"#a78bfa":"#1C1C1C"),background:doelMinuten===m?"rgba(167,139,250,0.08)":"#111",color:doelMinuten===m?"#a78bfa":isDark?"#555":"#888",fontSize:12,fontWeight:700,cursor:"pointer"}}>{m}m</button>
+          ))}
+        </div>
+      </div>
+      {modus==="interval"&&(
+        <div style={{...S.card,padding:14,marginBottom:14}}>
+          <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:10}}>Interval instelling</div>
+          <div style={{marginBottom:10}}>
+            <div style={{fontSize:11,color:isDark?"#555":"#888",marginBottom:6}}>Sprint duur</div>
+            <div style={{display:"flex",gap:6}}>{[20,30,40,60].map(s=><button key={s} onClick={()=>setWerkSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(werkSec===s?ORANGE:"#222"),background:werkSec===s?"rgba(255,107,43,0.08)":"#111",color:werkSec===s?ORANGE:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}s</button>)}</div>
+          </div>
+          <div>
+            <div style={{fontSize:11,color:isDark?"#555":"#888",marginBottom:6}}>Herstel duur</div>
+            <div style={{display:"flex",gap:6}}>{[10,20,30,60].map(s=><button key={s} onClick={()=>setRustSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(rustSec===s?LIME:"#222"),background:rustSec===s?"rgba(200,241,56,0.08)":"#111",color:rustSec===s?LIME:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}s</button>)}</div>
+          </div>
+        </div>
+      )}
+      <div style={{marginBottom:14}}>
+        <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Weerstand (1-20)</div>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>
+          <button onClick={()=>setWeerstand(w=>Math.max(1,w-1))} style={{width:40,height:40,borderRadius:10,border:"1px solid "+BORDER,background:"none",color:TEXT,fontSize:20,cursor:"pointer",fontWeight:300}}>–</button>
+          <div style={{flex:1,textAlign:"center",fontSize:36,fontWeight:900,color:"#a78bfa"}}>{weerstand}</div>
+          <button onClick={()=>setWeerstand(w=>Math.min(20,w+1))} style={{width:40,height:40,borderRadius:10,border:"1px solid "+BORDER,background:"none",color:TEXT,fontSize:20,cursor:"pointer",fontWeight:300}}>+</button>
+        </div>
+      </div>
+      <button onClick={start} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:"pointer",background:"#a78bfa",color:"#000",fontSize:16,fontWeight:900}}>🚴 Start spinning</button>
+    </div>
+  );
+  if(fase==="fietsen")return(
+    <div>
+      {doelMinuten>0&&(
+        <div style={{marginBottom:12}}>
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:6}}>
+            <span>Voortgang</span><span>{fmtTime(elapsed)} / {doelMinuten}:00</span>
+          </div>
+          <div style={{background:isDark?"#111":"#E8E8E0",borderRadius:99,height:8,overflow:"hidden"}}>
+            <div style={{width:Math.min(100,elapsed/(doelMinuten*60)*100)+"%",height:8,background:"#a78bfa",borderRadius:99,transition:"width 1s linear"}}/>
+          </div>
+        </div>
+      )}
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
+        <div style={{...S.card,padding:16,textAlign:"center"}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Tijd</div>
+          <div style={{fontSize:40,fontWeight:900,letterSpacing:-1,lineHeight:1}}>{fmtTime(elapsed)}</div>
+        </div>
+        <div style={{...S.card,padding:16,textAlign:"center"}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Calorieën</div>
+          <div style={{fontSize:40,fontWeight:900,color:ORANGE,letterSpacing:-1,lineHeight:1}}>{kcal}</div>
+        </div>
+      </div>
+      {modus==="interval"?(
+        <div style={{...S.card,padding:"14px 18px",marginBottom:12,border:"1px solid "+(intervalFase==="werk"?"rgba(255,107,43,0.3)":"rgba(200,241,56,0.2)"),display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:10,color:intervalFase==="werk"?ORANGE:LIME,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:2}}>{intervalFase==="werk"?"🔥 Sprint":"😮 Herstel"}</div>
+            <div style={{fontSize:52,fontWeight:900,color:intervalFase==="werk"?ORANGE:LIME,letterSpacing:-2,lineHeight:1}}>{intervalLeft}<span style={{fontSize:14,marginLeft:3}}>s</span></div>
+          </div>
+          <div style={{textAlign:"right"}}>
+            <div style={{fontSize:10,color:isDark?"#333":"#888",textTransform:"uppercase",letterSpacing:2}}>Weerstand</div>
+            <div style={{fontSize:32,fontWeight:900,color:"#a78bfa"}}>{intervalFase==="werk"?Math.min(20,weerstand+3):Math.max(1,weerstand-2)}</div>
+          </div>
+        </div>
+      ):(
+        <div style={{...S.card,padding:"14px 18px",marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:10,color:"#a78bfa",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:2}}>Weerstand</div>
+            <div style={{fontSize:52,fontWeight:900,color:"#a78bfa",letterSpacing:-2}}>{weerstand}</div>
+          </div>
+          <div style={{textAlign:"right"}}>
+            <div style={{fontSize:10,color:isDark?"#333":"#888",textTransform:"uppercase",letterSpacing:2}}>Modus</div>
+            <div style={{fontSize:18,fontWeight:700,color:TEXT,textTransform:"capitalize"}}>{modus}</div>
+          </div>
+        </div>
+      )}
+      <div style={{display:"flex",gap:8}}>
+        <button onClick={()=>setRunning(r=>!r)} style={{flex:1,padding:16,borderRadius:14,border:"none",cursor:"pointer",background:running?isDark?"#1C1C1C":"#E8E8E0":"#a78bfa",color:running?isDark?"#555":"#888":"#000",fontSize:14,fontWeight:900}}>{running?"⏸ Pauze":"▶ Hervat"}</button>
+        <button onClick={stop} style={{padding:"16px 20px",borderRadius:14,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>⏹ Stop</button>
+      </div>
+    </div>
+  );
+  return(
+    <div style={{textAlign:"center",padding:"24px 0"}}>
+      <div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Spinning klaar 🚴</div>
+      <div style={{fontSize:64,fontWeight:900,letterSpacing:-3,color:"#a78bfa",lineHeight:1,marginBottom:4}}>{fmtTime(elapsed)}</div>
+      <div style={{fontSize:16,color:isDark?"#555":"#888",marginBottom:20}}>{kcal} kcal verbrand</div>
+      <button onClick={()=>onDone({sport:"spinning",tijd:elapsed,cal:kcal,modus,weerstand})} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:"pointer",background:"#a78bfa",color:"#000",fontSize:15,fontWeight:900}}>Opslaan</button>
+    </div>
+  );
+}
+
 function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
   const S={card:{background:CARD_BG,borderRadius:16,border:"1px solid "+BORDER}};
   // Hoofdmenu tabs
@@ -3803,8 +4061,8 @@ setFeedbackReply(reply);setFeedbackLoading(false);
       {/* TRAINING TAB */}
       {tab===T.training&&(
         <div style={{padding:"24px 16px",background:BG,minHeight:"100vh"}}>
-          <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.5,marginBottom:2,color:TEXT}}>Training</div>
-          <div style={{fontSize:13,color:"#999",marginBottom:12}}><span style={{color:sportType==="hiit"?ORANGE:sportType==="cardio"?"#60a5fa":LIME,fontWeight:700,textTransform:"capitalize"}}>{sportType}</span> · {profile.level||"beginner"}</div>
+          <div style={{fontSize:30,fontWeight:900,letterSpacing:-1,marginBottom:2,color:TEXT}}>Training</div>
+          <div style={{fontSize:14,color:isDark?"#777":"#888",marginBottom:14}}><span style={{color:sportType==="hiit"?ORANGE:sportType==="cardio"?"#60a5fa":LIME,fontWeight:800,textTransform:"capitalize"}}>{sportType}</span> · {profile.level||"beginner"}</div>
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
             <div style={{display:"flex",gap:8,flex:1,alignItems:"center"}}>
               <button onClick={()=>setTrainDate(d=>fmtDate(new Date(parseDate(d).getTime()-86400000)))} style={{width:36,height:36,borderRadius:10,border:`1px solid ${BORDER}`,background:CARD_BG,color:TEXT,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
@@ -3824,16 +4082,16 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <div key={cat.title} style={{marginBottom:20}}>
                   <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
                     <div style={{width:3,height:16,borderRadius:99,background:cat.color,flexShrink:0}}/>
-                    <div style={{fontSize:11,fontWeight:800,color:cat.color,letterSpacing:2,textTransform:"uppercase"}}>{cat.title}</div>
+                    <div style={{fontSize:13,fontWeight:800,color:cat.color,letterSpacing:1,textTransform:"uppercase"}}>{cat.title}</div>
                   </div>
                   <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
                     {cat.items.map(s=>(
-                      <button key={s.label} onClick={()=>startSess(s.muscles,null,s)} style={{height:110,borderRadius:16,border:"none",cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
+                      <button key={s.label} onClick={()=>startSess(s.muscles,null,s)} style={{height:130,borderRadius:16,border:"none",cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
                         <img src={P[s.pk||"full body"]} alt={s.label} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
                         <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 10%,rgba(0,0,0,0.82))"}}/>
                         <div style={{position:"relative",padding:"10px 12px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
-                          <div style={{fontSize:13,fontWeight:900,color:"#ffffff",marginBottom:2}}>{s.label}</div>
-                          <div style={{fontSize:9,color:"rgba(255,255,255,0.7)"}}>{s.desc}</div>
+                          <div style={{fontSize:15,fontWeight:900,color:"#ffffff",marginBottom:3}}>{s.label}</div>
+                          <div style={{fontSize:10,color:"rgba(255,255,255,0.75)"}}>{s.desc}</div>
                         </div>
                       </button>
                     ))}
@@ -3864,11 +4122,11 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <div style={{...S.lbl,marginBottom:14}}>{T.ofKiesSpiergroep}</div>
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
                   {MUSCLE_GROUPS.map(m=>(
-                    <button key={m} onClick={()=>setTargetMuscles(p=>p.includes(m)?p.filter(x=>x!==m):[...p,m])} style={{height:120,borderRadius:18,border:`2px solid ${targetMuscles.includes(m)?LIME:"transparent"}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
+                    <button key={m} onClick={()=>setTargetMuscles(p=>p.includes(m)?p.filter(x=>x!==m):[...p,m])} style={{height:140,borderRadius:18,border:`2px solid ${targetMuscles.includes(m)?LIME:"transparent"}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
                       <img src={P[m]} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
                       <div style={{position:"absolute",inset:0,background:targetMuscles.includes(m)?"rgba(200,241,56,0.15)":"linear-gradient(to bottom,transparent 20%,rgba(0,0,0,0.75))"}}/>
                       {targetMuscles.includes(m)&&<div style={{position:"absolute",top:10,right:10,width:26,height:26,borderRadius:"50%",background:LIME,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:900,color:"#000"}}>✓</div>}
-                      <div style={{position:"relative",padding:12,height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}><div style={{fontSize:14,fontWeight:900,color:"#ffffff",marginBottom:2}}>{MUSCLE_META[m].label}</div><div style={{fontSize:9,color:"rgba(255,255,255,0.7)"}}>{MUSCLE_META[m].sub}</div></div>
+                      <div style={{position:"relative",padding:12,height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}><div style={{fontSize:16,fontWeight:900,color:"#ffffff",marginBottom:3}}>{MUSCLE_META[m].label}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.75)"}}>{MUSCLE_META[m].sub}</div></div>
                     </button>
                   ))}
                 </div>
@@ -3907,9 +4165,15 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               {sportType==="hiit"?(
                 <HiitWorkout exercises={session} voiceOn={voiceOn} onDone={saveWorkout}/>
               ):targetMuscles.length>0&&targetMuscles[0].startsWith("cardio_")?(
+                targetMuscles[0]==="cardio_swim"?(
+                  <SwimTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Zwemmen",exercises:[],targetMuscles,runDist:data.afstand||0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"swim",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
+                ):targetMuscles[0]==="cardio_bike"?(
+                  <SpinTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Spinning",exercises:[],targetMuscles,runDist:0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"spin",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
+                ):(
                 <RunTracker voiceOn={voiceOn} profile={profile} log={log} defaultRunType={activeCardioRunType} prevRun={(()=>{const muscle=targetMuscles[0]||"cardio_full";const r=log.find(e=>(e.targetMuscles||[]).some(m=>m.startsWith("cardio_")));return r?{dist:r.runDist||0,time:r.runTime||0,pace:r.runPace||"–",cal:r.runCal||0}:null;})()}
                   onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Hardlopen",exercises:[],targetMuscles,runDist:data.dist,runTime:data.time,runPace:data.pace,runCal:data.cal||0,runType:data.type||"steady",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}
                 />
+                )
               ):(
                 <div>
                   {session.map((ex,ei)=>{
