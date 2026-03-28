@@ -1402,7 +1402,7 @@ function SwimTracker({onDone,profile}){
       <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Hoe wil je bijhouden?</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
         {[{v:"live",l:"Live tellen",d:"Tik na elke baan — telefoon in waterdicht hoesje"},{v:"achteraf",l:"Achteraf invoeren",d:"Vul in na je training"}].map(m=>(
-          <button key={m.v} onClick={()=>setModus(m.v)} style={{padding:"13px 12px",borderRadius:12,border:"1px solid "+(modus===m.v?BLAUW:"#1C1C1C"),background:modus===m.v?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",textAlign:"left"}}>
+          <button key={m.v} onClick={()=>setModus(m.v)} style={{padding:"13px 12px",borderRadius:12,border:"1px solid "+(modus===m.v?BLAUW:BORDER),background:modus===m.v?"rgba(96,165,250,0.08)":isDark?"#111":CARD_BG,cursor:"pointer",textAlign:"left"}}>
             <div style={{fontSize:13,fontWeight:800,color:modus===m.v?BLAUW:TEXT,marginBottom:3}}>{m.l}</div>
             <div style={{fontSize:10,color:isDark?"#444":"#888",lineHeight:1.4}}>{m.d}</div>
           </button>
@@ -1413,7 +1413,7 @@ function SwimTracker({onDone,profile}){
       <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Baanlengte</div>
       <div style={{display:"flex",gap:8,marginBottom:16}}>
         {BAANLENGTE.map(m=>(
-          <button key={m} onClick={()=>setBaanM(m)} style={{flex:1,padding:"12px",borderRadius:12,border:"1px solid "+(baanM===m?BLAUW:"#1C1C1C"),background:baanM===m?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",textAlign:"center"}}>
+          <button key={m} onClick={()=>setBaanM(m)} style={{flex:1,padding:"12px",borderRadius:12,border:"1px solid "+(baanM===m?BLAUW:BORDER),background:baanM===m?"rgba(96,165,250,0.08)":isDark?"#111":CARD_BG,cursor:"pointer",textAlign:"center"}}>
             <div style={{fontSize:18,fontWeight:900,color:baanM===m?BLAUW:TEXT}}>{m}m</div>
             <div style={{fontSize:10,color:isDark?"#444":"#888",marginTop:2}}>{m===25?"Klein bad":"Olympisch bad"}</div>
           </button>
@@ -1424,7 +1424,7 @@ function SwimTracker({onDone,profile}){
       <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Slag</div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
         {SLAGEN.map(s=>(
-          <button key={s.v} onClick={()=>setSlag(s.v)} style={{padding:"11px 14px",borderRadius:12,border:"1px solid "+(slag===s.v?BLAUW:"#1C1C1C"),background:slag===s.v?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <button key={s.v} onClick={()=>setSlag(s.v)} style={{padding:"11px 14px",borderRadius:12,border:"1px solid "+(slag===s.v?BLAUW:BORDER),background:slag===s.v?"rgba(96,165,250,0.08)":isDark?"#111":CARD_BG,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <span style={{fontSize:13,fontWeight:700,color:slag===s.v?BLAUW:TEXT}}>{s.l}</span>
             <span style={{fontSize:10,color:isDark?"#333":"#999"}}>{Math.round(gewicht*s.cal*100)} kcal/100m</span>
           </button>
@@ -1436,7 +1436,7 @@ function SwimTracker({onDone,profile}){
         <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Doel</div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,marginBottom:16}}>
           {[10,20,30,40,50,60,80,100].map(n=>(
-            <button key={n} onClick={()=>setDoelBanen(n)} style={{padding:"10px 4px",borderRadius:10,border:"1px solid "+(doelBanen===n?BLAUW:"#1C1C1C"),background:doelBanen===n?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",textAlign:"center"}}>
+            <button key={n} onClick={()=>setDoelBanen(n)} style={{padding:"10px 4px",borderRadius:10,border:"1px solid "+(doelBanen===n?BLAUW:BORDER),background:doelBanen===n?"rgba(96,165,250,0.08)":isDark?"#111":CARD_BG,cursor:"pointer",textAlign:"center"}}>
               <div style={{fontSize:13,fontWeight:800,color:doelBanen===n?BLAUW:TEXT}}>{n}</div>
               <div style={{fontSize:9,color:isDark?"#333":"#999"}}>{n*baanM}m</div>
             </button>
@@ -1582,7 +1582,7 @@ function SpinTracker({onDone,profile}){
         <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Trainingsmodus</div>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
           {[{v:"steady",l:"Steady ride",d:"Constant tempo, vetverbranding"},{v:"interval",l:"Interval",d:"Afwisselend sprint en herstel"},{v:"sprint",l:"Sprint ride",d:"Hoge intensiteit, korte sessie"}].map(m=>(
-            <button key={m.v} onClick={()=>setModus(m.v)} style={{padding:"12px 16px",borderRadius:12,border:"1px solid "+(modus===m.v?"#a78bfa":"#1C1C1C"),background:modus===m.v?"rgba(167,139,250,0.08)":"#111",cursor:"pointer",display:"flex",gap:12,alignItems:"center",textAlign:"left"}}>
+            <button key={m.v} onClick={()=>setModus(m.v)} style={{padding:"12px 16px",borderRadius:12,border:"1px solid "+(modus===m.v?"#a78bfa":BORDER),background:modus===m.v?"rgba(167,139,250,0.08)":isDark?"#111":CARD_BG,cursor:"pointer",display:"flex",gap:12,alignItems:"center",textAlign:"left"}}>
               
               <div><div style={{fontSize:13,fontWeight:700,color:modus===m.v?"#a78bfa":TEXT}}>{m.l}</div><div style={{fontSize:11,color:isDark?"#444":"#888"}}>{m.d}</div></div>
             </button>
@@ -1593,7 +1593,7 @@ function SpinTracker({onDone,profile}){
         <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Duur (minuten)</div>
         <div style={{display:"flex",gap:8}}>
           {[20,30,45,60,90].map(m=>(
-            <button key={m} onClick={()=>setDoelMinuten(m)} style={{flex:1,padding:"10px 4px",borderRadius:10,border:"1px solid "+(doelMinuten===m?"#a78bfa":"#1C1C1C"),background:doelMinuten===m?"rgba(167,139,250,0.08)":"#111",color:doelMinuten===m?"#a78bfa":isDark?"#555":"#888",fontSize:12,fontWeight:700,cursor:"pointer"}}>{m}m</button>
+            <button key={m} onClick={()=>setDoelMinuten(m)} style={{flex:1,padding:"10px 4px",borderRadius:10,border:"1px solid "+(doelMinuten===m?"#a78bfa":BORDER),background:doelMinuten===m?"rgba(167,139,250,0.08)":isDark?"#111":CARD_BG,color:doelMinuten===m?"#a78bfa":isDark?"#555":"#888",fontSize:12,fontWeight:700,cursor:"pointer"}}>{m}m</button>
           ))}
         </div>
       </div>
@@ -1602,11 +1602,11 @@ function SpinTracker({onDone,profile}){
           <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:10}}>Interval instelling</div>
           <div style={{marginBottom:10}}>
             <div style={{fontSize:11,color:isDark?"#555":"#888",marginBottom:6}}>Sprint duur</div>
-            <div style={{display:"flex",gap:6}}>{[20,30,40,60].map(s=><button key={s} onClick={()=>setWerkSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(werkSec===s?ORANGE:"#222"),background:werkSec===s?"rgba(255,107,43,0.08)":"#111",color:werkSec===s?ORANGE:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}s</button>)}</div>
+            <div style={{display:"flex",gap:6}}>{[20,30,40,60].map(s=><button key={s} onClick={()=>setWerkSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(werkSec===s?ORANGE:BORDER),background:werkSec===s?"rgba(255,107,43,0.08)":isDark?"#111":CARD_BG,color:werkSec===s?ORANGE:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}s</button>)}</div>
           </div>
           <div>
             <div style={{fontSize:11,color:isDark?"#555":"#888",marginBottom:6}}>Herstel duur</div>
-            <div style={{display:"flex",gap:6}}>{[10,20,30,60].map(s=><button key={s} onClick={()=>setRustSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(rustSec===s?LIME:"#222"),background:rustSec===s?"rgba(200,241,56,0.08)":"#111",color:rustSec===s?LIME:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}s</button>)}</div>
+            <div style={{display:"flex",gap:6}}>{[10,20,30,60].map(s=><button key={s} onClick={()=>setRustSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(rustSec===s?LIME:BORDER),background:rustSec===s?"rgba(200,241,56,0.08)":isDark?"#111":CARD_BG,color:rustSec===s?LIME:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}s</button>)}</div>
           </div>
         </div>
       )}
