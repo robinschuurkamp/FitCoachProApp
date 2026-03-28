@@ -1743,6 +1743,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
 
   function startRun(){
     setPhase("running");setIsRunning(true);
+    setGpsError("");
     setDist(0);setElapsed(0);setKmSplits([]);setRoutePoints([]);setCalories(0);
     distRef.current=0;elapsedRef.current=0;kmAlertsRef.current=[];routeRef.current=[];paceWindowRef.current=[];
     const g=GOALS[selectedGoal];
@@ -1771,10 +1772,15 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
           }
         }
         lastPosRef.current=newP;
-      },{enableHighAccuracy:true,maximumAge:1000,timeout:10000},
-      ()=>setGpsError("GPS niet beschikbaar — controleer toestemming."));
+      },{enableHighAccuracy:true,maximumAge:3000,timeout:30000},
+      (err)=>{
+        if(err.code===1)setGpsError("GPS geweigerd — ga naar browserinstellingen en geef locatietoestemming.");
+        else if(err.code===2)setGpsError("GPS positie niet beschikbaar. Ga naar buiten of controleer je instellingen.");
+        else setGpsError("GPS time-out. Probeer opnieuw.");
+      });
     } else setGpsError("GPS niet ondersteund op dit apparaat.");
-    // Timer
+    // Timer — start altijd direct, onafhankelijk van GPS
+    if(timerRef.current)clearInterval(timerRef.current);
     timerRef.current=setInterval(()=>{
       elapsedRef.current+=1;
       setElapsed(elapsedRef.current);
@@ -1846,7 +1852,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
     const polylineRef=useRef(null);
     const markerRef=useRef(null);
     const startMarkerRef=useRef(null);
-    const mapIdRef=useRef("map-"+Math.random().toString(36).slice(2,8));
+    const mapIdRef=useRef("fitcoach-map");
 
     useEffect(()=>{
       if(typeof L==="undefined")return;
@@ -1860,7 +1866,10 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
         mapInstanceRef.current=map;
       }
       return()=>{
-        if(mapInstanceRef.current){mapInstanceRef.current.remove();mapInstanceRef.current=null;polylineRef.current=null;markerRef.current=null;startMarkerRef.current=null;}
+        try{
+          if(mapInstanceRef.current){mapInstanceRef.current.remove();}
+        }catch(e){}
+        mapInstanceRef.current=null;polylineRef.current=null;markerRef.current=null;startMarkerRef.current=null;
       };
     },[]);
 
@@ -1999,7 +2008,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
     const progPct=targetDist>0?Math.min(100,(dist/targetDist)*100):0;
     return(
       <div>
-        {gpsError&&<div style={{background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:10,padding:"8px 12px",marginBottom:10,fontSize:11,color:"#ef4444"}}>{gpsError}</div>}
+        <div style={{marginBottom:10}}>{gpsError?<div style={{background:"rgba(239,68,68,0.08)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:10,padding:"10px 14px",fontSize:12,color:"#ef4444",fontWeight:600}}>{gpsError}</div>:routePoints.length===0?<div style={{background:isDark?"rgba(200,241,56,0.05)":"rgba(200,241,56,0.08)",border:"1px solid rgba(200,241,56,0.2)",borderRadius:10,padding:"10px 14px",fontSize:12,color:LIME,display:"flex",alignItems:"center",gap:8}}><div style={{width:8,height:8,borderRadius:"50%",background:LIME,animation:"pulse 1s infinite",flexShrink:0}}/><span>GPS-signaal zoeken... Loop naar buiten voor beter signaal.</span></div>:null}</div>
         {targetDist>0&&(
           <div style={{marginBottom:12}}>
             <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:isDark?"#444":"#888",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>
