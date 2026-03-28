@@ -96,7 +96,7 @@ const ROAN_IMGS={
   strong:"https://i.postimg.cc/YLtXQWzt/Ontwerp-zonder-titel-8-removebg-preview.png",
 };
 
-const APP_VERSION="2.7";
+const APP_VERSION="2.8";
 const TRANSLATIONS={
   nl:{
     // Nav
@@ -430,6 +430,18 @@ const TRANSLATIONS={
 };
 
 const CHANGELOG=[
+  {
+    version:"2.8",
+    title:"Cardio, zwemmen & licht thema",
+    items:[
+      "Hardlopen en wandelen volledig vernieuwd — Leaflet kaart, route delen en betere interface",
+      "Zwemtracker herbouwd — live tellen of achteraf invoeren, baanlengte instelbaar",
+      "Spinning tracker met interval modus en weerstandsinstellingen",
+      "Licht thema volledig doorgevoerd in alle nieuwe schermen",
+      "Training interface professioneler — geen afleidende emoji's meer",
+      "Schema op maat — Roan maakt een persoonlijk weekplan",
+    ]
+  },
   {
     version:"2.7",
     titel:"Grote update — hardlopen, calisthenics & meer",
@@ -1196,12 +1208,12 @@ function RestTimer({seconds,onDone}){
   useEffect(()=>{if(left>0){ref.current=setTimeout(()=>setLeft(l=>l-1),1000);}else{if(onDone)onDone();}return()=>clearTimeout(ref.current);},[left]);
   const pct=(left/seconds)*100;
   return(
-    <div style={{background:BG,border:`1px solid ${BORDER}`,borderRadius:14,padding:"14px 16px",marginBottom:10}}>
+    <div style={{background:CARD_BG,border:"1px solid "+BORDER,borderRadius:14,padding:"14px 16px",marginBottom:10}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
         <div><div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#666",fontWeight:700,textTransform:"uppercase",marginBottom:2}}>Rust</div><div style={{fontSize:28,fontWeight:900,letterSpacing:-1,color:LIME,lineHeight:1}}>{left}<span style={{fontSize:13,color:isDark?"#444":"#666",fontWeight:400,marginLeft:2}}>sec</span></div></div>
         <button onClick={()=>{clearTimeout(ref.current);if(onDone)onDone();}} style={{padding:"8px 16px",borderRadius:8,border:`1px solid ${BORDER}`,background:"none",color:"#555",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:1}}>SKIP</button>
       </div>
-      <div style={{background:"#1A1A1A",borderRadius:2,height:2,overflow:"hidden"}}><div style={{width:`${pct}%`,height:2,background:LIME,transition:"width .9s linear"}}/></div>
+      <div style={{background:isDark?"#1A1A1A":"#E0E0D8",borderRadius:2,height:2,overflow:"hidden"}}><div style={{width:`${pct}%`,height:2,background:LIME,transition:"width .9s linear"}}/></div>
     </div>
   );
 }
@@ -1229,32 +1241,32 @@ function HiitWorkout({exercises,onDone,voiceOn}){
   },[configured,running,totalLeft]);
   if(!configured)return(
     <div>
-      <div style={{fontSize:11,letterSpacing:3,color:isDark?"#444":"#666",fontWeight:700,textTransform:"uppercase",marginBottom:20}}>Stel jouw circuit in</div>
+      <div style={{fontSize:11,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:20}}>Stel jouw circuit in</div>
       <div style={{marginBottom:18}}><div style={{fontSize:13,color:isDark?"#888":"#666",marginBottom:10,fontWeight:600}}>Aantal oefeningen per ronde</div><div style={{display:"flex",gap:8}}>{EX_COUNT_OPTS.map(n=><button key={n} onClick={()=>setExCount(n)} style={{flex:1,padding:"13px 4px",borderRadius:12,border:`1px solid ${exCount===n?ORANGE:"#1C1C1C"}`,background:exCount===n?"rgba(255,107,43,0.1)":"#111",color:exCount===n?ORANGE:isDark?"#444":"#666",fontWeight:900,fontSize:16,cursor:"pointer"}}>{n}</button>)}</div></div>
       <div style={{marginBottom:18}}><div style={{fontSize:13,color:isDark?"#888":"#666",marginBottom:10,fontWeight:600}}>Rondes</div><div style={{display:"flex",gap:8}}>{ROUNDS_OPTS.map(n=><button key={n} onClick={()=>setRounds(n)} style={{flex:1,padding:"13px 4px",borderRadius:12,border:`1px solid ${rounds===n?"#fff":"#1C1C1C"}`,background:rounds===n?"rgba(255,255,255,0.06)":"#111",color:rounds===n?"#fff":isDark?"#444":"#666",fontWeight:900,fontSize:16,cursor:"pointer"}}>{n}x</button>)}</div></div>
       <div style={{marginBottom:18}}><div style={{fontSize:13,color:isDark?"#888":"#666",marginBottom:10,fontWeight:600}}>Work tijd per oefening</div><div style={{display:"flex",gap:8}}>{WORK_OPTS.map(s=><button key={s} onClick={()=>setWorkSec(s)} style={{flex:1,padding:"13px 4px",borderRadius:12,border:`1px solid ${workSec===s?ORANGE:"#1C1C1C"}`,background:workSec===s?"rgba(255,107,43,0.1)":"#111",color:workSec===s?ORANGE:isDark?"#444":"#666",fontWeight:900,fontSize:15,cursor:"pointer"}}>{s}<span style={{fontSize:9,marginLeft:1}}>s</span></button>)}</div></div>
       <div style={{marginBottom:18}}><div style={{fontSize:13,color:isDark?"#888":"#666",marginBottom:10,fontWeight:600}}>Rust tussen oefeningen</div><div style={{display:"flex",gap:8}}>{REST_HIIT_OPTS.map(s=><button key={s} onClick={()=>setRestSec(s)} style={{flex:1,padding:"13px 4px",borderRadius:12,border:`1px solid ${restSec===s?LIME:"#1C1C1C"}`,background:restSec===s?"rgba(200,241,56,0.08)":"#111",color:restSec===s?LIME:isDark?"#444":"#666",fontWeight:900,fontSize:15,cursor:"pointer"}}>{s}<span style={{fontSize:9,marginLeft:1}}>s</span></button>)}</div></div>
       <div style={{marginBottom:20}}><button onClick={()=>setUseWeights(v=>!v)} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:`1px solid ${useWeights?LIME:"#1C1C1C"}`,background:useWeights?"rgba(200,241,56,0.06)":"#111",color:useWeights?LIME:"#555",fontSize:13,fontWeight:700,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>Oefeningen met gewichten</span><span style={{fontSize:11,color:useWeights?LIME:isDark?"#333":"#666"}}>{useWeights?"Aan":"Uit"}</span></button></div>
       <div style={{background:BG,borderRadius:12,padding:"10px 14px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{fontSize:12,color:"#555"}}>Geschatte duur</div><div style={{fontSize:14,fontWeight:900,color:estMin>45?"#ef4444":LIME}}>{estMin} min {estMin>45&&<span style={{fontSize:11,color:"#ef4444"}}>· te lang!</span>}</div></div>
-      <div style={{background:BG,borderRadius:14,padding:14,marginBottom:20}}><div style={{fontSize:10,letterSpacing:3,color:isDark?"#333":"#666",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Circuit ({circuitEx.length} oefeningen · {rounds} rondes)</div>{circuitEx.map((name,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:8,marginBottom:8,borderBottom:i<circuitEx.length-1?"1px solid #111":"none"}}><div style={{fontSize:13,color:isDark?"#ccc":"#333",fontWeight:600}}>{name}</div><div style={{fontSize:10,color:isDark?"#333":"#666"}}>{workSec}s · {restSec}s rust</div></div>)}</div>
+      <div style={{background:BG,borderRadius:14,padding:14,marginBottom:20}}><div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Circuit ({circuitEx.length} oefeningen · {rounds} rondes)</div>{circuitEx.map((name,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:8,marginBottom:8,borderBottom:i<circuitEx.length-1?"1px solid #111":"none"}}><div style={{fontSize:13,color:isDark?"#ccc":"#333",fontWeight:600}}>{name}</div><div style={{fontSize:10,color:isDark?"#444":"#888"}}>{workSec}s · {restSec}s rust</div></div>)}</div>
       <button onClick={()=>{setConfigured(true);setLeft(workSec);setTotalLeft(20*60);say(`${rounds} rondes. ${circuitEx.length} oefeningen. Ronde 1. ${circuitEx[0]}. Start.`);setRunning(true);}} disabled={estMin>45} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:estMin>45?"default":"pointer",background:estMin>45?"#1C1C1C":ORANGE,color:estMin>45?isDark?"#444":"#777":"#fff",fontSize:16,fontWeight:900,letterSpacing:-0.5}}>{estMin>45?"Verklein circuit (max 45 min)":"Start circuit"}</button>
     </div>
   );
-  if(phase==="done")return(<div style={{padding:"60px 0",textAlign:"center"}}><div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#666",fontWeight:700,textTransform:"uppercase",marginBottom:16}}>Voltooid</div><div style={{fontSize:52,fontWeight:900,letterSpacing:-2,color:LIME,marginBottom:4,lineHeight:1}}>{rounds} rondes</div><div style={{fontSize:14,color:"#555",marginBottom:8}}>{circuitEx.length} oefeningen · HIIT circuit</div><button onClick={onDone} style={{padding:"16px 40px",borderRadius:14,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:900}}>Opslaan</button></div>);
+  if(phase==="done")return(<div style={{padding:"60px 0",textAlign:"center"}}><div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:16}}>Voltooid</div><div style={{fontSize:52,fontWeight:900,letterSpacing:-2,color:LIME,marginBottom:4,lineHeight:1}}>{rounds} rondes</div><div style={{fontSize:14,color:"#555",marginBottom:8}}>{circuitEx.length} oefeningen · HIIT circuit</div><button onClick={onDone} style={{padding:"16px 40px",borderRadius:14,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:900}}>Opslaan</button></div>);
   const isWork=phase==="work",curEx=circuitEx[exIdx%circuitEx.length],nextExName=circuitEx[(exIdx+1)%circuitEx.length],curSec=isWork?workSec:restSec,pct=(left/curSec)*100,isAlert=left<=3&&running;
   return(
     <div>
-      <div style={{marginBottom:16}}><div style={{display:"flex",justifyContent:"space-between",fontSize:10,letterSpacing:2,color:isDark?"#333":"#666",fontWeight:700,textTransform:"uppercase",marginBottom:6}}><span>Ronde {roundIdx} / {rounds}</span><span>{Math.floor(totalLeft/60)}:{String(totalLeft%60).padStart(2,'0')}</span></div><div style={{background:isDark?"#111":CARD_BG,borderRadius:2,height:2}}><div style={{width:`${Math.min(100,100-(totalLeft/(20*60)*100))}%`,height:2,background:isDark?"#333":"#666",transition:"width 1s linear"}}/></div></div>
+      <div style={{marginBottom:16}}><div style={{display:"flex",justifyContent:"space-between",fontSize:10,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:6}}><span>Ronde {roundIdx} / {rounds}</span><span>{Math.floor(totalLeft/60)}:{String(totalLeft%60).padStart(2,'0')}</span></div><div style={{background:isDark?"#111":CARD_BG,borderRadius:2,height:2}}><div style={{width:`${Math.min(100,100-(totalLeft/(20*60)*100))}%`,height:2,background:isDark?"#333":"#666",transition:"width 1s linear"}}/></div></div>
       <div style={{background:BG,borderRadius:20,padding:"32px 24px",marginBottom:12,textAlign:"center",border:`1px solid ${isWork?"#1C1C1C":"rgba(200,241,56,0.1)"}`}}>
         <div style={{fontSize:10,letterSpacing:4,fontWeight:700,textTransform:"uppercase",color:isWork?ORANGE:LIME,marginBottom:16}}>{isWork?"Work":"Rust"}</div>
         {isWork&&<div style={{fontSize:28,fontWeight:900,letterSpacing:-1,marginBottom:4}}>{curEx}</div>}
-        {!isWork&&<div style={{marginBottom:16}}><div style={{fontSize:12,color:isDark?"#444":"#666",marginBottom:4}}>Volgende</div><div style={{fontSize:22,fontWeight:900,color:isDark?"#888":"#666"}}>{nextExName}</div></div>}
+        {!isWork&&<div style={{marginBottom:16}}><div style={{fontSize:12,color:isDark?"#444":"#888",marginBottom:4}}>Volgende</div><div style={{fontSize:22,fontWeight:900,color:isDark?"#888":"#666"}}>{nextExName}</div></div>}
         <div style={{fontSize:isAlert?90:76,fontWeight:900,letterSpacing:-4,lineHeight:1,color:isAlert?"#ef4444":isWork?ORANGE:LIME,transition:"color .3s",marginBottom:6}}>{left}</div>
-        <div style={{fontSize:10,letterSpacing:3,color:isDark?"#333":"#666",textTransform:"uppercase"}}>seconden</div>
+        <div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#888",textTransform:"uppercase"}}>seconden</div>
         <div style={{background:isDark?"#111":CARD_BG,borderRadius:2,height:2,marginTop:20,overflow:"hidden"}}><div style={{width:`${pct}%`,height:2,background:isWork?ORANGE:LIME,transition:"width .9s linear"}}/></div>
       </div>
-      {isWork&&<div style={{background:BG,border:"1px solid #111",borderRadius:12,padding:"10px 16px",marginBottom:12,display:"flex",justifyContent:"space-between"}}><div style={{fontSize:10,letterSpacing:2,color:isDark?"#333":"#666",fontWeight:700,textTransform:"uppercase"}}>Daarna</div><div style={{fontSize:13,color:"#555",fontWeight:600}}>{nextExName}</div></div>}
-      <div style={{display:"flex",gap:8}}><button onClick={()=>setRunning(r=>!r)} style={{flex:1,padding:"16px",borderRadius:14,border:"none",cursor:"pointer",background:running?"#1C1C1C":ORANGE,color:running?"#555":"#fff",fontSize:13,fontWeight:900,letterSpacing:1,textTransform:"uppercase"}}>{running?"Pauze":"Hervat"}</button><button onClick={()=>setLeft(0)} style={{padding:"16px 20px",borderRadius:14,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer",letterSpacing:1,textTransform:"uppercase"}}>Skip</button></div>
+      {isWork&&<div style={{background:BG,border:"1px solid "+BORDER,borderRadius:12,padding:"10px 16px",marginBottom:12,display:"flex",justifyContent:"space-between"}}><div style={{fontSize:10,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase"}}>Daarna</div><div style={{fontSize:13,color:"#555",fontWeight:600}}>{nextExName}</div></div>}
+      <div style={{display:"flex",gap:8}}><button onClick={()=>setRunning(r=>!r)} style={{flex:1,padding:"16px",borderRadius:14,border:"none",cursor:"pointer",background:running?"#1C1C1C":ORANGE,color:running?"#555":"#fff",fontSize:13,fontWeight:900,letterSpacing:1,textTransform:"uppercase"}}>{running?"Pauze":"Hervat"}</button><button onClick={()=>setLeft(0)} style={{padding:"16px 20px",borderRadius:14,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#444":"#888",fontSize:11,fontWeight:700,cursor:"pointer",letterSpacing:1,textTransform:"uppercase"}}>Skip</button></div>
     </div>
   );
 }
@@ -1280,7 +1292,7 @@ const LOOP_PLANNEN=[
     ]
   },
   {
-    id:"5k",label:"5K verbeteren",icon:"🏃",weken:6,doel:"Snellere 5K",
+    id:"5k",label:"5K verbeteren",icon:"",weken:6,doel:"Snellere 5K",
     beschrijving:"Verbeter je 5K tijd in 6 weken. Mix van tempo, interval en duurlopen.",
     schema:[
       {week:1,sessies:[{type:"steady",minuten:25},{type:"tempo",minuten:20},{type:"steady",minuten:30}]},
@@ -1292,7 +1304,7 @@ const LOOP_PLANNEN=[
     ]
   },
   {
-    id:"10k",label:"10K trainingsplan",icon:"🎯",weken:8,doel:"10 km uitlopen",
+    id:"10k",label:"10K trainingsplan",icon:"",weken:8,doel:"10 km uitlopen",
     beschrijving:"Bouw op naar 10 km in 8 weken. Ideaal als je al 5 km kunt lopen.",
     schema:[
       {week:1,sessies:[{type:"steady",minuten:30},{type:"steady",minuten:25},{type:"steady",minuten:35}]},
@@ -1306,7 +1318,7 @@ const LOOP_PLANNEN=[
     ]
   },
   {
-    id:"half",label:"Halve marathon",icon:"🏅",weken:12,doel:"21 km finishen",
+    id:"half",label:"Halve marathon",icon:"",weken:12,doel:"21 km finishen",
     beschrijving:"12 weken naar de halve marathon. Voor runners die al comfortabel 10 km lopen.",
     schema:[
       {week:1,sessies:[{type:"steady",minuten:40},{type:"tempo",minuten:30},{type:"steady",minuten:60}]},
@@ -1327,120 +1339,207 @@ const LOOP_PLANNEN=[
 
 // ── Zwem Tracker ──────────────────────────────────────────────
 function SwimTracker({onDone,profile}){
-  const [fase,setFase]=useState("setup");
-  const [slag,setSlag]=useState("wisselslag");
+  const SLAGEN=[
+    {v:"vrije slag",l:"Vrije slag",cal:0.014},
+    {v:"schoolslag",l:"Schoolslag",cal:0.012},
+    {v:"rugslag",l:"Rugslag",cal:0.013},
+    {v:"wisselslag",l:"Wisselslag",cal:0.015},
+    {v:"borstcrawl",l:"Borstcrawl",cal:0.016},
+  ];
+  const BAANLENGTE=[25,50];
+  const [modus,setModus]=useState("live"); // live | achteraf
+  const [slag,setSlag]=useState("vrije slag");
+  const [baanM,setBaanM]=useState(25);
   const [doelBanen,setDoelBanen]=useState(20);
+  const [fase,setFase]=useState("setup");
+  // Live modus state
   const [banen,setBanen]=useState(0);
   const [elapsed,setElapsed]=useState(0);
   const [running,setRunning]=useState(false);
   const [splits,setSplits]=useState([]);
   const timerRef=useRef(null);
   const elapsedRef=useRef(0);
+  // Achteraf modus state
+  const [aNBanen,setANBanen]=useState("");
+  const [aTijd,setATijd]=useState("");
+
   const gewicht=parseFloat(profile?.weight)||75;
-  const SLAGEN=[{v:"vrije slag",l:"Vrije slag",e:"🏊",cal:0.014},{v:"schoolslag",l:"Schoolslag",e:"🐸",cal:0.012},{v:"rugslag",l:"Rugslag",e:"🔄",cal:0.013},{v:"wisselslag",l:"Wisselslag",e:"⚡",cal:0.015},{v:"borst",l:"Borstcrawl",e:"💪",cal:0.016}];
-  const DOELEN=[10,20,30,40,50,60,80,100];
   const slagInfo=SLAGEN.find(s=>s.v===slag)||SLAGEN[0];
-  const calPer100m=Math.round(gewicht*slagInfo.cal*100);
-  const totaalM=banen*25;
+  const totaalM=banen*baanM;
   const kcal=Math.round(gewicht*slagInfo.cal*totaalM/100*100);
   function fmtTime(s){const m=Math.floor(s/60),sec=s%60;return m+":"+String(sec).padStart(2,"0");}
-  function start(){
-    setFase("zwemmen");setRunning(true);setBanen(0);setElapsed(0);elapsedRef.current=0;setSplits([]);
+
+  function startLive(){
+    setFase("live");setBanen(0);setElapsed(0);setSplits([]);elapsedRef.current=0;setRunning(true);
     timerRef.current=setInterval(()=>{elapsedRef.current+=1;setElapsed(elapsedRef.current);},1000);
   }
-  function baan(){
+  function baanGedaan(){
     const nb=banen+1;
     setBanen(nb);
     setSplits(p=>[...p,{baan:nb,tijd:elapsedRef.current}]);
     if(nb>=doelBanen){clearInterval(timerRef.current);setRunning(false);setFase("klaar");}
   }
-  function stop(){clearInterval(timerRef.current);setRunning(false);setFase("klaar");}
+  function stopLive(){clearInterval(timerRef.current);setRunning(false);setFase("klaar");}
   useEffect(()=>()=>clearInterval(timerRef.current),[]);
-  const S={card:{background:CARD_BG,borderRadius:16,border:"1px solid "+BORDER}};
+
+  const S={card:{background:CARD_BG,borderRadius:14,border:"1px solid "+BORDER}};
+  const BLAUW="#60a5fa";
+
+  // ── SETUP ────────────────────────────────────────────────────
   if(fase==="setup")return(
     <div>
-      <div style={{fontSize:11,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:14}}>Zwemmen instellen</div>
-      <div style={{marginBottom:16}}>
-        <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Slag</div>
-        <div style={{display:"flex",flexDirection:"column",gap:8}}>
-          {SLAGEN.map(s=>(
-            <button key={s.v} onClick={()=>setSlag(s.v)} style={{padding:"12px 16px",borderRadius:12,border:"1px solid "+(slag===s.v?"#60a5fa":"#1C1C1C"),background:slag===s.v?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",textAlign:"left"}}>
-              <div style={{display:"flex",gap:10,alignItems:"center"}}><span style={{fontSize:20}}>{s.e}</span><span style={{fontSize:13,fontWeight:700,color:slag===s.v?"#60a5fa":TEXT}}>{s.l}</span></div>
-              <span style={{fontSize:11,color:isDark?"#444":"#888"}}>~{Math.round(gewicht*s.cal*100)} kcal/100m</span>
+      {/* Header foto stijl */}
+      <div style={{height:130,borderRadius:14,overflow:"hidden",position:"relative",marginBottom:16,background:isDark?"#111":CARD_BG}}>
+        <img src={P.rug} alt="Zwemmen" style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.6}}/>
+        <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent,rgba(0,0,0,0.8))"}}/>
+        <div style={{position:"absolute",bottom:14,left:16}}>
+          <div style={{fontSize:10,letterSpacing:3,color:BLAUW,fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Zwemmen</div>
+          <div style={{fontSize:22,fontWeight:900,color:"#fff"}}>Stel je training in</div>
+        </div>
+      </div>
+
+      {/* Modus */}
+      <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Hoe wil je bijhouden?</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
+        {[{v:"live",l:"Live tellen",d:"Tik na elke baan — telefoon in waterdicht hoesje"},{v:"achteraf",l:"Achteraf invoeren",d:"Vul in na je training"}].map(m=>(
+          <button key={m.v} onClick={()=>setModus(m.v)} style={{padding:"13px 12px",borderRadius:12,border:"1px solid "+(modus===m.v?BLAUW:"#1C1C1C"),background:modus===m.v?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",textAlign:"left"}}>
+            <div style={{fontSize:13,fontWeight:800,color:modus===m.v?BLAUW:TEXT,marginBottom:3}}>{m.l}</div>
+            <div style={{fontSize:10,color:isDark?"#444":"#888",lineHeight:1.4}}>{m.d}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Baanlengte */}
+      <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Baanlengte</div>
+      <div style={{display:"flex",gap:8,marginBottom:16}}>
+        {BAANLENGTE.map(m=>(
+          <button key={m} onClick={()=>setBaanM(m)} style={{flex:1,padding:"12px",borderRadius:12,border:"1px solid "+(baanM===m?BLAUW:"#1C1C1C"),background:baanM===m?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",textAlign:"center"}}>
+            <div style={{fontSize:18,fontWeight:900,color:baanM===m?BLAUW:TEXT}}>{m}m</div>
+            <div style={{fontSize:10,color:isDark?"#444":"#888",marginTop:2}}>{m===25?"Klein bad":"Olympisch bad"}</div>
+          </button>
+        ))}
+      </div>
+
+      {/* Slag */}
+      <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Slag</div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
+        {SLAGEN.map(s=>(
+          <button key={s.v} onClick={()=>setSlag(s.v)} style={{padding:"11px 14px",borderRadius:12,border:"1px solid "+(slag===s.v?BLAUW:"#1C1C1C"),background:slag===s.v?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <span style={{fontSize:13,fontWeight:700,color:slag===s.v?BLAUW:TEXT}}>{s.l}</span>
+            <span style={{fontSize:10,color:isDark?"#333":"#999"}}>{Math.round(gewicht*s.cal*100)} kcal/100m</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Doel banen — alleen voor live modus */}
+      {modus==="live"&&<>
+        <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Doel</div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6,marginBottom:16}}>
+          {[10,20,30,40,50,60,80,100].map(n=>(
+            <button key={n} onClick={()=>setDoelBanen(n)} style={{padding:"10px 4px",borderRadius:10,border:"1px solid "+(doelBanen===n?BLAUW:"#1C1C1C"),background:doelBanen===n?"rgba(96,165,250,0.08)":"#111",cursor:"pointer",textAlign:"center"}}>
+              <div style={{fontSize:13,fontWeight:800,color:doelBanen===n?BLAUW:TEXT}}>{n}</div>
+              <div style={{fontSize:9,color:isDark?"#333":"#999"}}>{n*baanM}m</div>
             </button>
           ))}
         </div>
-      </div>
-      <div style={{marginBottom:20}}>
-        <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Doelantal banen (25m)</div>
-        <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-          {DOELEN.map(n=>(
-            <button key={n} onClick={()=>setDoelBanen(n)} style={{flex:"1 0 calc(25% - 6px)",padding:"10px 4px",borderRadius:10,border:"1px solid "+(doelBanen===n?"#60a5fa":"#1C1C1C"),background:doelBanen===n?"rgba(96,165,250,0.08)":"#111",color:doelBanen===n?"#60a5fa":isDark?"#555":"#888",fontSize:12,fontWeight:700,cursor:"pointer",textAlign:"center"}}>
-              {n}<span style={{fontSize:9,display:"block",color:isDark?"#333":"#999"}}>{n*25}m</span>
-            </button>
-          ))}
+      </>}
+
+      {/* Achteraf invoer */}
+      {modus==="achteraf"&&<>
+        <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Training invoeren</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
+          <div>
+            <div style={{fontSize:11,color:isDark?"#555":"#888",marginBottom:6}}>Aantal banen</div>
+            <input type="number" value={aNBanen} onChange={e=>setANBanen(e.target.value)} placeholder="bijv. 40" style={{width:"100%",padding:"13px 14px",borderRadius:12,border:"1px solid "+BORDER,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:16,fontWeight:700,outline:"none",boxSizing:"border-box"}}/>
+          </div>
+          <div>
+            <div style={{fontSize:11,color:isDark?"#555":"#888",marginBottom:6}}>Tijd (minuten)</div>
+            <input type="number" value={aTijd} onChange={e=>setATijd(e.target.value)} placeholder="bijv. 45" style={{width:"100%",padding:"13px 14px",borderRadius:12,border:"1px solid "+BORDER,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:16,fontWeight:700,outline:"none",boxSizing:"border-box"}}/>
+          </div>
         </div>
-      </div>
-      <div style={{...S.card,padding:"10px 14px",marginBottom:16,display:"flex",justifyContent:"space-between"}}>
+      </>}
+
+      {/* Calorie preview */}
+      {(modus==="live"||aNBanen)&&<div style={{...S.card,padding:"10px 16px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center",borderTop:"2px solid "+BLAUW}}>
         <span style={{fontSize:12,color:isDark?"#555":"#888"}}>Geschatte calorieën</span>
-        <span style={{fontSize:14,fontWeight:900,color:"#60a5fa"}}>~{Math.round(gewicht*slagInfo.cal*doelBanen*25/100*100)} kcal</span>
-      </div>
-      <button onClick={start} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:"pointer",background:"#60a5fa",color:"#000",fontSize:16,fontWeight:900}}>🏊 Start zwemmen</button>
+        <span style={{fontSize:16,fontWeight:900,color:BLAUW}}>~{modus==="live"?Math.round(gewicht*slagInfo.cal*doelBanen*baanM):Math.round(gewicht*slagInfo.cal*(parseInt(aNBanen)||0)*baanM)} kcal</span>
+      </div>}
+
+      <button onClick={()=>{
+        if(modus==="achteraf"){
+          if(!aNBanen)return;
+          const totM=(parseInt(aNBanen)||0)*baanM;
+          const totSec=(parseFloat(aTijd)||0)*60;
+          onDone({sport:"zwemmen",banen:parseInt(aNBanen),afstand:totM,tijd:totSec,cal:Math.round(gewicht*slagInfo.cal*totM),slag,baanM});
+        } else {
+          startLive();
+        }
+      }} disabled={modus==="achteraf"&&!aNBanen} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:modus==="achteraf"&&!aNBanen?"default":"pointer",background:modus==="achteraf"&&!aNBanen?"#1C1C1C":BLAUW,color:modus==="achteraf"&&!aNBanen?isDark?"#444":"#888":"#000",fontSize:16,fontWeight:900}}>
+        {modus==="achteraf"?"Opslaan":"Start zwemmen"}
+      </button>
     </div>
   );
-  if(fase==="zwemmen")return(
+
+  // ── LIVE ZWEMMEN ─────────────────────────────────────────────
+  if(fase==="live")return(
     <div>
-      <div style={{marginBottom:16}}>
-        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:6}}>
+      {/* Voortgang */}
+      <div style={{marginBottom:14}}>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:6}}>
           <span>Voortgang</span><span>{banen} / {doelBanen} banen</span>
         </div>
         <div style={{background:isDark?"#111":"#E8E8E0",borderRadius:99,height:8,overflow:"hidden"}}>
-          <div style={{width:Math.min(100,banen/doelBanen*100)+"%",height:8,background:"#60a5fa",borderRadius:99,transition:"width .3s"}}/>
+          <div style={{width:Math.min(100,banen/doelBanen*100)+"%",height:8,background:BLAUW,borderRadius:99,transition:"width .3s"}}/>
         </div>
       </div>
+      {/* Stats */}
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:12}}>
-        <div style={{...S.card,padding:16,textAlign:"center"}}>
-          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Banen</div>
-          <div style={{fontSize:48,fontWeight:900,color:"#60a5fa",letterSpacing:-2,lineHeight:1}}>{banen}</div>
-          <div style={{fontSize:11,color:isDark?"#444":"#888"}}>{totaalM}m</div>
+        <div style={{...S.card,padding:16,textAlign:"center",borderTop:"2px solid "+BLAUW}}>
+          <div style={{fontSize:10,color:BLAUW,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:4}}>Banen</div>
+          <div style={{fontSize:52,fontWeight:900,color:BLAUW,letterSpacing:-2,lineHeight:1}}>{banen}</div>
+          <div style={{fontSize:11,color:isDark?"#444":"#888",marginTop:2}}>{totaalM}m</div>
         </div>
-        <div style={{...S.card,padding:16,textAlign:"center"}}>
-          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Tijd</div>
+        <div style={{...S.card,padding:16,textAlign:"center",borderTop:"2px solid "+BORDER}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:4}}>Tijd</div>
           <div style={{fontSize:40,fontWeight:900,letterSpacing:-1,lineHeight:1}}>{fmtTime(elapsed)}</div>
         </div>
-        <div style={{...S.card,padding:16,textAlign:"center"}}>
-          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Calorieën</div>
-          <div style={{fontSize:32,fontWeight:900,color:ORANGE,letterSpacing:-1}}>{kcal}</div>
+        <div style={{...S.card,padding:14,textAlign:"center"}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:4}}>Tempo</div>
+          <div style={{fontSize:24,fontWeight:900,letterSpacing:-0.5}}>{banen>0&&elapsed>0?fmtTime(Math.round(elapsed/banen)):"–"}</div>
+          <div style={{fontSize:10,color:isDark?"#444":"#888"}}>per baan</div>
         </div>
-        <div style={{...S.card,padding:16,textAlign:"center"}}>
-          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Tempo</div>
-          <div style={{fontSize:24,fontWeight:900,letterSpacing:-1}}>{banen>0&&elapsed>0?Math.floor((elapsed/banen)/60)+":"+String(Math.round((elapsed/banen)%60)).padStart(2,"0"):"–"}</div>
-          <div style={{fontSize:10,color:isDark?"#444":"#888"}}>min/baan</div>
+        <div style={{...S.card,padding:14,textAlign:"center"}}>
+          <div style={{fontSize:10,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:4}}>Calorieën</div>
+          <div style={{fontSize:24,fontWeight:900,color:ORANGE,letterSpacing:-0.5}}>{kcal}</div>
         </div>
       </div>
-      <button onClick={baan} style={{width:"100%",padding:22,borderRadius:16,border:"none",cursor:"pointer",background:"#60a5fa",color:"#000",fontSize:18,fontWeight:900,marginBottom:10,letterSpacing:-0.5}}>
-        ✓ Baan {banen+1} klaar
+      {/* Grote baan knop */}
+      <button onClick={baanGedaan} style={{width:"100%",padding:24,borderRadius:16,border:"none",cursor:"pointer",background:BLAUW,color:"#000",fontSize:20,fontWeight:900,marginBottom:10,letterSpacing:-0.5}}>
+        Baan {banen+1} klaar
       </button>
-      <button onClick={stop} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>Stop</button>
+      <button onClick={stopLive} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>Stoppen</button>
     </div>
   );
-  // Klaar scherm
+
+  // ── KLAAR ────────────────────────────────────────────────────
   return(
     <div style={{textAlign:"center",padding:"24px 0"}}>
-      <div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Zwemtraining klaar 🏊</div>
-      <div style={{fontSize:64,fontWeight:900,letterSpacing:-3,color:"#60a5fa",lineHeight:1,marginBottom:4}}>{banen}</div>
+      <div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Zwemtraining voltooid</div>
+      <div style={{fontSize:72,fontWeight:900,letterSpacing:-4,color:BLAUW,lineHeight:1,marginBottom:4}}>{banen}</div>
       <div style={{fontSize:16,color:isDark?"#555":"#888",marginBottom:20}}>banen · {totaalM}m</div>
-      <div style={{display:"flex",justifyContent:"center",gap:24,marginBottom:24}}>
-        {[{l:"Tijd",v:fmtTime(elapsed)},{l:"Calorieën",v:kcal+" kcal"},{l:"Tempo",v:banen>0?Math.floor((elapsed/banen)/60)+":"+String(Math.round((elapsed/banen)%60)).padStart(2,"0")+"  /baan":"–"}].map(s=>(
-          <div key={s.l} style={{textAlign:"center"}}><div style={{fontSize:20,fontWeight:900,color:TEXT}}>{s.v}</div><div style={{fontSize:10,color:"#555",marginTop:2}}>{s.l}</div></div>
+      <div style={{display:"flex",justifyContent:"center",gap:28,marginBottom:24}}>
+        {[{l:"Tijd",v:fmtTime(elapsed)},{l:"Tempo",v:banen>0?fmtTime(Math.round(elapsed/banen))+" /baan":"–"},{l:"Calorieën",v:kcal+" kcal"}].map(s=>(
+          <div key={s.l} style={{textAlign:"center"}}>
+            <div style={{fontSize:20,fontWeight:900,color:TEXT}}>{s.v}</div>
+            <div style={{fontSize:10,color:"#555",marginTop:2}}>{s.l}</div>
+          </div>
         ))}
       </div>
-      <button onClick={()=>onDone({sport:"zwemmen",banen,afstand:totaalM,tijd:elapsed,cal:kcal,slag})} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:"pointer",background:"#60a5fa",color:"#000",fontSize:15,fontWeight:900}}>Opslaan</button>
+      <button onClick={()=>onDone({sport:"zwemmen",banen,afstand:totaalM,tijd:elapsed,cal:kcal,slag,baanM})} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:"pointer",background:BLAUW,color:"#000",fontSize:15,fontWeight:900}}>Opslaan</button>
     </div>
   );
 }
 
-// ── Spinning / Fietstracker ─────────────────────────────────
 function SpinTracker({onDone,profile}){
   const [fase,setFase]=useState("setup");
   const [modus,setModus]=useState("steady");
@@ -1482,9 +1581,9 @@ function SpinTracker({onDone,profile}){
       <div style={{marginBottom:16}}>
         <div style={{fontSize:11,color:isDark?"#555":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:8}}>Trainingsmodus</div>
         <div style={{display:"flex",flexDirection:"column",gap:8}}>
-          {[{v:"steady",l:"Steady ride",d:"Constant tempo, vetverbranding",e:"🚴"},{v:"interval",l:"Interval",d:"Afwisselend sprint en herstel",e:"⚡"},{v:"sprint",l:"Sprint ride",d:"Hoge intensiteit, korte sessie",e:"🔥"}].map(m=>(
+          {[{v:"steady",l:"Steady ride",d:"Constant tempo, vetverbranding"},{v:"interval",l:"Interval",d:"Afwisselend sprint en herstel"},{v:"sprint",l:"Sprint ride",d:"Hoge intensiteit, korte sessie"}].map(m=>(
             <button key={m.v} onClick={()=>setModus(m.v)} style={{padding:"12px 16px",borderRadius:12,border:"1px solid "+(modus===m.v?"#a78bfa":"#1C1C1C"),background:modus===m.v?"rgba(167,139,250,0.08)":"#111",cursor:"pointer",display:"flex",gap:12,alignItems:"center",textAlign:"left"}}>
-              <span style={{fontSize:22}}>{m.e}</span>
+              
               <div><div style={{fontSize:13,fontWeight:700,color:modus===m.v?"#a78bfa":TEXT}}>{m.l}</div><div style={{fontSize:11,color:isDark?"#444":"#888"}}>{m.d}</div></div>
             </button>
           ))}
@@ -1547,7 +1646,7 @@ function SpinTracker({onDone,profile}){
       {modus==="interval"?(
         <div style={{...S.card,padding:"14px 18px",marginBottom:12,border:"1px solid "+(intervalFase==="werk"?"rgba(255,107,43,0.3)":"rgba(200,241,56,0.2)"),display:"flex",justifyContent:"space-between",alignItems:"center"}}>
           <div>
-            <div style={{fontSize:10,color:intervalFase==="werk"?ORANGE:LIME,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:2}}>{intervalFase==="werk"?"🔥 Sprint":"😮 Herstel"}</div>
+            <div style={{fontSize:10,color:intervalFase==="werk"?ORANGE:LIME,fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:2}}>{intervalFase==="werk"?"Sprint":"Herstel"}</div>
             <div style={{fontSize:52,fontWeight:900,color:intervalFase==="werk"?ORANGE:LIME,letterSpacing:-2,lineHeight:1}}>{intervalLeft}<span style={{fontSize:14,marginLeft:3}}>s</span></div>
           </div>
           <div style={{textAlign:"right"}}>
@@ -1575,7 +1674,7 @@ function SpinTracker({onDone,profile}){
   );
   return(
     <div style={{textAlign:"center",padding:"24px 0"}}>
-      <div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Spinning klaar 🚴</div>
+      <div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Spinning voltooid</div>
       <div style={{fontSize:64,fontWeight:900,letterSpacing:-3,color:"#a78bfa",lineHeight:1,marginBottom:4}}>{fmtTime(elapsed)}</div>
       <div style={{fontSize:16,color:isDark?"#555":"#888",marginBottom:20}}>{kcal} kcal verbrand</div>
       <button onClick={()=>onDone({sport:"spinning",tijd:elapsed,cal:kcal,modus,weerstand})} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:"pointer",background:"#a78bfa",color:"#000",fontSize:15,fontWeight:900}}>Opslaan</button>
@@ -1789,8 +1888,8 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
     },[points]);
 
     if(points.length===0)return(
-      <div style={{height:H,background:isDark?"#111":"#1a1a1a",borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:8,border:"1px solid "+(isDark?"#1C1C1C":"#E0E0D8")}}>
-        <div style={{fontSize:28}}>📍</div>
+      <div style={{height:H,background:isDark?"#111":"#E8E8E0",borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:8,border:"1px solid "+(isDark?"#1C1C1C":"#E0E0D8")}}>
+        <div style={{fontSize:20,color:isDark?"#444":"#888"}}>GPS</div>
         <div style={{fontSize:12,color:isDark?"#444":"#888",fontWeight:600}}>Wacht op GPS-signaal...</div>
       </div>
     );
@@ -1860,7 +1959,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
                 document.body.appendChild(a);a.click();document.body.removeChild(a);
                 setTimeout(()=>URL.revokeObjectURL(url),1000);
               }} style={{flex:1,padding:"11px",borderRadius:12,border:"1px solid rgba(200,241,56,0.3)",background:"rgba(200,241,56,0.06)",color:LIME,fontSize:13,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
-                <span>⬇️</span><span>Download route</span>
+                Download route
               </button>
               {navigator.share&&<button onClick={async()=>{
                 try{
@@ -1868,7 +1967,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
                   await navigator.share({title:"Mijn route — FitCoach Pro",text:"Zojuist "+(dist/1000).toFixed(2)+" km "+type+" in "+fmtTime(elapsed)+"! Tempo: "+calcPace(dist,elapsed)+" /km. 🔥 "+calories+" kcal verbrand. Via FitCoach Pro 💪"});
                 }catch(e){}
               }} style={{flex:1,padding:"11px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
-                <span>📤</span><span>Delen</span>
+                Delen
               </button>}
             </div>
           </div>
@@ -1939,13 +2038,13 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
             <div style={{fontSize:10,color:hz.color,fontWeight:700}}>{hz.label}</div>
           </div>
           <div style={{...S.card,padding:10,textAlign:"center"}}>
-            <div style={{fontSize:10,color:isDark?"#444":"#888"}}>🔥 {calories} kcal</div>
+            <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{calories} kcal verbrand</div>
           </div>
         </div>
         {runType==="interval"&&(
           <div style={{...S.card,padding:"12px 16px",marginBottom:10,border:"1px solid "+(intervalPhase==="sprint"?"rgba(255,107,43,0.3)":"rgba(200,241,56,0.2)"),display:"flex",justifyContent:"space-between",alignItems:"center"}}>
             <div>
-              <div style={{fontSize:9,letterSpacing:3,color:intervalPhase==="sprint"?ORANGE:LIME,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{intervalPhase==="sprint"?"🏃 Sprint":"😮‍💨 Herstel"}</div>
+              <div style={{fontSize:9,letterSpacing:3,color:intervalPhase==="sprint"?ORANGE:LIME,fontWeight:700,textTransform:"uppercase",marginBottom:2}}>{intervalPhase==="sprint"?"Sprint":"Herstel"}</div>
               <div style={{fontSize:36,fontWeight:900,color:intervalPhase==="sprint"?ORANGE:LIME,letterSpacing:-2}}>{intervalLeft}<span style={{fontSize:12,color:isDark?"#444":"#888",marginLeft:2}}>s</span></div>
             </div>
             <div style={{textAlign:"right"}}>
@@ -1971,7 +2070,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
     <div>
       <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:16}}>
         {tabs.map(t=>(
-          <button key={t.id} onClick={()=>setMainTab(t.id)} style={{padding:"11px 8px",borderRadius:10,border:"1px solid "+(mainTab===t.id?LIME:"#1C1C1C"),cursor:"pointer",background:mainTab===t.id?"rgba(200,241,56,0.07)":"#111",color:mainTab===t.id?LIME:isDark?"#555":"#888",fontSize:13,fontWeight:mainTab===t.id?800:500,textAlign:"center",transition:"all .15s",letterSpacing:-0.3}}>{t.l}</button>
+          <button key={t.id} onClick={()=>setMainTab(t.id)} style={{padding:"11px 8px",borderRadius:10,border:"1px solid "+(mainTab===t.id?LIME:BORDER),cursor:"pointer",background:mainTab===t.id?"rgba(200,241,56,0.07)":isDark?"#111":CARD_BG,color:mainTab===t.id?LIME:isDark?"#555":"#888",fontSize:13,fontWeight:mainTab===t.id?800:500,textAlign:"center",transition:"all .15s",letterSpacing:-0.3}}>{t.l}</button>
         ))}
       </div>
 
@@ -2000,7 +2099,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
               return(
                 <button key={t.v} onClick={()=>setRunType(t.v)} style={{height:100,borderRadius:14,border:"2px solid "+(runType===t.v?t.kleur:"transparent"),cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
                   <img src={foto} alt={t.l} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
-                  <div style={{position:"absolute",inset:0,background:runType===t.v?"rgba(0,0,0,0.45)":"linear-gradient(to bottom,transparent 10%,rgba(0,0,0,0.75))"}}/>
+                  <div style={{position:"absolute",inset:0,background:runType===t.v?"rgba(0,0,0,0.45)":"linear-gradient(to bottom,transparent 10%,rgba(0,0,0,0.8))"}}/>
                   {runType===t.v&&<div style={{position:"absolute",top:8,right:8,width:18,height:18,borderRadius:"50%",background:t.kleur,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"#000",fontWeight:900}}>✓</div>}
                   <div style={{position:"relative",padding:"8px 10px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
                     <div style={{fontSize:14,fontWeight:900,color:"#fff",marginBottom:2}}>{t.l}</div>
@@ -2023,7 +2122,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
           <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Doel</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
             {Object.entries(GOALS).map(([k,g])=>(
-              <button key={k} onClick={()=>setSelectedGoal(k)} style={{padding:"13px 14px",borderRadius:12,border:"1px solid "+(selectedGoal===k?LIME:"#1C1C1C"),background:selectedGoal===k?"rgba(200,241,56,0.07)":"#111",cursor:"pointer",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <button key={k} onClick={()=>setSelectedGoal(k)} style={{padding:"13px 14px",borderRadius:12,border:"1px solid "+(selectedGoal===k?LIME:"#1C1C1C"),background:selectedGoal===k?"rgba(200,241,56,0.07)":isDark?"#111":CARD_BG,cursor:"pointer",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                 <div>
                   <div style={{fontSize:15,fontWeight:900,color:selectedGoal===k?LIME:TEXT,marginBottom:2}}>{g.label}</div>
                   <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{g.sub}</div>
@@ -2038,18 +2137,18 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
               <div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Interval instellingen</div>
               <div style={{marginBottom:10}}>
                 <div style={{fontSize:11,color:isDark?"#888":"#666",marginBottom:6}}>Sprint duur</div>
-                <div style={{display:"flex",gap:6}}>{[20,30,45,60,90].map(s=><button key={s} onClick={()=>setSprintSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(sprintSec===s?ORANGE:"#222"),background:sprintSec===s?"rgba(255,107,43,0.08)":"#111",color:sprintSec===s?ORANGE:isDark?"#444":"#888",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}s</button>)}</div>
+                <div style={{display:"flex",gap:6}}>{[20,30,45,60,90].map(s=><button key={s} onClick={()=>setSprintSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(sprintSec===s?ORANGE:"#222"),background:sprintSec===s?"rgba(255,107,43,0.08)":isDark?"#111":CARD_BG,color:sprintSec===s?ORANGE:isDark?"#444":"#888",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s}s</button>)}</div>
               </div>
               <div>
                 <div style={{fontSize:11,color:isDark?"#888":"#666",marginBottom:6}}>Herstel duur</div>
-                <div style={{display:"flex",gap:6}}>{[30,60,90,120,180].map(s=><button key={s} onClick={()=>setRestSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(restSec===s?LIME:"#222"),background:restSec===s?"rgba(200,241,56,0.08)":"#111",color:restSec===s?LIME:isDark?"#444":"#888",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s<60?s+"s":Math.floor(s/60)+"m"}</button>)}</div>
+                <div style={{display:"flex",gap:6}}>{[30,60,90,120,180].map(s=><button key={s} onClick={()=>setRestSec(s)} style={{flex:1,padding:"8px 2px",borderRadius:8,border:"1px solid "+(restSec===s?LIME:"#222"),background:restSec===s?"rgba(200,241,56,0.08)":isDark?"#111":CARD_BG,color:restSec===s?LIME:isDark?"#444":"#888",fontSize:11,fontWeight:700,cursor:"pointer"}}>{s<60?s+"s":Math.floor(s/60)+"m"}</button>)}</div>
               </div>
             </div>
           )}
           {/* Spraak */}
           <div onClick={()=>setVoiceKm(v=>!v)} style={{...S.card,padding:"10px 14px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center",cursor:"pointer"}}>
-            <div><div style={{fontSize:13,fontWeight:700,color:TEXT}}>🔊 Km-updates</div><div style={{fontSize:10,color:isDark?"#444":"#888"}}>Afstand en tempo per kilometer</div></div>
-            <div style={{width:40,height:22,borderRadius:11,background:voiceKm?"rgba(200,241,56,0.2)":"#222",border:"1px solid "+(voiceKm?LIME:isDark?"#333":"#888"),position:"relative"}}>
+            <div><div style={{fontSize:13,fontWeight:700,color:TEXT}}>Km-updates</div><div style={{fontSize:10,color:isDark?"#444":"#888"}}>Afstand en tempo per kilometer</div></div>
+            <div style={{width:40,height:22,borderRadius:11,background:voiceKm?"rgba(200,241,56,0.2)":isDark?"#222":"#E0E0D8",border:"1px solid "+(voiceKm?LIME:isDark?"#333":"#888"),position:"relative"}}>
               <div style={{width:16,height:16,borderRadius:"50%",background:voiceKm?LIME:isDark?"#444":"#888",position:"absolute",top:2,left:voiceKm?20:2,transition:"left .2s"}}/>
             </div>
           </div>
@@ -2116,7 +2215,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
             <div>
               <div style={{fontSize:13,color:isDark?"#555":"#888",marginBottom:16,lineHeight:1.6}}>Kies een trainingsplan en Roan begeleidt je stap voor stap naar je doel.</div>
               {LOOP_PLANNEN.map(plan=>(
-                <div key={plan.id} style={{...S.card,padding:16,marginBottom:10,border:"1px solid #1C1C1C"}}>
+                <div key={plan.id} style={{...S.card,padding:16,marginBottom:10,border:"1px solid "+BORDER}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
                     <div>
                       <div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>{plan.icon} {plan.weken} weken · {plan.doel}</div>
@@ -2136,7 +2235,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
         <div>
           {runHistory.length===0?(
             <div style={{...S.card,padding:24,textAlign:"center"}}>
-              <div style={{fontSize:32,marginBottom:8}}>🏃</div>
+              <div style={{fontSize:32,marginBottom:8}}></div>
               <div style={{fontSize:14,fontWeight:700,color:TEXT,marginBottom:4}}>Nog geen runs</div>
               <div style={{fontSize:12,color:isDark?"#555":"#888"}}>Start je eerste run om je geschiedenis bij te houden</div>
             </div>
@@ -2157,7 +2256,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
                 <div key={i} style={{...S.card,padding:14,marginBottom:8}}>
                   <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
                     <div style={{fontSize:11,color:isDark?"#444":"#888"}}>{r.date} · {r.runType||"Run"}</div>
-                    {r.runCal&&<div style={{fontSize:10,color:ORANGE}}>🔥 {r.runCal} kcal</div>}
+                    {r.runCal&&<div style={{fontSize:10,color:ORANGE}}>{r.runCal} kcal</div>}
                   </div>
                   <div style={{display:"flex",gap:20}}>
                     <div><div style={{fontSize:22,fontWeight:900,color:LIME}}>{((r.runDist||0)/1000).toFixed(2)}<span style={{fontSize:10,color:isDark?"#444":"#888",marginLeft:1}}>km</span></div></div>
@@ -2174,13 +2273,13 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
       {mainTab==="records"&&(
         <div>
           <div style={{fontSize:12,color:isDark?"#555":"#888",marginBottom:16}}>Jouw beste tijden per afstand</div>
-          {[{key:"k5",label:"5 km",dist:5000,icon:"🎯"},{key:"k10",label:"10 km",dist:10000,icon:"🏃"},{key:"half",label:"Halve marathon",dist:21097,icon:"🏅"},{key:"marathon",label:"Marathon",dist:42195,icon:"🏆"}].map(({key,label,dist:d,icon})=>{
+          {[{key:"k5",label:"5 km",dist:5000,icon:""},{key:"k10",label:"10 km",dist:10000,icon:""},{key:"half",label:"Halve marathon",dist:21097,icon:""},{key:"marathon",label:"Marathon",dist:42195,icon:""}].map(({key,label,dist:d,icon})=>{
             const pr=runPRs[key];
             return(
               <div key={key} style={{...S.card,padding:16,marginBottom:10}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   <div style={{display:"flex",gap:10,alignItems:"center"}}>
-                    <div style={{fontSize:28}}>{icon}</div>
+                    <div style={{width:36,height:36,borderRadius:10,background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:700,color:LIME}}>{label.split(" ")[0]}</div>
                     <div>
                       <div style={{fontSize:14,fontWeight:800,color:TEXT}}>{label}</div>
                       {pr&&<div style={{fontSize:10,color:isDark?"#444":"#888",marginTop:2}}>{pr.date}</div>}
@@ -2798,9 +2897,9 @@ function Onboarding({onComplete}){
           <RoanTip tekst="Ik pas mijn aanpak volledig aan op jouw voorkeur. Van een stille coach op de achtergrond tot dagelijkse check-ins."/>
           <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
             {[
-              {v:"weinig",l:"Zelfstandig",d:"Roan is op de achtergrond. Trainingsschemas zonder constante feedback.",icon:"🎯"},
+              {v:"weinig",l:"Zelfstandig",d:"Roan is op de achtergrond. Trainingsschemas zonder constante feedback.",icon:""},
               {v:"regelmatig",l:"Regelmatige check-in",d:"Tips na trainingen, wekelijkse feedback en voedingsadvies.",icon:"💬"},
-              {v:"personal",l:"Personal trainer",d:"Roan coacht actief bij elke set, analyseert alles en geeft gerichte aanwijzingen.",icon:"🏆"},
+              {v:"personal",l:"Personal trainer",d:"Roan coacht actief bij elke set, analyseert alles en geeft gerichte aanwijzingen.",icon:""},
             ].map(c=>(
               <button key={c.v} onClick={()=>u("coachLevel",c.v)} style={{padding:"16px 18px",borderRadius:14,border:"1.5px solid "+(p.coachLevel===c.v?ORANGE:"#1C1C1C"),background:p.coachLevel===c.v?"rgba(255,107,43,0.07)":"#141414",textAlign:"left",cursor:"pointer",display:"flex",gap:14,alignItems:"flex-start"}}>
                 <div style={{fontSize:28,flexShrink:0}}>{c.icon}</div>
@@ -4106,12 +4205,14 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               const tip=RUSTDAG_TIPS[TODAY.getDay()%RUSTDAG_TIPS.length];
               if(!isTrainDay) return(
                 <div style={{marginBottom:24}}>
-                  {last&&<div style={{...S.card,padding:14,marginBottom:12,background:"rgba(200,241,56,0.05)",border:"1px solid rgba(200,241,56,0.15)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:isDark?"#888":"#666"}}>{last.day} · {dgl===0?"Vandaag":dgl===1?"Gisteren":`${dgl} dagen geleden`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
-                  <div style={{...S.card,padding:20,background:"rgba(96,165,250,0.05)",border:"1px solid rgba(96,165,250,0.15)"}}>
+                  {last&&<div style={{...S.card,padding:14,marginBottom:12,background:isDark?"rgba(200,241,56,0.05)":"#F5F9E8",border:"1px solid rgba(200,241,56,0.25)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:isDark?"#888":"#666"}}>{last.day} · {dgl===0?"Vandaag":dgl===1?"Gisteren":`${dgl} dagen geleden`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
+                  <div style={{...S.card,padding:20,background:isDark?"rgba(96,165,250,0.05)":"#EEF4FF",border:"1px solid rgba(96,165,250,0.25)"}}>
                     <div style={{fontSize:11,color:"#60a5fa",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>{T.rustdag}</div>
-                    <div style={{fontSize:32,marginBottom:8}}>{tip.icon}</div>
-                    <div style={{fontSize:16,fontWeight:900,color:TEXT,marginBottom:6}}>{tip.title}</div>
-                    <div style={{fontSize:13,color:"rgba(255,255,255,0.5)",lineHeight:1.7,marginBottom:16}}>{tip.desc}</div>
+                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+                      <div style={{fontSize:20}}>{tip.icon}</div>
+                      <div style={{fontSize:16,fontWeight:900,color:TEXT}}>{tip.title}</div>
+                    </div>
+                    <div style={{fontSize:13,color:isDark?"rgba(255,255,255,0.6)":"#444",lineHeight:1.7,marginBottom:16}}>{tip.desc}</div>
                     <div style={{borderTop:`1px solid ${BORDER}`,paddingTop:14}}>
                       <div style={{fontSize:11,color:"#555",marginBottom:8}}>Volgende training</div>
                       <div style={{display:"flex",alignItems:"center",gap:10}}>
@@ -4200,7 +4301,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 </div>
               ))}
               <button onClick={()=>setShowSchemaOpMaat(true)} style={{width:"100%",padding:"13px",borderRadius:14,border:"1px solid rgba(255,107,43,0.3)",background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-                  <span>🤖</span><span>Schema op maat — Roan maakt een plan</span>
+                  Schema op maat — Roan maakt een plan
                 </button>
                 <button onClick={()=>setShowCustom(!showCustom)} style={{width:"100%",padding:"12px",borderRadius:14,border:`1px solid ${showCustom?LIME:"#222"}`,background:showCustom?"rgba(200,241,56,0.07)":"#141414",color:showCustom?LIME:isDark?"#888":"#666",fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:16,letterSpacing:1,textTransform:"uppercase"}}>{showCustom?"Sluiten":"Eigen workout samenstellen"}</button>
               {showCustom&&(
