@@ -4211,28 +4211,28 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                           {profile?.goal==="spiermassa"&&ex.prevWeights&&!ex.isCardioFinish&&(()=>{const maxP=Math.max(0,...ex.prevWeights.filter(w=>w>0));const maxN=Math.max(0,...ex.weights.filter(w=>w>0));const inc=maxP<20?1.25:maxP<50?2.5:5;const sug=Math.round((maxP+inc)/2.5)*2.5;if(maxP>0&&maxN===maxP)return<div style={{background:"rgba(200,241,56,0.04)",border:"1px solid rgba(200,241,56,0.12)",borderRadius:10,padding:"8px 12px",marginBottom:10,fontSize:11,color:LIME}}>Vorige keer {maxP}kg — probeer vandaag {sug}kg voor progressie</div>;return null;})()}
                           {ex.prevWeights&&<div style={{background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>Vorige training</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:isDark?"#444":"#666",marginBottom:3}}>{setLabel(unit,i)}</div><div style={{fontSize:13,fontWeight:700,color:isDark?"#666":"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
                           <div style={{...S.lbl,marginBottom:8}}>{unitLabel(unit,ex.name)}</div>
-                          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:4}}>
+                          <div style={{display:"flex",gap:10,flexWrap:"wrap",marginBottom:6}}>
                             {ex.weights.map((w,si)=>{
                               const pv=ex.prevWeights?.[si];const up=w>0&&pv>0&&w>pv;const setDone=ex.setsDone&&ex.setsDone[si];
                               return(<div key={si} style={{textAlign:"center"}}>
-                                <div style={{...S.lbl,marginBottom:4,color:setDone?LIME:"#555"}}>{setLabel(unit,si)}{setDone?" ✓":""}</div>
-                                {pv>0&&<div style={{fontSize:9,color:isDark?"#444":"#666",marginBottom:3}}>{fmtVal(pv,unit)}</div>}
+                                <div style={{fontSize:11,fontWeight:800,color:setDone?LIME:isDark?"#888":"#666",letterSpacing:1,textTransform:"uppercase",marginBottom:6}}>{setLabel(unit,si)}{setDone?" ✓":""}</div>
+                                {pv>0&&<div style={{fontSize:10,color:isDark?"#444":"#777",marginBottom:4}}>{fmtVal(pv,unit)}</div>}
                                 <select value={w} onChange={e=>setW2(ei,si,Number(e.target.value))} style={{width:64,padding:"10px 4px",borderRadius:12,border:`1px solid ${up?"rgba(200,241,56,0.3)":w>0?isDark?"#333":"#888":"#1C1C1C"}`,background:up?"rgba(200,241,56,0.06)":w>0?isDark?"#1C1C1C":"#E8E8E0":isDark?"#111":CARD_BG,color:up?LIME:w>0?TEXT:isDark?"#444":"#666",fontSize:13,fontWeight:800,cursor:"pointer",textAlign:"center"}}>
                                   {opts.map(o=><option key={o} value={o}>{o>0?fmtVal(o,unit):"–"}</option>)}
                                 </select>
-                                {up&&<div style={{fontSize:9,color:LIME,marginTop:3,fontWeight:700}}>↑PR</div>}
-                                {!setDone&&<button onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,setsDone:{...(e.setsDone||{}),[si]:true},activeRest:si<e.weights.length-1?si:null}))} style={{display:"block",width:64,marginTop:4,padding:"4px",borderRadius:8,border:"none",cursor:"pointer",background:isDark?"#1C1C1C":"#E8E8E0",color:"#555",fontSize:10,fontWeight:700}}>Klaar</button>}
+                                {up&&<div style={{fontSize:11,color:LIME,marginTop:4,fontWeight:800}}>↑PR</div>}
+                                {!setDone&&<button onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,setsDone:{...(e.setsDone||{}),[si]:true},activeRest:si<e.weights.length-1?si:null}))} style={{display:"block",width:76,marginTop:6,padding:"8px 4px",borderRadius:10,border:"none",cursor:"pointer",background:setDone?LIME:isDark?"#1C1C1C":"#E0E0D8",color:setDone?"#000":isDark?"#666":"#555",fontSize:12,fontWeight:800}}>Klaar</button>}
                               </div>);
                             })}
                             <div style={{display:"flex",flexDirection:"column",justifyContent:"center",gap:4,paddingBottom:4}}>
-                              <button onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,weights:[...e.weights,e.weights[e.weights.length-1]||0]}))} style={{width:40,height:40,borderRadius:10,border:"1px dashed #333",background:"none",color:"#555",fontSize:20,cursor:"pointer",fontWeight:300,lineHeight:1}}>+</button>
+                              <button onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,weights:[...e.weights,e.weights[e.weights.length-1]||0]}))} style={{width:48,height:48,borderRadius:12,border:"1px dashed #333",background:"none",color:"#555",fontSize:24,cursor:"pointer",fontWeight:300,lineHeight:1}}>+</button>
                               {ex.weights.length>1&&<button onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,weights:e.weights.slice(0,-1)}))} style={{width:40,height:24,borderRadius:8,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#333":"#666",fontSize:10,cursor:"pointer",fontWeight:700}}>–set</button>}
                             </div>
                           </div>
                           {ex.activeRest!=null&&<RestTimer key={`${ei}-${ex.activeRest}`} seconds={restSecs} onDone={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,activeRest:null}))}/>}
                           <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:12,marginTop:8}}>
-                            <span style={{fontSize:10,color:isDark?"#444":"#666",fontWeight:700,flexShrink:0}}>{T.rust}:</span>
-                            <div style={{display:"flex",gap:4}}>{REST_OPTS.map(s=><button key={s} onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,restSecs:s}))} style={{padding:"3px 7px",borderRadius:6,border:"none",cursor:"pointer",background:restSecs===s?LIME:"#1C1C1C",color:restSecs===s?"#000":"#555",fontSize:10,fontWeight:700}}>{s}s</button>)}</div>
+                            <span style={{fontSize:12,color:isDark?"#555":"#666",fontWeight:700,flexShrink:0}}>{T.rust}:</span>
+                            <div style={{display:"flex",gap:4}}>{REST_OPTS.map(s=><button key={s} onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,restSecs:s}))} style={{padding:"7px 10px",borderRadius:8,border:"none",cursor:"pointer",background:restSecs===s?LIME:isDark?"#1C1C1C":"#E0E0D8",color:restSecs===s?"#000":isDark?"#555":"#888",fontSize:12,fontWeight:700}}>{s}s</button>)}</div>
                           </div>
                           <button onClick={()=>markSave(ei)} style={{width:"100%",padding:"10px",borderRadius:12,border:"none",cursor:"pointer",background:ex.saved?LIME:"#1C1C1C",color:ex.saved?"#000":isDark?"#666":"#666",fontSize:13,fontWeight:800,marginBottom:10}}>{ex.saved?"✓ Opgeslagen":"Oefening opslaan"}</button>
                           <div style={{display:"flex",gap:8}}>
