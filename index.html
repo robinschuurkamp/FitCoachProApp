@@ -64,6 +64,14 @@ function closeModal(){document.getElementById('installModal').classList.remove('
 document.getElementById('closeInstall').onclick=closeModal;
 document.getElementById('closeInstall2').onclick=closeModal;
 </script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  .leaflet-container{background:#1a1a1a!important;}
+  .leaflet-tile-pane{filter:brightness(0.85) saturate(0.9);}
+  .leaflet-control-attribution{font-size:8px!important;background:rgba(0,0,0,0.5)!important;color:#666!important;}
+  .leaflet-control-attribution a{color:#888!important;}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -1580,12 +1588,12 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
   // Hoofdmenu tabs
   const [mainTab,setMainTab]=useState("start"); // start | plannen | geschiedenis | records
   // Run setup
-  const GOALS={vrij:{label:"Vrij lopen",target:0,icon:"🏃"},k5:{label:"5 km",target:5000,icon:"🎯"},k10:{label:"10 km",target:10000,icon:"🎯"},half:{label:"Halve marathon",target:21097,icon:"🏅"},marathon:{label:"Marathon",target:42195,icon:"🏆"}};
+  const GOALS={vrij:{label:"Vrij",target:0,sub:"Geen doel"},k5:{label:"5 km",target:5000,sub:"Beginnersdoel"},k10:{label:"10 km",target:10000,sub:"Intermediate"},half:{label:"Halve marathon",target:21097,sub:"21.1 km"},marathon:{label:"Marathon",target:42195,sub:"42.2 km"}};
   const RUN_TYPES=[
-    {v:"steady",l:"Duurloop",d:"Constant tempo, vetverbranding",icon:"🏃"},
-    {v:"interval",l:"Interval",d:"Sprint & herstel beurtelings",icon:"⚡"},
-    {v:"tempo",l:"Tempoloop",d:"Comfortabel hard, lactaat drempel",icon:"🔥"},
-    {v:"wandel",l:"Wandelen",d:"Rustig of incline wandeling",icon:"🚶"},
+    {v:"steady",l:"Duurloop",d:"Constant tempo, vetverbranding",kleur:LIME},
+    {v:"interval",l:"Interval",d:"Sprint & herstel beurtelings",kleur:ORANGE},
+    {v:"tempo",l:"Tempoloop",d:"Comfortabel hard, lactaat drempel",kleur:"#f59e0b"},
+    {v:"wandel",l:"Wandelen",d:"Rustig of incline wandeling",kleur:"#60a5fa"},
   ];
   const [runType,setRunType]=useState(defaultRunType||"steady");
   const [selectedGoal,setSelectedGoal]=useState("vrij");
@@ -1646,7 +1654,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
         const newP={lat:pos.coords.latitude,lon:pos.coords.longitude,t:Date.now()};
         if(lastPosRef.current){
           const d=haversine(lastPosRef.current,newP);
-          if(d>1&&d<200){
+          if(d>(runType==="wandel"?0.5:1)&&d<200){
             distRef.current+=d;
             setDist(distRef.current);
             routeRef.current=[...routeRef.current,newP];
@@ -1732,27 +1740,63 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
   useEffect(()=>()=>{clearInterval(timerRef.current);clearInterval(intRef.current);if(watchRef.current)navigator.geolocation.clearWatch(watchRef.current);},[]);
 
   // ── SVG Route kaart ──────────────────────────────────────────
-  function RouteKaart({points}){
-    if(points.length<2)return(
-      <div style={{height:140,background:isDark?"#111":"#E8E8E0",borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:6}}>
-        <div style={{fontSize:24}}>📍</div>
-        <div style={{fontSize:11,color:isDark?"#444":"#888"}}>Route verschijnt zodra je beweegt</div>
+  function RouteKaart({points,height,live}){
+    const H=height||200;
+    const mapRef=useRef(null);
+    const mapInstanceRef=useRef(null);
+    const polylineRef=useRef(null);
+    const markerRef=useRef(null);
+    const startMarkerRef=useRef(null);
+    const mapIdRef=useRef("map-"+Math.random().toString(36).slice(2,8));
+
+    useEffect(()=>{
+      if(typeof L==="undefined")return;
+      if(!mapInstanceRef.current){
+        const container=document.getElementById(mapIdRef.current);
+        if(!container)return;
+        const map=L.map(container,{zoomControl:false,attributionControl:true,dragging:true,touchZoom:true});
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+          attribution:"© OpenStreetMap",maxZoom:19
+        }).addTo(map);
+        mapInstanceRef.current=map;
+      }
+      return()=>{
+        if(mapInstanceRef.current){mapInstanceRef.current.remove();mapInstanceRef.current=null;polylineRef.current=null;markerRef.current=null;startMarkerRef.current=null;}
+      };
+    },[]);
+
+    useEffect(()=>{
+      const map=mapInstanceRef.current;
+      if(!map||typeof L==="undefined"||points.length===0)return;
+      const latlngs=points.map(p=>[p.lat,p.lon]);
+      // Update of maak polyline
+      if(polylineRef.current){polylineRef.current.setLatLngs(latlngs);}
+      else{polylineRef.current=L.polyline(latlngs,{color:"#C8F138",weight:4,opacity:0.9,lineCap:"round"}).addTo(map);}
+      // Start marker (blauw)
+      if(!startMarkerRef.current&&points.length>0){
+        const startIcon=L.divIcon({html:'<div style="width:12px;height:12px;border-radius:50%;background:#60a5fa;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.5)"></div>',iconSize:[12,12],iconAnchor:[6,6],className:""});
+        startMarkerRef.current=L.marker([points[0].lat,points[0].lon],{icon:startIcon}).addTo(map);
+      }
+      // Huidige positie marker (groen)
+      const last=points[points.length-1];
+      const currIcon=L.divIcon({html:'<div style="width:16px;height:16px;border-radius:50%;background:#C8F138;border:3px solid #fff;box-shadow:0 2px 8px rgba(200,241,56,0.6)"></div>',iconSize:[16,16],iconAnchor:[8,8],className:""});
+      if(markerRef.current){markerRef.current.setLatLng([last.lat,last.lon]);}
+      else{markerRef.current=L.marker([last.lat,last.lon],{icon:currIcon}).addTo(map);}
+      // Zoom naar route
+      if(points.length===1){map.setView([last.lat,last.lon],16);}
+      else if(live){map.setView([last.lat,last.lon],16);}
+      else{map.fitBounds(L.polyline(latlngs).getBounds(),{padding:[20,20]});}
+    },[points]);
+
+    if(points.length===0)return(
+      <div style={{height:H,background:isDark?"#111":"#1a1a1a",borderRadius:12,display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:8,border:"1px solid "+(isDark?"#1C1C1C":"#E0E0D8")}}>
+        <div style={{fontSize:28}}>📍</div>
+        <div style={{fontSize:12,color:isDark?"#444":"#888",fontWeight:600}}>Wacht op GPS-signaal...</div>
       </div>
     );
-    const lats=points.map(p=>p.lat),lons=points.map(p=>p.lon);
-    const minLat=Math.min(...lats),maxLat=Math.max(...lats),minLon=Math.min(...lons),maxLon=Math.max(...lons);
-    const pad=0.0002;
-    const W=320,H=140;
-    function toX(lon){return((lon-minLon+pad)/(maxLon-minLon+pad*2))*W;}
-    function toY(lat){return H-((lat-minLat+pad)/(maxLat-minLat+pad*2))*H;}
-    const pathD=points.map((p,i)=>(i===0?"M":"L")+toX(p.lon).toFixed(1)+","+toY(p.lat).toFixed(1)).join(" ");
-    const last=points[points.length-1];
+
     return(
-      <svg viewBox={"0 0 "+W+" "+H} style={{width:"100%",height:H,borderRadius:12,background:isDark?"#111":"#E8E8E0"}}>
-        <path d={pathD} fill="none" stroke={LIME} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx={toX(points[0].lon)} cy={toY(points[0].lat)} r="5" fill="#60a5fa"/>
-        <circle cx={toX(last.lon)} cy={toY(last.lat)} r="6" fill={LIME} stroke="#000" strokeWidth="1.5"/>
-      </svg>
+      <div id={mapIdRef.current} style={{height:H,borderRadius:12,overflow:"hidden",border:"1px solid "+(isDark?"#1C1C1C":"#E0E0D8")}}/>
     );
   }
 
@@ -1773,7 +1817,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
     return(
       <div>
         <div style={{textAlign:"center",padding:"24px 0 16px"}}>
-          <div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Run voltooid 🎉</div>
+          <div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>{runType==="wandel"?"Wandeling voltooid":"Run voltooid"}</div>
           <div style={{fontSize:72,fontWeight:900,letterSpacing:-4,color:LIME,lineHeight:1}}>{(dist/1000).toFixed(2)}</div>
           <div style={{fontSize:16,color:isDark?"#555":"#888",marginBottom:20}}>kilometer</div>
           <div style={{display:"flex",justifyContent:"center",gap:28,marginBottom:16}}>
@@ -1783,7 +1827,52 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
           </div>
           <div style={{display:"inline-flex",padding:"6px 14px",borderRadius:99,background:hz.color+"22",border:"1px solid "+hz.color+"44",fontSize:11,fontWeight:700,color:hz.color,marginBottom:16}}>{hz.label}</div>
         </div>
-        {routePoints.length>2&&<div style={{marginBottom:14}}><RouteKaart points={routePoints}/></div>}
+        {routePoints.length>1&&(
+          <div style={{marginBottom:16}}>
+            <RouteKaart points={routePoints} height={260}/>
+            <div style={{display:"flex",gap:8,marginTop:10}}>
+              <button onClick={()=>{
+                const pts=routePoints;
+                if(pts.length<2)return;
+                const lats=pts.map(p=>p.lat),lons=pts.map(p=>p.lon);
+                const minLat=Math.min(...lats),maxLat=Math.max(...lats),minLon=Math.min(...lons),maxLon=Math.max(...lons);
+                const pad=0.0003,W=800,H=500;
+                const toX=lon=>((lon-minLon+pad)/(maxLon-minLon+pad*2))*W;
+                const toY=lat=>H-((lat-minLat+pad)/(maxLat-minLat+pad*2))*H;
+                const pathD=pts.map((p,i)=>(i===0?"M":"L")+toX(p.lon).toFixed(1)+","+toY(p.lat).toFixed(1)).join(" ");
+                const last=pts[pts.length-1];
+                const kmTxt=(dist/1000).toFixed(2)+" km";
+                const statsTxt=fmtTime(elapsed)+" · "+calcPace(dist,elapsed)+" /km · "+calories+" kcal";
+                const svgStr=
+                  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+(H+120)+'">'
+                  +'<rect width="'+W+'" height="'+(H+120)+'" fill="#0D0D0D"/>'
+                  +'<path d="'+pathD+'" fill="none" stroke="#C8F138" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>'
+                  +'<circle cx="'+toX(pts[0].lon).toFixed(1)+'" cy="'+toY(pts[0].lat).toFixed(1)+'" r="8" fill="#60a5fa"/>'
+                  +'<circle cx="'+toX(last.lon).toFixed(1)+'" cy="'+toY(last.lat).toFixed(1)+'" r="10" fill="#C8F138" stroke="#0D0D0D" stroke-width="2"/>'
+                  +'<text x="40" y="'+(H+52)+'" font-family="Arial" font-size="52" font-weight="900" fill="#C8F138">'+kmTxt+'</text>'
+                  +'<text x="40" y="'+(H+88)+'" font-family="Arial" font-size="22" fill="#888">'+statsTxt+'</text>'
+                  +'<text x="'+(W-30)+'" y="'+(H+108)+'" font-family="Arial" font-size="16" fill="#444" text-anchor="end">FitCoach Pro</text>'
+                  +'</svg>';
+                const blob=new Blob([svgStr],{type:"image/svg+xml"});
+                const url=URL.createObjectURL(blob);
+                const a=document.createElement("a");
+                a.href=url;a.download="route.svg";
+                document.body.appendChild(a);a.click();document.body.removeChild(a);
+                setTimeout(()=>URL.revokeObjectURL(url),1000);
+              }} style={{flex:1,padding:"11px",borderRadius:12,border:"1px solid rgba(200,241,56,0.3)",background:"rgba(200,241,56,0.06)",color:LIME,fontSize:13,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+                <span>⬇️</span><span>Download route</span>
+              </button>
+              {navigator.share&&<button onClick={async()=>{
+                try{
+                  const type=runType==="wandel"?"gewandeld":"gelopen";
+                  await navigator.share({title:"Mijn route — FitCoach Pro",text:"Zojuist "+(dist/1000).toFixed(2)+" km "+type+" in "+fmtTime(elapsed)+"! Tempo: "+calcPace(dist,elapsed)+" /km. 🔥 "+calories+" kcal verbrand. Via FitCoach Pro 💪"});
+                }catch(e){}
+              }} style={{flex:1,padding:"11px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+                <span>📤</span><span>Delen</span>
+              </button>}
+            </div>
+          </div>
+        )}
         {kmSplits.length>0&&(
           <div style={{...S.card,padding:14,marginBottom:14}}>
             <div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Km splits</div>
@@ -1822,7 +1911,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
             </div>
           </div>
         )}
-        <div style={{marginBottom:10}}><RouteKaart points={routePoints}/></div>
+        <div style={{marginBottom:10}}><RouteKaart points={routePoints} height={180} live={true}/></div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
           <div style={{...S.card,padding:14,textAlign:"center"}}>
             <div style={{fontSize:9,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Afstand</div>
@@ -1877,12 +1966,12 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
 
   // ── Setup scherm ─────────────────────────────────────────────
   // Sub-tabs
-  const tabs=[{id:"start",l:"▶ Start"},{id:"plannen",l:"📋 Plannen"},{id:"geschiedenis",l:"📊 Historie"},{id:"records",l:"🏆 PRs"}];
+  const tabs=[{id:"start",l:"Start"},{id:"plannen",l:"Plannen"},{id:"geschiedenis",l:"Historie"},{id:"records",l:"PRs"}];
   return(
     <div>
-      <div style={{display:"flex",gap:6,background:isDark?"#111":CARD_BG,borderRadius:12,padding:6,marginBottom:16}}>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:16}}>
         {tabs.map(t=>(
-          <button key={t.id} onClick={()=>setMainTab(t.id)} style={{flex:1,padding:"8px 4px",borderRadius:8,border:"none",cursor:"pointer",background:mainTab===t.id?isDark?"#1C1C1C":"#E8E8E0":"none",color:mainTab===t.id?TEXT:isDark?"#555":"#999",fontSize:9,fontWeight:mainTab===t.id?700:400,textAlign:"center",transition:"all .15s"}}>{t.l}</button>
+          <button key={t.id} onClick={()=>setMainTab(t.id)} style={{padding:"11px 8px",borderRadius:10,border:"1px solid "+(mainTab===t.id?LIME:"#1C1C1C"),cursor:"pointer",background:mainTab===t.id?"rgba(200,241,56,0.07)":"#111",color:mainTab===t.id?LIME:isDark?"#555":"#888",fontSize:13,fontWeight:mainTab===t.id?800:500,textAlign:"center",transition:"all .15s",letterSpacing:-0.3}}>{t.l}</button>
         ))}
       </div>
 
@@ -1890,44 +1979,56 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
         <div>
           {/* Vorige run */}
           {prevRun&&prevRun.dist>100&&(
-            <div style={{...S.card,padding:14,marginBottom:16}}>
-              <div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:8}}>Vorige run</div>
-              <div style={{display:"flex",gap:20,alignItems:"center"}}>
-                <div><div style={{fontSize:24,fontWeight:900,color:LIME}}>{(prevRun.dist/1000).toFixed(2)}<span style={{fontSize:11,color:isDark?"#444":"#888",marginLeft:2}}>km</span></div><div style={{fontSize:10,color:"#555"}}>afstand</div></div>
-                <div><div style={{fontSize:20,fontWeight:900}}>{fmtTime(prevRun.time||0)}</div><div style={{fontSize:10,color:"#555"}}>tijd</div></div>
-                <div><div style={{fontSize:20,fontWeight:900}}>{prevRun.pace||"–"}</div><div style={{fontSize:10,color:"#555"}}>min/km</div></div>
-                {prevRun.cal&&<div><div style={{fontSize:20,fontWeight:900,color:ORANGE}}>{prevRun.cal}</div><div style={{fontSize:10,color:"#555"}}>kcal</div></div>}
+            <div style={{...S.card,padding:"12px 16px",marginBottom:16,borderTop:"3px solid "+LIME}}>
+              <div style={{fontSize:10,letterSpacing:2,color:LIME,fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Vorige run</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+                {[{l:"Afstand",v:(prevRun.dist/1000).toFixed(2)+" km",c:LIME},{l:"Tijd",v:fmtTime(prevRun.time||0),c:TEXT},{l:"Tempo",v:(prevRun.pace||"–")+" /km",c:TEXT}].map(s=>(
+                  <div key={s.l} style={{textAlign:"center"}}>
+                    <div style={{fontSize:16,fontWeight:900,color:s.c,marginBottom:2}}>{s.v}</div>
+                    <div style={{fontSize:9,color:isDark?"#444":"#888",textTransform:"uppercase",letterSpacing:1}}>{s.l}</div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
-          {/* Type */}
-          <div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Type training</div>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
-            {RUN_TYPES.map(t=>(
-              <button key={t.v} onClick={()=>setRunType(t.v)} style={{padding:"12px",borderRadius:12,border:"1px solid "+(runType===t.v?t.v==="wandel"?"#60a5fa":LIME:"#1C1C1C"),background:runType===t.v?t.v==="wandel"?"rgba(96,165,250,0.08)":"rgba(200,241,56,0.06)":"#111",cursor:"pointer",textAlign:"left"}}>
-                <div style={{fontSize:18,marginBottom:4}}>{t.icon}</div>
-                <div style={{fontSize:12,fontWeight:900,color:runType===t.v?t.v==="wandel"?"#60a5fa":LIME:TEXT}}>{t.l}</div>
-                <div style={{fontSize:9,color:isDark?"#444":"#888",marginTop:2}}>{t.d}</div>
-              </button>
-            ))}
+          {/* Type training — foto stijl */}
+          <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Type training</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+            {RUN_TYPES.map(t=>{
+              const fotoMap={steady:P.cardio,interval:P.hiit,tempo:P["full body"],wandel:P.buik};
+              const foto=fotoMap[t.v]||P.cardio;
+              return(
+                <button key={t.v} onClick={()=>setRunType(t.v)} style={{height:100,borderRadius:14,border:"2px solid "+(runType===t.v?t.kleur:"transparent"),cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
+                  <img src={foto} alt={t.l} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+                  <div style={{position:"absolute",inset:0,background:runType===t.v?"rgba(0,0,0,0.45)":"linear-gradient(to bottom,transparent 10%,rgba(0,0,0,0.75))"}}/>
+                  {runType===t.v&&<div style={{position:"absolute",top:8,right:8,width:18,height:18,borderRadius:"50%",background:t.kleur,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:"#000",fontWeight:900}}>✓</div>}
+                  <div style={{position:"relative",padding:"8px 10px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+                    <div style={{fontSize:14,fontWeight:900,color:"#fff",marginBottom:2}}>{t.l}</div>
+                    <div style={{fontSize:9,color:"rgba(255,255,255,0.7)"}}>{t.d}</div>
+                  </div>
+                </button>
+              );
+            })}
           </div>
           {/* Incline voor wandelen */}
           {runType==="wandel"&&(
             <div style={{...S.card,padding:"10px 14px",marginBottom:14,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-              <div><div style={{fontSize:13,fontWeight:700,color:TEXT}}>Incline wandeling 🏔️</div><div style={{fontSize:11,color:isDark?"#444":"#888"}}>Extra calorieverbranding, loopband helling</div></div>
+              <div><div style={{fontSize:13,fontWeight:700,color:TEXT}}>Incline wandeling</div><div style={{fontSize:11,color:isDark?"#444":"#888"}}>Extra calorieverbranding, loopband helling</div></div>
               <div onClick={()=>setInclineMode(v=>!v)} style={{width:40,height:22,borderRadius:11,background:inclineMode?"rgba(96,165,250,0.2)":"#222",border:"1px solid "+(inclineMode?"#60a5fa":isDark?"#333":"#888"),position:"relative",cursor:"pointer",flexShrink:0}}>
                 <div style={{width:16,height:16,borderRadius:"50%",background:inclineMode?"#60a5fa":isDark?"#444":"#888",position:"absolute",top:2,left:inclineMode?20:2,transition:"left .2s"}}/>
               </div>
             </div>
           )}
           {/* Doel afstand */}
-          <div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Doel afstand</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:6,marginBottom:16}}>
+          <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Doel</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:16}}>
             {Object.entries(GOALS).map(([k,g])=>(
-              <button key={k} onClick={()=>setSelectedGoal(k)} style={{padding:"10px 6px",borderRadius:10,border:"1px solid "+(selectedGoal===k?LIME:"#1C1C1C"),background:selectedGoal===k?"rgba(200,241,56,0.06)":"#111",color:selectedGoal===k?LIME:isDark?"#666":"#888",fontSize:11,fontWeight:700,cursor:"pointer",textAlign:"center"}}>
-                <div style={{fontSize:16,marginBottom:2}}>{g.icon}</div>
-                <div>{g.label}</div>
-                {g.target>0&&<div style={{fontSize:9,color:isDark?"#333":"#888",marginTop:1}}>{(g.target/1000).toFixed(1)} km</div>}
+              <button key={k} onClick={()=>setSelectedGoal(k)} style={{padding:"13px 14px",borderRadius:12,border:"1px solid "+(selectedGoal===k?LIME:"#1C1C1C"),background:selectedGoal===k?"rgba(200,241,56,0.07)":"#111",cursor:"pointer",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <div>
+                  <div style={{fontSize:15,fontWeight:900,color:selectedGoal===k?LIME:TEXT,marginBottom:2}}>{g.label}</div>
+                  <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{g.sub}</div>
+                </div>
+                {selectedGoal===k&&<div style={{color:LIME,fontSize:16}}>✓</div>}
               </button>
             ))}
           </div>
@@ -1952,8 +2053,8 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
               <div style={{width:16,height:16,borderRadius:"50%",background:voiceKm?LIME:isDark?"#444":"#888",position:"absolute",top:2,left:voiceKm?20:2,transition:"left .2s"}}/>
             </div>
           </div>
-          <button onClick={startRun} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:900,marginBottom:8}}>
-            {runType==="wandel"?"🚶 Start wandeling":"🏃 Start run"}
+          <button onClick={startRun} style={{width:"100%",padding:20,borderRadius:16,border:"none",cursor:"pointer",background:runType==="wandel"?"#60a5fa":LIME,color:"#000",fontSize:17,fontWeight:900,letterSpacing:-0.5,marginBottom:8}}>
+            {runType==="wandel"?"Start wandeling":"Start run"}
           </button>
           <div style={{fontSize:10,color:isDark?"#333":"#999",textAlign:"center"}}>Vereist GPS-toestemming in je browser</div>
         </div>
@@ -2198,7 +2299,7 @@ function LineChart({data,height=120}){
   if(!data||data.length<2)return<div style={{height,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:isDark?"#444":"#666"}}>Meer metingen nodig</div>;
   const vals=data.map(d=>d.w),mn=Math.min(...vals)-0.5,mx=Math.max(...vals)+0.5,rng=mx-mn,W=320,H=height-24;
   const pts=data.map((d,i)=>({x:20+(i/(data.length-1))*(W-40),y:H-((d.w-mn)/rng*H)+4,w:d.w,date:d.date}));
-  const pd="M"+pts.map((p,i)=>{if(i===0)return`${p.x},${p.y}`;const pv=pts[i-1],cx=(pv.x+p.x)/2;return`C${cx},${pv.y} ${cx},${p.y} ${p.x},${p.y}`;}).join(" ");
+  const pd="M"+pts.map((p,i)=>{if(i===0)return p.x+","+p.y;const pv=pts[i-1],cx=(pv.x+p.x)/2;return "C"+cx+","+pv.y+" "+cx+","+p.y+" "+p.x+","+p.y;}).join(" ");
   return(<svg viewBox={`0 0 ${W} ${height}`} style={{width:"100%",height}}><defs><linearGradient id="lg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={LIME} stopOpacity="0.25"/><stop offset="100%" stopColor={LIME} stopOpacity="0"/></linearGradient></defs><path d={pd+` L${pts[pts.length-1].x},${H+4} L${pts[0].x},${H+4} Z`} fill="url(#lg)"/><path d={pd} fill="none" stroke={LIME} strokeWidth="2.5" strokeLinecap="round"/>{pts.map((p,i)=>(<g key={i}><circle cx={p.x} cy={p.y} r={i===pts.length-1?5:2.5} fill={i===pts.length-1?LIME:isDark?"#333":"#666"} stroke={i===pts.length-1?"#0D0D0D":"none"} strokeWidth={2}/>{(i===0||i===pts.length-1||data.length<=6)&&<text x={p.x} y={height-2} textAnchor="middle" fontSize="8" fill="#555">{p.date.slice(0,5)}</text>}{i===pts.length-1&&<text x={p.x} y={p.y-10} textAnchor="middle" fontSize="9" fill={LIME} fontWeight="700">{p.w}kg</text>}</g>))}</svg>);
 }
 
@@ -4171,7 +4272,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                   <SpinTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Spinning",exercises:[],targetMuscles,runDist:0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"spin",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
                 ):(
                 <RunTracker voiceOn={voiceOn} profile={profile} log={log} defaultRunType={activeCardioRunType} prevRun={(()=>{const muscle=targetMuscles[0]||"cardio_full";const r=log.find(e=>(e.targetMuscles||[]).some(m=>m.startsWith("cardio_")));return r?{dist:r.runDist||0,time:r.runTime||0,pace:r.runPace||"–",cal:r.runCal||0}:null;})()}
-                  onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Hardlopen",exercises:[],targetMuscles,runDist:data.dist,runTime:data.time,runPace:data.pace,runCal:data.cal||0,runType:data.type||"steady",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}
+                  onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:data.type==="wandel"?"Wandelen":"Hardlopen",exercises:[],targetMuscles,runDist:data.dist,runTime:data.time,runPace:data.pace,runCal:data.cal||0,runType:data.type||"steady",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}
                 />
                 )
               ):(
