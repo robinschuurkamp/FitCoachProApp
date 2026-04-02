@@ -69,7 +69,7 @@ document.getElementById('closeInstall2').onclick=closeModal;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script type="text/babel">
-const {useState,useEffect,useRef}=React;
+const {useState,useEffect,useRef,useCallback,useMemo}=React;
 const SB_URL="https://ujbgkilppibfdirxackk.supabase.co";
 const SB_KEY="sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h";
 const sb=supabase.createClient(SB_URL,SB_KEY);
@@ -77,6 +77,53 @@ const sb=supabase.createClient(SB_URL,SB_KEY);
 async function sbUpsert(table,data){try{await sb.from(table).upsert(data,{onConflict:"user_id"});}catch(e){}}
 async function sbInsert(table,data){try{await sb.from(table).insert(data);}catch(e){}}
 async function sbGetUser(){try{const {data:{user}}=await sb.auth.getUser();return user;}catch(e){return null;}}
+
+async function sbGetLeaderboard(){
+  try{
+    const {data}=await sb.from("social_profiles")
+      .select("user_id,display_name,foto_url,fit_points,level,rang_naam,rang_emoji,trainingen_count,updated_at")
+      .order("fit_points",{ascending:false})
+      .limit(50);
+    return data||[];
+  }catch(e){return [];}
+}
+async function sbUpdateSocialProfile(userId,profile,fitPoints,log){
+  try{
+    const level=berekenLevel(fitPoints);
+    const rang=getRang(level);
+    await sb.from("social_profiles").upsert({
+      user_id:userId,
+      display_name:profile.name||"Gebruiker",
+      foto_url:profile.fotoUrl||null,
+      fit_points:fitPoints,
+      level,
+      rang_naam:rang.naam,
+      rang_emoji:rang.emoji,
+      trainingen_count:log.length,
+      updated_at:new Date().toISOString()
+    },{onConflict:"user_id"});
+  }catch(e){}
+}
+async function sbToggleLike(userId,targetUserId){
+  try{
+    const {data:existing}=await sb.from("social_likes")
+      .select("id").eq("from_user",userId).eq("to_user",targetUserId).maybeSingle();
+    if(existing){
+      await sb.from("social_likes").delete().eq("id",existing.id);
+      return false;
+    }else{
+      await sb.from("social_likes").insert({from_user:userId,to_user:targetUserId,created_at:new Date().toISOString()});
+      return true;
+    }
+  }catch(e){return false;}
+}
+async function sbGetMyLikes(userId){
+  try{
+    const {data}=await sb.from("social_likes").select("to_user").eq("from_user",userId);
+    return new Set((data||[]).map(d=>d.to_user));
+  }catch(e){return new Set();}
+}
+
 async function sbLoad(table,userId){try{const {data}=await sb.from(table).select("*").eq("user_id",userId).maybeSingle();return data;}catch(e){return null;}}
 
 const LIME="#C8F138",ORANGE="#FF6B2B";
@@ -86,6 +133,50 @@ const ROAN_IMGS={
   laugh:"https://i.postimg.cc/7JrhdT4b/Ontwerp-zonder-titel-(3).png",
   victory:"https://i.postimg.cc/wR9WDmQ6/Ontwerp-zonder-titel-10-removebg-preview.png",
   strong:"https://i.postimg.cc/YLtXQWzt/Ontwerp-zonder-titel-8-removebg-preview.png"
+};
+
+
+const RANGEN=[
+  {naam:"Starter",   kleur:"#666",  emoji:"⬜", minLevel:0,  maxLevel:0},
+  {naam:"Hout",      kleur:"#8B4513",emoji:"🪵", minLevel:1,  maxLevel:3},
+  {naam:"Steen",     kleur:"#888",  emoji:"🪨", minLevel:4,  maxLevel:6},
+  {naam:"IJzer",     kleur:"#a78bfa",emoji:"⚙️",minLevel:7,  maxLevel:10},
+  {naam:"Brons",     kleur:"#CD7F32",emoji:"🥉", minLevel:11, maxLevel:15},
+  {naam:"Zilver",    kleur:"#C0C0C0",emoji:"🥈", minLevel:16, maxLevel:21},
+  {naam:"Goud",      kleur:"#FFD700",emoji:"🥇", minLevel:22, maxLevel:28},
+  {naam:"Platina",   kleur:"#E5E4E2",emoji:"💎", minLevel:29, maxLevel:36},
+  {naam:"Saffier",   kleur:"#0F52BA",emoji:"🔷", minLevel:37, maxLevel:45},
+  {naam:"Smaragd",   kleur:"#50C878",emoji:"💚", minLevel:46, maxLevel:55},
+  {naam:"Diamant",   kleur:"#B9F2FF",emoji:"💠", minLevel:56, maxLevel:66},
+  {naam:"Meester",   kleur:"#8B00FF",emoji:"🔮", minLevel:67, maxLevel:80},
+  {naam:"Legende",   kleur:"#FF6B2B",emoji:"🔥", minLevel:81, maxLevel:99},
+  {naam:"G.O.A.T.",  kleur:"#C8F138",emoji:"🐐", minLevel:100,maxLevel:999},
+];
+function getRang(level){return RANGEN.find(r=>level>=r.minLevel&&level<=r.maxLevel)||RANGEN[0];}
+function getFPVoorLevel(level){
+  // Eerste 11 levels: vast aantal FP
+  if(level<=11)return[0,100,200,350,500,700,900,1150,1400,1700,2000,2500][level]||2500;
+  // Level 12+: wekelijks 3000 FP nodig per level
+  return null; // wekelijks systeem
+}
+function berekenLevel(totalFP,weekFP){
+  // Simpel cumulatief systeem voor eerste 11 levels
+  let level=0;
+  for(let i=1;i<=11;i++){if(totalFP>=getFPVoorLevel(i))level=i;else break;}
+  return level;
+}
+
+
+const FP={
+  training: 150,      // Training opslaan
+  cardio: 100,        // Cardio/run voltooien
+  voeding: 25,        // Maaltijd loggen
+  water: 10,          // Waterglas bijhouden
+  gewicht: 30,        // Gewicht invoeren
+  streak3: 50,        // 3-daagse streak bonus
+  streak7: 200,       // 7-daagse streak bonus
+  pr: 75,             // PR gevestigd
+  schema: 100,        // Schema gegenereerd
 };
 
 const APP_VERSION="2.8";
@@ -409,6 +500,38 @@ const TRANSLATIONS={
     settingsTrainingSub:"Sportart, Niveau, Trainingstage",settingsVoedingSub:"Kalorien-Phase",settingsLichaamsSub:"BMI, BMR, TDEE",settingsThemaSub:"Dunkles oder helles Thema",settingsInfoSub:"FAQ, Hilfe, Datenschutz",bmiNote:"Weniger genau für Sportler",streakUitleg:"Aufeinanderfolgende Trainingstage",circuitInstellen:"Circuit einrichten",aantalOefeningenRonde:"Übungen pro Runde",rondes:"Runden",workTijd:"Arbeitszeit pro Übung",rustTussenOef:"Pause zwischen Übungen",oefeningenGewichten:"Gewichtsübungen",geschatDuur:"Geschätzte Dauer",voltooid:"Abgeschlossen",seconden:"Sekunden",daarna:"Dann",zwemInstellen:"Schwimmen",hoeBijhouden:"Wie möchtest du tracken?",baanlengte:"Bahnlänge",slag:"Schwimmstil",trainingInvoeren:"Training eingeben",aantalBanen:"Anzahl Bahnen",tijdMinuten:"Zeit (Minuten)",geschatCal:"Geschätzte Kalorien",perBaan:"pro Bahn",stoppen:"Stoppen",zwemVoltooid:"Schwimmtraining abgeschlossen",spinInstellen:"Spinning einrichten",trainingsmodus:"Trainingsmodus",duurMinuten:"Dauer (Minuten)",intervalInstelling:"Intervalleinstellung",sprintDuur:"Sprintdauer",herselDuur:"Erholungsdauer",weerstand120:"Widerstand (1-20)",weerstandLabel:"Widerstand",modusLabel:"Modus",spinVoltooid:"Spinning abgeschlossen",wachtGPS:"Warte auf GPS-Signal...",kmSplits:"Km-Splits",opslaanKlaar:"Speichern & fertig",nieuweRun:"Neuer Lauf",afstand:"Distanz",snelheid:"Geschwindigkeit",voortgangLabel:"Fortschritt",vorigeRun:"Vorheriger Lauf",typeTraining:"Trainingstyp",inclineWandeling:"Steigung gehen",intervalInstellingen:"Intervalleinstellungen",kmUpdates:"Km-Updates",kmUpdatesSub:"Distanz und Tempo pro Kilometer",gpsVereist:"Erfordert GPS-Berechtigung",stopPlan:"Plan stoppen",startPijl:"Start",startPlan:"Plan starten",nogGeenRuns:"Noch keine Läufe",dezeWeek:"Diese Woche",dezeMaand:"Diesen Monat",jouwBesteTijden:"Deine besten Zeiten",nogGeenPR:"Noch kein PR",totaleStats:"Gesamtstatistiken",meerMetingenNodig:"Mehr Daten benötigt",onFire:"On fire!",volgendeTraining:"Nächstes Training",tikOmTeStarten:"Tippen zum Starten",warming_up:"Aufwärmen",sessiepr:"Sitzungs-PR!",vorigeTraining2:"Vorheriges Training",wisselOfVoegToe:"Wechseln oder hinzufügen",eerderGewisseld:"Früher gewechselt:",oefeningNietGevonden:"Eigene hinzufügen:",toevoegenWisselen:"Hinzufügen & wechseln",oefeningToevoegen:"Übung hinzufügen",bekijkYoutube:"Auf YouTube ansehen",starten:"Starten",vandaagLabel2:"Heute",toon:"Zeigen",metingenTab:"Messungen",trainingslogLabel:"Trainingslog",automBijgehouden:"Automatisch erfasst",nogGeenRecords:"Noch keine Rekorde",aantalTrainingenWeek:"Trainings pro Woche",laatste_metingen:"Letzte Messungen",taille:"Taille",borst2:"Brust",heupen:"Hüften",nogGeenMetingen:"Noch keine Messungen",eerstelichaams:"Erste Körpermessung hinzufügen",fase2:"Phase",eiwit2b:"Eiweiß",koolh:"Kohlenhydrate",cheatdagVoorstel:"Cheat-Day-Vorschlag",deal:"Deal!",roanRecept:"Roans Rezept des Tages",alleRecepten2:"Alle Rezepte",roanMaaktRecept:"Roan erstellt ein Rezept...",jouwVoorkeuren:"Deine Vorlieben",watEetjeGraag:"Was isst du gerne?",watNiet:"Was isst du lieber nicht?",menuGenPrefs:"Menü mit Vorlieben erstellen",personen:"Personen",cheatdag2:"Cheat-Tag",boodschappenlijst:"Einkaufsliste",nogGeenItems:"Noch keine Artikel",geenReceptenOpgeslagen:"Keine gespeicherten Rezepte",dieet2:"Diät",wijzig2:"Ändern",aiCoachSub:"Dein persönlicher KI-Coach",aiCoachKent:"KI-Coach - Kennt deine Daten",voedingFase2:"Ernährung & Phase",themaLaal:"Thema & Sprache",thema2:"Thema",taal2:"Sprache",wachtwoordWijzigen2:"Passwort ändern",lichaamsgegevens2:"Körperdaten",informatieLabel:"Information",challengeKies:"Challenge auswählen",nogGeenChallenge:"Keine aktive Challenge",afvinken:"Abhaken",naarTraining2:"Zum Training",schemaOpMaatTitel:"Maßgeschneiderter Plan",roanMaaktPlan:"Roan erstellt einen Plan",focusVraag:"Worauf möchtest du dich konzentrieren?",trainingdagenWeek:"Trainingstage diese Woche",tijdPerSessie:"Zeit pro Einheit",intensiteitLabel:"Intensität",locatieLabel:"Standort",extraWensen:"Zusätzliche Wünsche (optional)",schemaKlaar:"Dein Plan ist fertig!",opMaatGemaakt:"Maßgeschneidert von Roan",opnieuw:"Erneut versuchen",aanDeSlat:"Loslegen",geslacht2:"Geschlecht",lichaamsbouw:"Körperbau",huidigeConditie:"Aktuelle Kondition",waarTrainJe:"Wo trainierst du?",voorkeurMateriaal:"Ausrüstungspräferenz",snelKiezen:"Schnellauswahl:",calorietarget:"Kalorienziel",voorkeurenOpt:"Vorlieben (optional)",klaarOmTeStarten:"Bereit zum Starten!",roanHeeftAlles:"Roan hat alles Nötige.",startMetRoan2:"Start mit Roan",bedanktFeedback:"Danke für dein Feedback!",feedbackHelpt:"Das hilft uns, die App zu verbessern.",trainOpgeslagen:"Training gespeichert!",trainKlaar:"Training fertig!",roanDenkt:"Roan denkt nach...",watIsNieuw:"Was ist neu",aanDeSlaa:"Loslegen",volgendePijl:"Weiter",wachtwoordNietOvereen:"Passwörter stimmen nicht überein",wachtwoordOvereen:"Passwörter stimmen überein",openApp:"App öffnen",stoppen2:"Plan stoppen",bezig:"Lädt...",vernieuwen2:"Aktualisieren"
   }
 };
+
+const FP_RANGEN=[
+  {naam:"Starter",  min:0,     kleur:"#666",    emoji:"⬜"},
+  {naam:"Hout",     min:100,   kleur:"#8B4513", emoji:"🟫"},
+  {naam:"Steen",    min:300,   kleur:"#888",    emoji:"🪨"},
+  {naam:"IJzer",    min:600,   kleur:"#9ca3af", emoji:"⚙️"},
+  {naam:"Brons",    min:1000,  kleur:"#cd7f32", emoji:"🥉"},
+  {naam:"Zilver",   min:2000,  kleur:"#C0C0C0", emoji:"🥈"},
+  {naam:"Goud",     min:4000,  kleur:"#FFD700", emoji:"🥇"},
+  {naam:"Platina",  min:8000,  kleur:"#e5e4e2", emoji:"💠"},
+  {naam:"Saffier",  min:15000, kleur:"#0066CC", emoji:"🔵"},
+  {naam:"Smaragd",  min:25000, kleur:"#50C878", emoji:"💚"},
+  {naam:"Diamant",  min:40000, kleur:"#b9f2ff", emoji:"💎"},
+  {naam:"Meester",  min:75000, kleur:"#a78bfa", emoji:"👑"},
+  {naam:"Legende",  min:150000,kleur:"#C8F138", emoji:"⭐"},
+];
+const FP_VERDIEN={training:50,perMinuut:1,streak3:25,streak7:100,streak14:250,streak30:500,eersteTraining:200,voeding:10,gewicht:15};
+function getFPRang(fp){for(let i=FP_RANGEN.length-1;i>=0;i--)if(fp>=FP_RANGEN[i].min)return FP_RANGEN[i];return FP_RANGEN[0];}
+function getFPVolgende(fp){return FP_RANGEN.find(r=>r.min>fp)||null;}
+function berekenFP(log,food,weightLog,streak){
+  let fp=0;
+  if((log||[]).length>0)fp+=FP_VERDIEN.eersteTraining;
+  fp+=(log||[]).length*FP_VERDIEN.training;
+  fp+=(log||[]).reduce((s,e)=>s+(e.duration||0),0)*FP_VERDIEN.perMinuut;
+  fp+=Object.keys(food||{}).length*FP_VERDIEN.voeding;
+  fp+=Object.keys(weightLog||{}).length*FP_VERDIEN.gewicht;
+  if(streak>=3)fp+=FP_VERDIEN.streak3;
+  if(streak>=7)fp+=FP_VERDIEN.streak7;
+  if(streak>=14)fp+=FP_VERDIEN.streak14;
+  if(streak>=30)fp+=FP_VERDIEN.streak30;
+  return Math.round(fp);
+}
 
 const CHANGELOG=[
   {
@@ -3778,11 +3901,30 @@ function App(){
   const [waterLog,setWaterLog]=useState(()=>LS.get("fitcoach_water")||{});
   const [activeCardioRunType,setActiveCardioRunType]=useState("steady");
   const [voortgangAnalyse,setVoortgangAnalyse]=useState(null);
+  const [sociaalTab,setSociaalTab]=useState("ranglijst");
+  const [ranglijst,setRanglijst]=useState([]);
+  const [rangLaden,setRangLaden]=useState(false);
+  const [myLikes,setMyLikes]=useState(new Set());
   const [voortgangLaden,setVoortgangLaden]=useState(false);
   const [editLogId,setEditLogId]=useState(null);
+  const [fpAnimatie,setFpAnimatie]=useState(null); // {amount, x, y}
+  const [levelUp,setLevelUp]=useState(null); // niveau omhoog popup
   const [editLogName,setEditLogName]=useState("");
   const [showSchemaOpMaat,setShowSchemaOpMaat]=useState(false);
   const [schemaPopup,setSchemaPopup]=useState(false);
+
+  useEffect(()=>{
+    if(tab==="sociaal"&&sbUser){
+      setRangLaden(true);
+      // Update eigen profiel
+      sbUpdateSocialProfile(sbUser.id,profile,fitPoints,log);
+      // Laad ranglijst
+      sbGetLeaderboard().then(data=>{setRanglijst(data);setRangLaden(false);});
+      // Laad likes
+      sbGetMyLikes(sbUser.id).then(likes=>setMyLikes(likes));
+    }
+  },[tab]);
+
   useEffect(()=>{
     if(!profile?.name)return;
     const saved=LS.get("fitcoach_last_schema");
@@ -3893,10 +4035,31 @@ function App(){
     const entry={date:trainDate,day:dayName,workout:targetMuscles.map(m=>muscleLabel(m)).join(" + "),exercises:session.map(e=>({name:e.name,weights:[...e.weights],reps:e.reps,note:e.note,unit:e.unit||"kg"})),targetMuscles,id:Date.now()};
     const updated=[entry,...log].slice(0,100);
     setLog(updated);LS.set("fitcoach_log",updated);
+    // FitPoints
+    verdienFP("training");
+    // Check PR bonus
+    if(Object.keys(updatePRs(prData,session)).length>Object.keys(prData).length)verdienFP("pr");
     // Update PRs
     const newPRs=updatePRs(prData,session);setPrData(newPRs);LS.set("fitcoach_prs",newPRs);
     setSelectingMuscles(true);setSession(null);setTargetMuscles([]);
     setFeedbackModal({entry,workout:entry.workout});setFeedbackReply("");
+  }
+  function verdienFP(actie,bonus){
+    const amount=(FP[actie]||0)+(bonus||0);
+    if(amount<=0)return;
+    const nieuw=fitPoints+amount;
+    setFitPoints(nieuw);
+    LS.set("fitcoach_fp",nieuw);
+    // Check level up
+    const oudLevel=berekenLevel(fitPoints);
+    const nieuwLevel=berekenLevel(nieuw);
+    if(nieuwLevel>oudLevel){
+      const rang=getRang(nieuwLevel);
+      setTimeout(()=>setLevelUp({level:nieuwLevel,rang}),300);
+    }
+    // Toon FP animatie
+    setFpAnimatie({amount,label:"+"+amount+" FP"});
+    setTimeout(()=>setFpAnimatie(null),2000);
   }
   function deleteWorkout(id){const u=log.filter(e=>e.id!==id);setLog(u);LS.set("fitcoach_log",u);}
   function deleteWeight(id){const u=wLog.filter(e=>e.id!==id);setWLog(u);LS.set("fitcoach_wlog",u);}
@@ -3907,9 +4070,10 @@ function App(){
     const raw=await ai(`Voedingswaarden voor: "${txt}". ALLEEN JSON: {"desc":"${txt}","kcal":0,"prot":0,"carbs":0,"fat":0}.`);
     try{const pp=JSON.parse(raw.replace(/```json|```/g,"").trim());const item={desc:pp.desc||txt,kcal:pp.kcal||0,prot:pp.prot||0,carbs:pp.carbs||0,fat:pp.fat||0};const day=food[foodDate]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};const uFood={...food,[foodDate]:{...day,[meal]:[...(day[meal]||[]),item]}};setFood(uFood);LS.set("fitcoach_food",uFood);const ck="fitcoach_custom_foods";const custom=LS.get(ck)||{Ochtend:[],Middag:[],Avond:[],Snack:[]};if(custom[meal]&&!custom[meal].includes(txt)){custom[meal]=[txt,...custom[meal]].slice(0,6);LS.set(ck,custom);}if(!quickItem)setFoodInput(p=>({...p,[meal]:""}))}catch(e){}
     if(!quickItem)setFoodLoading(p=>({...p,[meal]:false}));
+    verdienFP("voeding");
   }
   function remFood(meal,idx){const day=food[foodDate]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};const u={...food,[foodDate]:{...day,[meal]:(day[meal]||[]).filter((_,i)=>i!==idx)}};setFood(u);LS.set("fitcoach_food",u);}
-  function addWeight(){const w=parseFloat(newW);if(!w||w<40||w>250)return;const u=[...wLog,{date:TODAY_KEY,w,id:Date.now()}];setWLog(u);LS.set("fitcoach_wlog",u);setNewW("");}
+  function addWeight(){const w=parseFloat(newW);if(!w||w<40||w>250)return;const u=[...wLog,{date:TODAY_KEY,w,id:Date.now()}];setWLog(u);LS.set("fitcoach_wlog",u);setNewW("");verdienFP("gewicht");}
   async function getRecipe(){setLoadingRecipe(true);setRecipe("");const txt=await ai(`Gezond recept voor ${profile?.name}, fase: ${fase}, niveau: ${profile?.level||"beginner"}. Respond in: ${lang==="en"?"English":lang==="de"?"German":"Dutch"}, max 250 words.`);setRecipe(txt);setLoadingRecipe(false);}
 
   if(!authChecked)return<div style={{minHeight:"100vh",background:isDark?"#0D0D0D":"#F5F5F0",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}><div style={{width:40,height:40,border:`3px solid #1C1C1C`,borderTop:`3px solid ${LIME}`,borderRadius:"50%",animation:"spin 1s linear infinite"}}/><div style={{fontSize:13,color:isDark?"#666":"#666"}}>{T.laden}</div><style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style></div>;
@@ -3990,7 +4154,27 @@ function App(){
           </div>
         </div>
       )}
-      {schemaPopup&&!showSchemaOpMaat&&(
+      {levelUp&&(
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.9)",zIndex:400,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>setLevelUp(null)}>
+      <div style={{textAlign:"center",padding:32,animation:"scaleIn .4s cubic-bezier(.16,1,.3,1)"}}>
+        <div style={{fontSize:80,marginBottom:16,animation:"bounce 0.6s ease"}}>{levelUp.rang.emoji}</div>
+        <div style={{fontSize:14,color:levelUp.rang.kleur,fontWeight:700,letterSpacing:3,textTransform:"uppercase",marginBottom:8}}>Level Up!</div>
+        <div style={{fontSize:48,fontWeight:900,color:"#fff",letterSpacing:-2,marginBottom:4}}>Level {levelUp.level}</div>
+        <div style={{fontSize:20,fontWeight:800,color:levelUp.rang.kleur,marginBottom:24}}>{levelUp.rang.naam}</div>
+        <div style={{fontSize:13,color:"#555",marginBottom:32}}>Tik om door te gaan</div>
+      </div>
+      <style>{`@keyframes scaleIn{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}`}</style>
+    </div>
+  )}
+  {fpAnimatie&&(
+    <div style={{position:"fixed",top:"18%",left:"50%",transform:"translateX(-50%)",zIndex:300,pointerEvents:"none",textAlign:"center"}}>
+      <div style={{background:fpRang.kleur,color:["Starter","Steen","IJzer"].includes(fpRang.naam)?"#fff":"#000",fontWeight:900,fontSize:20,padding:"11px 28px",borderRadius:99,boxShadow:"0 6px 24px rgba(0,0,0,0.5)",whiteSpace:"nowrap",animation:"fpPop .4s ease-out"}}>
+        +{fpAnimatie} FP
+      </div>
+      <div style={{fontSize:11,color:isDark?"#ddd":"#333",marginTop:5,fontWeight:700}}>Training voltooid!</div>
+    </div>
+  )}
+  {schemaPopup&&!showSchemaOpMaat&&(
     <div style={{position:"fixed",bottom:80,left:"50%",transform:"translateX(-50%)",zIndex:99,width:"calc(100% - 32px)",maxWidth:420}} onClick={()=>setSchemaPopup(false)}>
       <div onClick={e=>e.stopPropagation()} style={{background:isDark?"#141414":"#fff",borderRadius:16,padding:16,border:"1px solid rgba(255,107,43,0.3)",boxShadow:"0 8px 32px rgba(0,0,0,0.3)",display:"flex",gap:12,alignItems:"center"}}>
         <FinnImg size={44} emotion="victory"/>
@@ -4006,6 +4190,62 @@ function App(){
     </div>
   )}
   {showSchemaOpMaat&&<SchemaOpMaat profile={profile} log={log} onClose={()=>setShowSchemaOpMaat(false)} setTab={setTab} T={T} lang={lang}/> }
+      {showFPModal&&(
+  <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:150,display:"flex",alignItems:"flex-end"}} onClick={()=>setShowFPModal(false)}>
+    <div onClick={e=>e.stopPropagation()} style={{background:isDark?"#141414":BG,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,margin:"0 auto",maxHeight:"88vh",overflowY:"auto",paddingBottom:32}}>
+      <div style={{padding:"20px 20px 0",display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+        <div style={{fontSize:20,fontWeight:900,color:TEXT}}>FitPoints</div>
+        <button onClick={()=>setShowFPModal(false)} style={{width:36,height:36,borderRadius:"50%",background:isDark?"#1C1C1C":"#E8E8E0",border:"none",color:TEXT,fontSize:18,cursor:"pointer"}}>x</button>
+      </div>
+      <div style={{textAlign:"center",padding:"20px 20px 24px",background:isDark?"rgba(255,255,255,0.02)":"#F5F5F0",margin:"0 16px 16px",borderRadius:16,border:"1px solid "+fpRang.kleur+"44"}}>
+        <div style={{fontSize:56,marginBottom:6}}>{fpRang.emoji}</div>
+        <div style={{fontSize:13,letterSpacing:2,fontWeight:700,color:fpRang.kleur,textTransform:"uppercase",marginBottom:4}}>{fpRang.naam}</div>
+        <div style={{fontSize:40,fontWeight:900,color:TEXT,lineHeight:1,marginBottom:12}}>{fitPoints.toLocaleString()} <span style={{fontSize:16,color:isDark?"#555":"#888"}}>FP</span></div>
+        {fpVolgende&&<>
+          <div style={{background:isDark?"#1C1C1C":"#E0E0D8",borderRadius:99,height:8,overflow:"hidden",marginBottom:6}}>
+            <div style={{width:Math.min(100,Math.round((fitPoints-fpRang.min)/(fpVolgende.min-fpRang.min)*100))+"%",height:8,background:fpRang.kleur,borderRadius:99,transition:"width .8s ease"}}/>
+          </div>
+          <div style={{fontSize:12,color:isDark?"#444":"#888"}}><span style={{color:fpRang.kleur,fontWeight:700}}>{Math.min(100,Math.round((fitPoints-fpRang.min)/(fpVolgende.min-fpRang.min)*100))}%</span> richting {fpVolgende.naam} — nog {(fpVolgende.min-fitPoints).toLocaleString()} FP</div>
+        </>}
+      </div>
+      <div style={{padding:"0 16px"}}>
+        <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Zo verdien je FP</div>
+        <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:20}}>
+          {[
+            {l:"Training voltooien",v:"+"+FP_VERDIEN.training,c:LIME},
+            {l:"Per minuut trainen",v:"+"+FP_VERDIEN.perMinuut,c:LIME},
+            {l:"3 dagen streak",v:"+"+FP_VERDIEN.streak3,c:"#f59e0b"},
+            {l:"7 dagen streak",v:"+"+FP_VERDIEN.streak7,c:"#f59e0b"},
+            {l:"14 dagen streak",v:"+"+FP_VERDIEN.streak14,c:ORANGE},
+            {l:"30 dagen streak",v:"+"+FP_VERDIEN.streak30,c:ORANGE},
+            {l:"Voeding loggen (per dag)",v:"+"+FP_VERDIEN.voeding,c:"#60a5fa"},
+            {l:"Gewicht loggen",v:"+"+FP_VERDIEN.gewicht,c:"#60a5fa"},
+          ].map(r=>(
+            <div key={r.l} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 14px",background:isDark?"#111":"#F0F0E8",borderRadius:10}}>
+              <span style={{fontSize:13,color:TEXT}}>{r.l}</span>
+              <span style={{fontSize:13,fontWeight:800,color:r.c}}>{r.v} FP</span>
+            </div>
+          ))}
+        </div>
+        <div style={{fontSize:11,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Alle rangen</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,paddingBottom:16}}>
+          {FP_RANGEN.map(r=>{
+            const behaald=fitPoints>=r.min;
+            const huidig=fpRang.naam===r.naam;
+            return(
+              <div key={r.naam} style={{padding:"12px 6px",background:huidig?(isDark?"rgba(200,241,56,0.08)":"rgba(200,241,56,0.12)"):behaald?(isDark?"#111":"#F5F5F0"):(isDark?"#0a0a0a":"#EBEBEB"),borderRadius:12,border:"1.5px solid "+(huidig?LIME:behaald?r.kleur+"44":BORDER),textAlign:"center",opacity:behaald?1:0.4}}>
+                <div style={{fontSize:20,marginBottom:3}}>{r.emoji}</div>
+                <div style={{fontSize:10,fontWeight:800,color:behaald?r.kleur:isDark?"#333":"#aaa",lineHeight:1.2}}>{r.naam}</div>
+                <div style={{fontSize:9,color:isDark?"#333":"#bbb",marginTop:2}}>{r.min>=1000?(r.min/1000).toFixed(0)+"k":r.min}+</div>
+                {huidig&&<div style={{fontSize:9,color:LIME,fontWeight:700,marginTop:2}}>JIJ</div>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
       {showFinn&&<FinnPopup 
         key={finnKey}
         lang={lang}
@@ -4033,7 +4273,13 @@ function App(){
           setFoodSubTab("boodschappen");
         }}
       />}
-      {savedBanner&&<div style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",zIndex:100,background:LIME,color:"#000",padding:"14px 28px",borderRadius:"0 0 20px 20px",fontWeight:800,fontSize:14,maxWidth:480,width:"100%",textAlign:"center"}}>Training opgeslagen!</div>}
+      {fpAnimatie&&<div style={{position:"fixed",top:"30%",left:"50%",transform:"translateX(-50%)",zIndex:999,pointerEvents:"none",animation:"fadeUp 2s forwards"}}>
+    <div style={{background:"rgba(200,241,56,0.95)",color:"#000",padding:"10px 24px",borderRadius:99,fontWeight:900,fontSize:18,boxShadow:"0 4px 20px rgba(200,241,56,0.4)"}}>
+      {fpAnimatie.label}
+    </div>
+  </div>}
+  <style>{`@keyframes fadeUp{0%{opacity:0;transform:translateX(-50%) translateY(0)}20%{opacity:1}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-40px)}}`}</style>
+  {savedBanner&&<div style={{position:"fixed",top:0,left:"50%",transform:"translateX(-50%)",zIndex:100,background:LIME,color:"#000",padding:"14px 28px",borderRadius:"0 0 20px 20px",fontWeight:800,fontSize:14,maxWidth:480,width:"100%",textAlign:"center"}}>Training opgeslagen!</div>}
 
       {/* FEEDBACK MODAL */}
       {feedbackModal&&(
@@ -4068,7 +4314,8 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               <>
                 <div style={{display:"flex",gap:12,alignItems:"center",marginBottom:20}}><FinnImg size={44} emotion="victory"/><div><div style={{fontSize:14,fontWeight:900}}>{T.roanFeedback}</div><div style={{fontSize:11,color:"#555"}}>{feedbackModal.workout}</div></div></div>
                 <div style={{fontSize:14,lineHeight:1.8,color:isDark?"#ccc":"#333",marginBottom:24,padding:"16px",background:isDark?"#111":CARD_BG,borderRadius:14,border:`1px solid ${BORDER}`}}>{feedbackReply}</div>
-                <button onClick={()=>{setFeedbackModal(null);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),2500);setTab(T.home);}} style={{width:"100%",padding:"16px",borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:15,fontWeight:900,cursor:"pointer"}}>{T.naarHome}</button>
+                <button onClick={()=>{setFeedbackModal(null);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),2500);setTab(T.home);
+    if(sbUser)sbUpdateSocialProfile(sbUser.id,profile,fitPoints,log);}} style={{width:"100%",padding:"16px",borderRadius:14,border:"none",background:LIME,color:"#000",fontSize:15,fontWeight:900,cursor:"pointer"}}>{T.naarHome}</button>
               </>
             )}
           </div>
@@ -4100,6 +4347,20 @@ setFeedbackReply(reply);setFeedbackLoading(false);
             </div>
           </div>
           <div style={{padding:"0 16px"}}>
+            {/* FitPoints widget */}
+            <div onClick={()=>setShowFPModal(true)} style={{...S.card,padding:"11px 16px",marginBottom:12,cursor:"pointer",borderLeft:"4px solid "+fpRang.kleur,display:"flex",alignItems:"center",gap:12}}>
+              <div style={{fontSize:26,lineHeight:1}}>{fpRang.emoji}</div>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:5}}>
+                  <div style={{fontSize:13,fontWeight:800,color:fpRang.kleur}}>{fpRang.naam}</div>
+                  <div style={{fontSize:12,fontWeight:700,color:TEXT}}>{fitPoints.toLocaleString()} <span style={{fontSize:10,color:isDark?"#444":"#888"}}>FP</span></div>
+                </div>
+                <div style={{background:isDark?"#1C1C1C":"#E0E0D8",borderRadius:99,height:5,overflow:"hidden"}}>
+                  <div style={{width:fpVolgende?Math.min(100,Math.round((fitPoints-fpRang.min)/(fpVolgende.min-fpRang.min)*100))+"%":"100%",height:5,background:fpRang.kleur,borderRadius:99,transition:"width .6s ease"}}/>
+                </div>
+                {fpVolgende&&<div style={{fontSize:10,color:isDark?"#444":"#888",marginTop:3}}>{(fpVolgende.min-fitPoints).toLocaleString()} FP tot {fpVolgende.naam}</div>}
+              </div>
+            </div>
             {/* Roan bericht */}
             <div style={{display:"flex",gap:12,alignItems:"flex-start",background:isDark?"rgba(255,107,43,0.07)":"rgba(255,107,43,0.05)",border:"1px solid rgba(255,107,43,0.2)",borderRadius:16,padding:14,margin:"16px 0",transform:"translateY(-8px)"}}><FinnImg size={44}/><div><div style={{fontSize:11,color:ORANGE,fontWeight:700,marginBottom:3}}>{T.roanZegt}</div><div style={{fontSize:13,color:isDark?"rgba(255,255,255,0.85)":"#222",lineHeight:1.6}}>{finnBericht}</div></div></div>
 
@@ -4142,6 +4403,39 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               </div>
             </div>
 
+            
+            {/* ── FitPoints & Level widget ── */}
+            {(()=>{
+              const level=berekenLevel(fitPoints);
+              const rang=getRang(level);
+              const fpDitLevel=getFPVoorLevel(level)||0;
+              const fpVolgend=getFPVoorLevel(level+1)||fpDitLevel+500;
+              const progress=fpVolgend>fpDitLevel?Math.min(100,((fitPoints-fpDitLevel)/(fpVolgend-fpDitLevel))*100):100;
+              return(
+                <div style={{...S.card,padding:"14px 16px",marginBottom:14,borderTop:"2px solid "+rang.kleur,cursor:"pointer"}} onClick={()=>setTab("fitpoints")}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8}}>
+                      <div style={{fontSize:20}}>{rang.emoji}</div>
+                      <div>
+                        <div style={{fontSize:11,fontWeight:800,color:rang.kleur,letterSpacing:1,textTransform:"uppercase"}}>{rang.naam}</div>
+                        <div style={{fontSize:10,color:isDark?"#444":"#888"}}>Level {level}</div>
+                      </div>
+                    </div>
+                    <div style={{textAlign:"right"}}>
+                      <div style={{fontSize:18,fontWeight:900,color:rang.kleur}}>{fitPoints.toLocaleString()}</div>
+                      <div style={{fontSize:10,color:isDark?"#444":"#888"}}>FitPoints</div>
+                    </div>
+                  </div>
+                  <div style={{background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:99,height:6,overflow:"hidden"}}>
+                    <div style={{width:progress+"%",height:6,background:"linear-gradient(90deg,"+rang.kleur+","+rang.kleur+"aa)",borderRadius:99,transition:"width .6s ease"}}/>
+                  </div>
+                  <div style={{display:"flex",justifyContent:"space-between",fontSize:9,color:isDark?"#333":"#888",marginTop:4}}>
+                    <span>{fitPoints.toLocaleString()} FP</span>
+                    <span>Level {level+1}: {fpVolgend?.toLocaleString()||"∞"} FP</span>
+                  </div>
+                </div>
+              );
+            })()}
             {/* Voortgang balk */}
             <div style={{...S.card,padding:18,marginBottom:14}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}><div style={{...S.lbl}}>{T.voortgangNaarDoel}</div><div style={{fontSize:15,fontWeight:800,color:LIME}}>{pct}%</div></div>
@@ -4411,7 +4705,9 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <HiitWorkout exercises={session} voiceOn={voiceOn} onDone={saveWorkout}/>
               ):targetMuscles.length>0&&targetMuscles[0].startsWith("cardio_")?(
                 targetMuscles[0]==="cardio_swim"?(
-                  <SwimTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Zwemmen",exercises:[],targetMuscles,runDist:data.afstand||0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"swim",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
+                  <SwimTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Zwemmen",exercises:[],targetMuscles,runDist:data.afstand||0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"swim",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);
+    const fpVerdiend=FP_VERDIEN.training+Math.round((trainDurationMin||0)*FP_VERDIEN.perMinuut);
+    setFpAnimatie(fpVerdiend);setTimeout(()=>setFpAnimatie(null),2500);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
                 ):targetMuscles[0]==="cardio_bike"?(
                   <SpinTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Spinning",exercises:[],targetMuscles,runDist:0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"spin",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
                 ):(
@@ -4645,6 +4941,26 @@ setFeedbackReply(reply);setFeedbackLoading(false);
           </>}
 
           {measSubTab==="trainings"&&<>
+            {/* FitPoints voortgang */}
+            <div onClick={()=>setShowFPModal(true)} style={{...S.card,padding:16,marginBottom:14,cursor:"pointer",borderTop:"3px solid "+fpRang.kleur}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                <div style={{display:"flex",gap:10,alignItems:"center"}}>
+                  <div style={{fontSize:28}}>{fpRang.emoji}</div>
+                  <div>
+                    <div style={{fontSize:14,fontWeight:900,color:fpRang.kleur}}>{fpRang.naam}</div>
+                    <div style={{fontSize:11,color:isDark?"#444":"#888"}}>Tik voor details</div>
+                  </div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:24,fontWeight:900,color:TEXT,lineHeight:1}}>{fitPoints.toLocaleString()}</div>
+                  <div style={{fontSize:10,color:isDark?"#444":"#888",marginTop:2}}>FitPoints</div>
+                </div>
+              </div>
+              <div style={{background:isDark?"#1C1C1C":"#E0E0D8",borderRadius:99,height:7,overflow:"hidden"}}>
+                <div style={{width:fpVolgende?Math.min(100,Math.round((fitPoints-fpRang.min)/(fpVolgende.min-fpRang.min)*100))+"%":"100%",height:7,background:fpRang.kleur,borderRadius:99}}/>
+              </div>
+              {fpVolgende&&<div style={{fontSize:11,color:isDark?"#444":"#888",marginTop:6}}>{(fpVolgende.min-fitPoints).toLocaleString()} FP tot <span style={{color:fpVolgende.kleur,fontWeight:700}}>{fpVolgende.naam}</span></div>}
+            </div>
             {/* ── v1.6: Wekelijks volume ─── */}
             <div style={{...S.card,padding:16,marginBottom:14}}>
               <div style={{...S.lbl,marginBottom:12}}>{T.wekelijksVolume}</div>
@@ -4963,6 +5279,257 @@ setFeedbackReply(reply);setFeedbackLoading(false);
         </div>
       )}
 
+      
+      
+      {/* SOCIAAL TAB */}
+      {tab==="sociaal"&&(()=>{
+        const myRank=ranglijst.findIndex(r=>r.user_id===sbUser?.id)+1;
+        const myEntry=ranglijst.find(r=>r.user_id===sbUser?.id);
+        const top3=ranglijst.slice(0,3);
+        const rest=ranglijst.slice(3);
+        return(
+          <div style={{padding:"24px 16px"}}>
+            <div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Community</div>
+            <div style={{fontSize:30,fontWeight:900,letterSpacing:-1,marginBottom:16,color:TEXT}}>Ranglijst</div>
+
+            {/* Subtabs */}
+            <div style={{display:"flex",gap:6,marginBottom:20,background:isDark?"#111":CARD_BG,borderRadius:12,padding:6}}>
+              {[{k:"ranglijst",l:"🏆 Ranglijst"},{k:"profiel",l:"👤 Mijn profiel"}].map(t=>(
+                <button key={t.k} onClick={()=>setSociaalTab(t.k)} style={{flex:1,padding:"9px",borderRadius:9,border:"none",cursor:"pointer",background:sociaalTab===t.k?isDark?"#1C1C1C":"#E0E0D8":"none",color:sociaalTab===t.k?TEXT:isDark?"#555":"#888",fontSize:12,fontWeight:sociaalTab===t.k?700:400}}>
+                  {t.l}
+                </button>
+              ))}
+            </div>
+
+            {sociaalTab==="ranglijst"&&<>
+              {/* Mijn positie */}
+              {myEntry&&(
+                <div style={{...S.card,padding:"12px 16px",marginBottom:16,borderTop:"2px solid "+LIME,display:"flex",alignItems:"center",gap:12}}>
+                  <div style={{fontSize:20,fontWeight:900,color:LIME,width:32,textAlign:"center"}}>{myRank||"–"}</div>
+                  <div style={{width:40,height:40,borderRadius:"50%",overflow:"hidden",flexShrink:0,border:"2px solid "+LIME,background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {myEntry.foto_url?<img src={myEntry.foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:16}}>👤</span>}
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:14,fontWeight:800,color:TEXT}}>{myEntry.display_name} <span style={{fontSize:10,color:LIME}}>(jij)</span></div>
+                    <div style={{fontSize:11,color:isDark?"#444":"#888"}}>{myEntry.rang_emoji} {myEntry.rang_naam} · Level {myEntry.level}</div>
+                  </div>
+                  <div style={{textAlign:"right"}}>
+                    <div style={{fontSize:16,fontWeight:900,color:LIME}}>{(myEntry.fit_points||0).toLocaleString()}</div>
+                    <div style={{fontSize:10,color:isDark?"#444":"#888"}}>FP</div>
+                  </div>
+                </div>
+              )}
+
+              {rangLaden&&<div style={{textAlign:"center",padding:40,color:isDark?"#444":"#888",fontSize:13}}>Ranglijst laden...</div>}
+
+              {/* Top 3 podium */}
+              {!rangLaden&&top3.length>=3&&(
+                <div style={{...S.card,padding:20,marginBottom:16}}>
+                  <div style={{display:"flex",alignItems:"flex-end",justifyContent:"center",gap:8,marginBottom:16}}>
+                    {/* #2 */}
+                    <div style={{textAlign:"center",flex:1}}>
+                      <div style={{width:56,height:56,borderRadius:"50%",overflow:"hidden",margin:"0 auto 8px",border:"2px solid #C0C0C0",background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        {top3[1]?.foto_url?<img src={top3[1].foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:22}}>👤</span>}
+                      </div>
+                      <div style={{fontSize:18,marginBottom:4}}>🥈</div>
+                      <div style={{fontSize:11,fontWeight:800,color:TEXT}}>{top3[1]?.display_name?.split(" ")[0]||"–"}</div>
+                      <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{(top3[1]?.fit_points||0).toLocaleString()} FP</div>
+                    </div>
+                    {/* #1 */}
+                    <div style={{textAlign:"center",flex:1.2}}>
+                      <div style={{width:72,height:72,borderRadius:"50%",overflow:"hidden",margin:"0 auto 8px",border:"3px solid #FFD700",background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        {top3[0]?.foto_url?<img src={top3[0].foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:28}}>👤</span>}
+                      </div>
+                      <div style={{fontSize:24,marginBottom:4}}>🥇</div>
+                      <div style={{fontSize:13,fontWeight:900,color:TEXT}}>{top3[0]?.display_name?.split(" ")[0]||"–"}</div>
+                      <div style={{fontSize:11,color:LIME,fontWeight:700}}>{(top3[0]?.fit_points||0).toLocaleString()} FP</div>
+                    </div>
+                    {/* #3 */}
+                    <div style={{textAlign:"center",flex:1}}>
+                      <div style={{width:56,height:56,borderRadius:"50%",overflow:"hidden",margin:"0 auto 8px",border:"2px solid #CD7F32",background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        {top3[2]?.foto_url?<img src={top3[2].foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:22}}>👤</span>}
+                      </div>
+                      <div style={{fontSize:18,marginBottom:4}}>🥉</div>
+                      <div style={{fontSize:11,fontWeight:800,color:TEXT}}>{top3[2]?.display_name?.split(" ")[0]||"–"}</div>
+                      <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{(top3[2]?.fit_points||0).toLocaleString()} FP</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Rest van de lijst */}
+              {!rangLaden&&rest.length>0&&(
+                <div style={{...S.card,padding:"0 4px"}}>
+                  {rest.map((user,i)=>{
+                    const pos=i+4;
+                    const isMe=user.user_id===sbUser?.id;
+                    const liked=myLikes.has(user.user_id);
+                    return(
+                      <div key={user.user_id} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 12px",borderBottom:i<rest.length-1?"1px solid "+(isDark?"#111":"#E8E8E0"):"none",background:isMe?"rgba(200,241,56,0.04)":"none"}}>
+                        <div style={{fontSize:13,fontWeight:700,color:isDark?"#444":"#888",width:24,textAlign:"center"}}>{pos}</div>
+                        <div style={{width:36,height:36,borderRadius:"50%",overflow:"hidden",flexShrink:0,border:"1px solid "+(isMe?LIME:BORDER),background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                          {user.foto_url?<img src={user.foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:14}}>👤</span>}
+                        </div>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:13,fontWeight:700,color:TEXT,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                            {user.display_name}{isMe&&<span style={{fontSize:9,color:LIME,marginLeft:4}}>(jij)</span>}
+                          </div>
+                          <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{user.rang_emoji} {user.rang_naam} · {user.trainingen_count||0} trainingen</div>
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                          <div style={{textAlign:"right"}}>
+                            <div style={{fontSize:13,fontWeight:800,color:LIME}}>{(user.fit_points||0).toLocaleString()}</div>
+                            <div style={{fontSize:9,color:isDark?"#444":"#888"}}>FP</div>
+                          </div>
+                          {!isMe&&(
+                            <button onClick={async()=>{
+                              const nu=await sbToggleLike(sbUser.id,user.user_id);
+                              setMyLikes(prev=>{const n=new Set(prev);nu?n.add(user.user_id):n.delete(user.user_id);return n;});
+                            }} style={{width:32,height:32,borderRadius:"50%",border:"1px solid "+(liked?"rgba(239,68,68,0.4)":BORDER),background:liked?"rgba(239,68,68,0.1)":"none",color:liked?"#ef4444":isDark?"#444":"#888",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                              {liked?"❤️":"🤍"}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {!rangLaden&&ranglijst.length===0&&(
+                <div style={{...S.card,padding:32,textAlign:"center"}}>
+                  <div style={{fontSize:32,marginBottom:12}}>🏋️</div>
+                  <div style={{fontSize:14,fontWeight:800,color:TEXT,marginBottom:8}}>Nog geen andere sporters</div>
+                  <div style={{fontSize:12,color:isDark?"#444":"#888",lineHeight:1.6}}>Nodig vrienden uit om samen op de ranglijst te staan.</div>
+                </div>
+              )}
+
+              <button onClick={()=>{setRangLaden(true);sbGetLeaderboard().then(d=>{setRanglijst(d);setRangLaden(false);});sbUpdateSocialProfile(sbUser.id,profile,fitPoints,log);}} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid "+BORDER,background:"none",color:isDark?"#444":"#888",fontSize:12,cursor:"pointer",marginTop:12,marginBottom:80}}>
+                Vernieuwen
+              </button>
+            </>}
+
+            {sociaalTab==="profiel"&&(()=>{
+              const level=berekenLevel(fitPoints);
+              const rang=getRang(level);
+              return(
+                <div>
+                  {/* Publiek profiel preview */}
+                  <div style={{...S.card,padding:24,marginBottom:16,textAlign:"center"}}>
+                    <div style={{width:80,height:80,borderRadius:"50%",overflow:"hidden",margin:"0 auto 12px",border:"3px solid "+rang.kleur,background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      {profile.fotoUrl?<img src={profile.fotoUrl} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:36}}>👤</span>}
+                    </div>
+                    <div style={{fontSize:22,fontWeight:900,color:TEXT,marginBottom:4}}>{profile.name}</div>
+                    <div style={{fontSize:13,color:rang.kleur,fontWeight:700,marginBottom:2}}>{rang.emoji} {rang.naam}</div>
+                    <div style={{fontSize:12,color:isDark?"#555":"#888",marginBottom:16}}>Level {level}</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:16}}>
+                      {[
+                        {l:"FitPoints",v:(fitPoints||0).toLocaleString(),c:rang.kleur},
+                        {l:"Trainingen",v:log.length,c:TEXT},
+                        {l:"Streak",v:calcStreak(log)+" d",c:LIME},
+                      ].map(s=>(
+                        <div key={s.l} style={{padding:"10px 8px",background:isDark?"#111":CARD_BG,borderRadius:10}}>
+                          <div style={{fontSize:18,fontWeight:900,color:s.c,marginBottom:2}}>{s.v}</div>
+                          <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{s.l}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{fontSize:11,color:isDark?"#444":"#888",marginBottom:12}}>Dit is hoe anderen jou zien op de ranglijst</div>
+                    <button onClick={()=>{sbUpdateSocialProfile(sbUser.id,profile,fitPoints,log);alert("Profiel bijgewerkt!");}} style={{padding:"10px 24px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer"}}>
+                      Profiel bijwerken
+                    </button>
+                  </div>
+                  <div style={{...S.card,padding:16,marginBottom:80}}>
+                    <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:12}}>Ranglijst positie</div>
+                    {myRank>0?(
+                      <div style={{display:"flex",alignItems:"center",gap:12}}>
+                        <div style={{fontSize:40,fontWeight:900,color:LIME}}>#{myRank}</div>
+                        <div>
+                          <div style={{fontSize:14,fontWeight:700,color:TEXT}}>van {ranglijst.length} sporters</div>
+                          <div style={{fontSize:11,color:isDark?"#444":"#888"}}>Train meer om te stijgen!</div>
+                        </div>
+                      </div>
+                    ):(
+                      <div style={{fontSize:12,color:isDark?"#444":"#888"}}>Sla eerst een training op om op de ranglijst te komen.</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        );
+      })()}
+      {/* FITPOINTS TAB */}
+      {tab==="fitpoints"&&(()=>{
+        const level=berekenLevel(fitPoints);
+        const rang=getRang(level);
+        const fpDitLevel=getFPVoorLevel(level)||0;
+        const fpVolgend=getFPVoorLevel(level+1)||fpDitLevel+500;
+        const progress=fpVolgend>fpDitLevel?Math.min(100,((fitPoints-fpDitLevel)/(fpVolgend-fpDitLevel))*100):100;
+        return(
+          <div style={{padding:"24px 16px"}}>
+            <div style={{fontSize:11,color:rang.kleur,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>FitPoints</div>
+            <div style={{fontSize:30,fontWeight:900,letterSpacing:-1,marginBottom:20,color:TEXT}}>Jouw rang</div>
+
+            {/* Rang badge */}
+            <div style={{...S.card,padding:24,marginBottom:16,textAlign:"center",borderTop:"3px solid "+rang.kleur}}>
+              <div style={{fontSize:64,marginBottom:8}}>{rang.emoji}</div>
+              <div style={{fontSize:28,fontWeight:900,color:rang.kleur,marginBottom:4}}>{rang.naam}</div>
+              <div style={{fontSize:14,color:isDark?"#555":"#888",marginBottom:16}}>Level {level}</div>
+              <div style={{fontSize:40,fontWeight:900,color:TEXT,marginBottom:4}}>{fitPoints.toLocaleString()}</div>
+              <div style={{fontSize:12,color:isDark?"#444":"#888",marginBottom:16}}>FitPoints totaal</div>
+              <div style={{background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:99,height:8,overflow:"hidden",marginBottom:6}}>
+                <div style={{width:progress+"%",height:8,background:"linear-gradient(90deg,"+rang.kleur+","+rang.kleur+"aa)",borderRadius:99,transition:"width .6s"}}/>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:isDark?"#444":"#888"}}>
+                <span>Level {level}</span>
+                <span>{fitPoints.toLocaleString()} / {fpVolgend?.toLocaleString()||"Max"} FP</span>
+                <span>Level {level+1}</span>
+              </div>
+            </div>
+
+            {/* Hoe FP verdienen */}
+            <div style={{...S.card,padding:16,marginBottom:16}}>
+              <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:12}}>FP verdienen</div>
+              {[
+                {actie:"Training afronden",fp:150,icon:"💪"},
+                {actie:"Cardio voltooien",fp:100,icon:"🏃"},
+                {actie:"Maaltijd loggen",fp:25,icon:"🥗"},
+                {actie:"PR vestigen",fp:75,icon:"🏆"},
+                {actie:"Gewicht bijhouden",fp:30,icon:"⚖️"},
+                {actie:"Dagdoel water",fp:60,icon:"💧"},
+                {actie:"3-daagse streak",fp:50,icon:"🔥"},
+                {actie:"7-daagse streak",fp:200,icon:"⚡"},
+              ].map(({actie,fp,icon})=>(
+                <div key={actie} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:10,marginBottom:10,borderBottom:"1px solid "+(isDark?"#111":"#E8E8E0")}}>
+                  <div style={{display:"flex",gap:10,alignItems:"center"}}>
+                    <span style={{fontSize:18}}>{icon}</span>
+                    <span style={{fontSize:13,color:TEXT}}>{actie}</span>
+                  </div>
+                  <div style={{fontSize:13,fontWeight:800,color:rang.kleur}}>+{fp} FP</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Alle rangen */}
+            <div style={{...S.card,padding:16,marginBottom:16}}>
+              <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:12}}>Alle rangen</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+                {RANGEN.map(r=>(
+                  <div key={r.naam} style={{textAlign:"center",padding:"12px 8px",borderRadius:12,background:rang.naam===r.naam?isDark?"rgba(200,241,56,0.08)":"rgba(200,241,56,0.05)":isDark?"#111":CARD_BG,border:"1px solid "+(rang.naam===r.naam?LIME:BORDER)}}>
+                    <div style={{fontSize:28,marginBottom:4}}>{r.emoji}</div>
+                    <div style={{fontSize:11,fontWeight:800,color:rang.naam===r.naam?LIME:TEXT,marginBottom:2}}>{r.naam}</div>
+                    <div style={{fontSize:9,color:isDark?"#444":"#888"}}>Lvl {r.minLevel}{r.maxLevel<999?"-"+r.maxLevel:"+"}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Reset knop (dev) */}
+            <button onClick={()=>{if(window.confirm("FitPoints resetten?")){{setFitPoints(0);LS.set("fitcoach_fp",0);}}}} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid "+BORDER,background:"none",color:isDark?"#333":"#888",fontSize:11,cursor:"pointer",marginBottom:80}}>Reset FitPoints (dev)</button>
+          </div>
+        );
+      })()}
       {/* BOTTOM NAV */}
       <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,background:isDark?"rgba(13,13,13,0.97)":"rgba(245,245,240,0.97)",borderTop:`1px solid ${BORDER}`,display:"flex",zIndex:20,backdropFilter:"blur(24px)"}}>
         {[
@@ -4970,7 +5537,9 @@ setFeedbackReply(reply);setFeedbackLoading(false);
           {id:T.training,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 4v16M18 4v16M2 8h4M18 8h4M2 16h4M18 16h4"/></svg>},
           {id:T.voortgang,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>},
           {id:T.voeding,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8 2 4 6 4 10c0 5.25 8 12 8 12s8-6.75 8-12c0-4-4-8-8-8z"/></svg>},
-          {id:T.coach,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>},
+          {id:"sociaal",svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>},
+  {id:"fitpoints",svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>},
+  {id:T.coach,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>},
         ].map(t=>(
           <button key={t.id} onClick={()=>{
             if(t.id===T.training&&tab===T.training&&!selectingMuscles){setSelectingMuscles(true);setSession(null);setTargetMuscles([]);}
