@@ -3907,7 +3907,12 @@ function App(){
   const [myLikes,setMyLikes]=useState(new Set());
   const [voortgangLaden,setVoortgangLaden]=useState(false);
   const [editLogId,setEditLogId]=useState(null);
-  const [fpAnimatie,setFpAnimatie]=useState(null); // {amount, x, y}
+  const [fpAnimatie,setFpAnimatie]=useState(null);
+  const [fitPoints,setFitPoints]=useState(()=>LS.get("fitcoach_fp")||0);
+  const [showFPModal,setShowFPModal]=useState(false);
+  const fpRang=getRang(berekenLevel(fitPoints||0));
+  const _fpNextLevel=berekenLevel(fitPoints||0)+1;
+  const fpVolgende=_fpNextLevel<=RANGEN[RANGEN.length-1].maxLevel?{naam:getRang(_fpNextLevel).naam,min:getFPVoorLevel(_fpNextLevel)||0}:null; // {amount, x, y}
   const [levelUp,setLevelUp]=useState(null); // niveau omhoog popup
   const [editLogName,setEditLogName]=useState("");
   const [showSchemaOpMaat,setShowSchemaOpMaat]=useState(false);
@@ -4169,7 +4174,7 @@ function App(){
   {fpAnimatie&&(
     <div style={{position:"fixed",top:"18%",left:"50%",transform:"translateX(-50%)",zIndex:300,pointerEvents:"none",textAlign:"center"}}>
       <div style={{background:fpRang.kleur,color:["Starter","Steen","IJzer"].includes(fpRang.naam)?"#fff":"#000",fontWeight:900,fontSize:20,padding:"11px 28px",borderRadius:99,boxShadow:"0 6px 24px rgba(0,0,0,0.5)",whiteSpace:"nowrap",animation:"fpPop .4s ease-out"}}>
-        +{fpAnimatie} FP
+        +{fpAnimatie?.amount||fpAnimatie} FP
       </div>
       <div style={{fontSize:11,color:isDark?"#ddd":"#333",marginTop:5,fontWeight:700}}>Training voltooid!</div>
     </div>
