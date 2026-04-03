@@ -1064,7 +1064,7 @@ const FOOD_PHOTOS={Ochtend:"https://images.unsplash.com/photo-1533089860892-a7c6
 
 // ╔══════════════════════════════════════════════════════════════╗
 // ║                    📸  FOTO CONFIGURATIE                     ║
-// ║  Hier pas je alle foto's aan. Kopieer een URL van            ║
+// ||  Hier pas je alle fotos aan. Kopieer een URL van            ||
 // ║  unsplash.com en plak hem hieronder.                         ║
 // ║                                                              ║
 // ║  Tip: ga naar unsplash.com, kies een foto, klik rechterklik  ║
@@ -3899,7 +3899,7 @@ function CardioTimer({ex,ei,onDone,profile,lang="nl",isDark,LIME,ORANGE,TEXT,CAR
           {running?(lang==="en"?"⏸ Pause":"⏸ Pauze"):(elapsed===0?("▶ Start"):("▶ Hervat"))}
         </button>
         {elapsed>0&&<button onClick={()=>{setRunning(false);setDone(true);}} style={{flex:1,padding:16,borderRadius:14,border:`1px solid ${LIME}`,background:"none",color:LIME,fontSize:14,fontWeight:900,cursor:"pointer"}}>
-          {lang==="en"?"Done":lang==="de"?"Fertig":lang==="en"?"Done":"Klaar"} ✓
+          {lang==="en"?"Done":lang==="de"?"Fertig":"Klaar"} ✓
         </button>}
       </div>
       <div style={{marginBottom:12}}>
@@ -4239,7 +4239,7 @@ function App(){
           </div>
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
             <button onClick={()=>setTab(T.training)} style={{background:"#000",color:LIME,padding:"12px 20px",borderRadius:99,fontSize:14,fontWeight:900,border:"none",cursor:"pointer"}}>{T.doorgaan} →</button>
-            <button onClick={()=>{if(window.confirm(lang==="en"?"Stop workout? Progress will be lost.":lang==="de"?"Training stoppen? Fortschritt geht verloren.":lang==="en"?"Stop workout? Progress will be lost.":lang==="de"?"Training stoppen? Fortschritt geht verloren.":"Training stoppen? Voortgang gaat verloren."))setSession(null);}} style={{background:"rgba(0,0,0,0.15)",color:"#000",padding:"10px 14px",borderRadius:99,fontSize:12,fontWeight:800,border:"1px solid rgba(0,0,0,0.2)",cursor:"pointer"}}>✕</button>
+            <button onClick={()=>{if(window.confirm(lang==="en"?"Stop workout? Progress will be lost.":lang==="de"?"Training stoppen? Fortschritt geht verloren.":"Training stoppen? Voortgang gaat verloren."))setSession(null);}} style={{background:"rgba(0,0,0,0.15)",color:"#000",padding:"10px 14px",borderRadius:99,fontSize:12,fontWeight:800,border:"1px solid rgba(0,0,0,0.2)",cursor:"pointer"}}>✕</button>
           </div>
         </div>
       )}
@@ -4252,7 +4252,7 @@ function App(){
           <div style={{background:CARD_BG,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,padding:"28px 24px 40px",border:`1px solid ${BORDER}`}}>
             <div style={{textAlign:"center",marginBottom:24}}>
               <div style={{fontSize:40,marginBottom:12}}>⭐</div>
-              <div style={{fontSize:22,fontWeight:900,marginBottom:8}}>{lang==="en"?"What do you think?":lang==="de"?"Was denkst du?":lang==="en"?"What do you think?":lang==="de"?"Was denkst du?":"Wat vind je?"}</div>
+              <div style={{fontSize:22,fontWeight:900,marginBottom:8}}>{lang==="en"?"What do you think?":lang==="de"?"Was denkst du?":"Wat vind je?"}</div>
               <div style={{fontSize:14,color:"#555",lineHeight:1.6}}>Jouw feedback helpt ons de app beter te maken. Duurt 30 seconden.</div>
             </div>
             {(()=>{
@@ -4435,7 +4435,7 @@ function App(){
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:24}}>
           {[
             {l:lang==="en"?"Duration":lang==="de"?"Dauer":"Duur",v:workoutSummary.duur,icon:"⏱"},
-            {l:lang==="en"?"Calories":lang==="de"?"Kalorien":lang==="en"?"Calories":lang==="de"?"Kalorien":"Calorieën",v:workoutSummary.kcal+" kcal",icon:"🔥"},
+            {l:lang==="en"?"Calories":lang==="de"?"Kalorien":"Calorieën",v:workoutSummary.kcal+" kcal",icon:"🔥"},
             {l:lang==="en"?"Exercises":lang==="de"?"Übungen":"Oefeningen",v:workoutSummary.exercises,icon:"💪"},
           ].map(s=>(
             <div key={s.l} style={{textAlign:"center",background:isDark?"#111":BG,borderRadius:14,padding:"14px 8px"}}>
@@ -4653,7 +4653,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                           <div style={{width:"100%",aspectRatio:"1",borderRadius:8,background:hasDone?"rgba(200,241,56,0.15)":isToday&&isTrainDay?"rgba(200,241,56,0.08)":!isTrainDay?isDark?"#0D0D0D":"#F0F0E8":isDark?"#111":"#FFFFFF",border:`1px solid ${hasDone?LIME:isToday&&isTrainDay?LIME+"44":!isTrainDay?"transparent":isDark?"#1C1C1C":"#333"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:hasDone?LIME:isToday?isDark?"#fff":"#000":isDark?"#333":"#666"}}>
                             {hasDone?"✓":!isTrainDay?"·":isToday?"→":""}
                           </div>
-                          <div style={{fontSize:8,color:hasDone?LIME:!isTrainDay?"#222":isToday?isDark?"#888":"#666":isDark?"#333":"#666",marginTop:3,fontWeight:700}}>{hasDone?T.klaarBtn:!isTrainDay?lang==="en"?"Rest":lang==="de"?"Ruhe":lang==="en"?"Rest":lang==="de"?"Ruhe":"Rust":isToday?lang==="en"?"Today":lang==="de"?"Heute":lang==="en"?"Today":lang==="de"?"Heute":lang==="en"?"Today":lang==="de"?"Heute":lang==="en"?"Today":lang==="de"?"Heute":"Vandaag":""}</div>
+                          <div style={{fontSize:8,color:hasDone?LIME:!isTrainDay?"#222":isToday?isDark?"#888":"#666":isDark?"#333":"#666",marginTop:3,fontWeight:700}}>{hasDone?T.klaarBtn:!isTrainDay?lang==="en"?"Rest":lang==="de"?"Ruhe":"Rust":isToday?lang==="en"?"Today":lang==="de"?"Heute":"Vandaag":""}</div>
                         </div>
                       );
                     })}
@@ -4679,7 +4679,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               const tip=RUSTDAG_TIPS[TODAY.getDay()%RUSTDAG_TIPS.length];
               if(!isTrainDay) return(
                 <div style={{marginBottom:24}}>
-                  {last&&<div style={{...S.card,padding:14,marginBottom:12,background:isDark?"rgba(200,241,56,0.05)":"#F5F9E8",border:"1px solid rgba(200,241,56,0.25)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:isDark?"#888":"#666"}}>{last.day} · {dgl===0?lang==="en"?"Today":lang==="de"?"Heute":lang==="en"?"Today":lang==="de"?"Heute":lang==="en"?"Today":lang==="de"?"Heute":lang==="en"?"Today":lang==="de"?"Heute":"Vandaag":dgl===1?lang==="en"?"Yesterday":lang==="de"?"Gestern":"Gisteren":`${dgl} ${T.dagenGeleden}`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
+                  {last&&<div style={{...S.card,padding:14,marginBottom:12,background:isDark?"rgba(200,241,56,0.05)":"#F5F9E8",border:"1px solid rgba(200,241,56,0.25)"}}><div style={{fontSize:11,color:LIME,fontWeight:700,marginBottom:4}}>LAATSTE TRAINING</div><div style={{fontSize:13,color:isDark?"#888":"#666"}}>{last.day} · {dgl===0?(lang==="en"?"Today":lang==="de"?"Heute":"Vandaag"):dgl===1?(lang==="en"?"Yesterday":lang==="de"?"Gestern":"Gisteren"):`${dgl} ${T.dagenGeleden}`}</div><div style={{fontSize:14,fontWeight:800,marginTop:4}}>{last.workout}</div></div>}
                   <div style={{...S.card,padding:20,background:isDark?"rgba(96,165,250,0.05)":"#EEF4FF",border:"1px solid rgba(96,165,250,0.25)"}}>
                     <div style={{fontSize:11,color:"#60a5fa",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:12}}>{T.rustdag}</div>
                     <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
@@ -4700,4 +4700,993 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               return(<div style={{marginBottom:24}}>
                 {last&&(
                   <div style={{...S.card,padding:14,marginBottom:12,background:"rgba(255,255,255,0.02)",border:`1px solid ${BORDER}`}}>
-                    <div style={{display:"fle
+                    <div style={{display:"flex",gap:12,alignItems:"center"}}>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:10,color:"#555",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>{T.laasteTraining}</div>
+                        <div style={{fontSize:14,fontWeight:800,color:isDark?"#ccc":"#333"}}>{last.workout}</div>
+                        <div style={{fontSize:11,color:"#555",marginTop:2}}>{dgl===0?lang==="en"?"Today":lang==="de"?"Heute":"Vandaag":dgl===1?lang==="en"?"Yesterday":lang==="de"?"Gestern":"Gisteren":`${dgl} ${T.dagenGeleden}`}</div>
+                      </div>
+                      <div style={{width:1,height:40,background:isDark?"#1C1C1C":"#E8E8E0"}}/>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>Volgende</div>
+                        <div style={{fontSize:14,fontWeight:800,color:TEXT}}>{MUSCLE_META[volg]?.label}</div>
+                        <div style={{fontSize:11,color:"#555",marginTop:2}}>{MUSCLE_META[volg]?.sub}</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <button onClick={()=>{setTargetMuscles([volg]);startSess([volg]);setTab(T.training);}} style={{width:"100%",height:160,borderRadius:18,border:`2px solid ${LIME}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left",marginBottom:10}}>
+                  <img src={P[volg]} alt={volg} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+                  <div style={{position:"absolute",inset:0,background:"linear-gradient(135deg,rgba(0,0,0,0.05),rgba(0,0,0,0.8))"}}/>
+                  <div style={{position:"relative",padding:"20px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.8)",marginBottom:4}}>Tik om te starten</div>
+                    <div style={{fontSize:22,fontWeight:900,color:"#ffffff",marginBottom:4}}>{MUSCLE_META[volg]?.label}</div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.8)",marginBottom:10}}>{MUSCLE_META[volg]?.sub}</div>
+                    <div style={{display:"inline-flex",alignItems:"center",gap:6,background:LIME,borderRadius:99,padding:"8px 18px",width:"fit-content"}}>
+                      <span style={{fontSize:13,fontWeight:800,color:"#000"}}>{T.gaTraining}</span>
+                    </div>
+                  </div>
+                </button>
+              </div>);
+            })()}
+          </div>
+        </div>
+      )}
+      {tab===T.training&&(
+        <div style={{padding:"24px 16px",background:BG,minHeight:"100vh"}}>
+          <div style={{fontSize:30,fontWeight:900,letterSpacing:-1,marginBottom:2,color:TEXT}}>Training</div>
+          <div style={{fontSize:14,color:isDark?"#777":"#888",marginBottom:14}}><span style={{color:sportType==="hiit"?ORANGE:sportType==="cardio"?"#60a5fa":LIME,fontWeight:800,textTransform:"capitalize"}}>{sportType}</span> · {profile.level||"beginner"}</div>
+          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20}}>
+            <div style={{display:"flex",gap:8,flex:1,alignItems:"center"}}>
+              <button onClick={()=>setTrainDate(d=>fmtDate(new Date(parseDate(d).getTime()-86400000)))} style={{width:36,height:36,borderRadius:10,border:`1px solid ${BORDER}`,background:CARD_BG,color:TEXT,fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+              <div style={{flex:1,textAlign:"center"}}><div style={{fontSize:13,fontWeight:700,color:trainDate===TODAY_KEY?LIME:isDark?"#888":"#666"}}>{trainDate===TODAY_KEY?lang==="en"?"Today":lang==="de"?"Heute":"Vandaag":trainDate}</div><div style={{fontSize:10,color:"#999"}}>{getDayLong(parseDate(trainDate).getDay(),lang)}</div></div>
+              <button onClick={()=>{if(trainDate!==TODAY_KEY)setTrainDate(d=>fmtDate(new Date(parseDate(d).getTime()+86400000)));}} disabled={trainDate===TODAY_KEY} style={{width:36,height:36,borderRadius:10,border:`1px solid ${BORDER}`,background:trainDate===TODAY_KEY?isDark?"#111":"#E8E8E0":isDark?"#141414":CARD_BG,color:trainDate===TODAY_KEY?isDark?"#333":"#888":TEXT,fontSize:18,cursor:trainDate===TODAY_KEY?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>›</button>
+            </div>
+            {sportType==="hiit"&&<button onClick={()=>{const nv=!voiceOn;setVoiceOn(nv);LS.set("fitcoach_voice",nv);}} style={{marginLeft:10,padding:"8px 12px",borderRadius:10,border:`1px solid ${voiceOn?"rgba(200,241,56,0.3)":BORDER}`,background:voiceOn?"rgba(200,241,56,0.06)":isDark?"#111":CARD_BG,color:voiceOn?LIME:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer",flexShrink:0}}>{voiceOn?T.stemAan:T.stemUit}</button>}
+          </div>
+          {selectingMuscles?(
+            <div>
+              {[
+                {title:lang==="en"?"Strength":lang==="de"?"Kraft":"Kracht",color:LIME,items:SPLITS_KRACHT},
+                {title:"Calisthenics",color:"#a78bfa",items:SPLITS_CALISTHENICS},
+                {title:lang==="en"?"Cardio":lang==="de"?"Cardio":"Cardio",color:"#60a5fa",items:SPLITS_CARDIO},
+                {title:"HIIT",color:ORANGE,items:SPLITS_HIIT},
+              ].map(cat=>(
+                <div key={cat.title} style={{marginBottom:20}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+                    <div style={{width:3,height:16,borderRadius:99,background:cat.color,flexShrink:0}}/>
+                    <div style={{fontSize:13,fontWeight:800,color:cat.color,letterSpacing:1,textTransform:"uppercase"}}>{cat.title}</div>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                    {cat.items.map(s=>(
+                      <button key={s.label} onClick={()=>startSess(s.muscles,null,s)} style={{height:130,borderRadius:16,border:"none",cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
+                        <img src={P[s.pk||"full body"]} alt={s.label} style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+                        <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 10%,rgba(0,0,0,0.82))"}}/>
+                        <div style={{position:"relative",padding:"10px 12px",height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}>
+                          <div style={{fontSize:15,fontWeight:900,color:"#ffffff",marginBottom:3}}>{s.label}</div>
+                          <div style={{fontSize:10,color:"rgba(255,255,255,0.75)"}}>{s.desc.split(" · ").map(m=>getMuscleLabel(m,lang)).join(" · ")}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              {log.length>0&&(()=>{
+                const weekAgo=new Date(TODAY);weekAgo.setDate(weekAgo.getDate()-7);
+                const weekLog=log.filter(e=>{try{const d=parseDate(e.date);return d>=weekAgo;}catch{return false;}});
+                const KERN=["borst","rug","schouders","benen","biceps","triceps","buik","billen"];
+                const gedaan=new Set(weekLog.flatMap(e=>e.targetMuscles||[]));
+                const gemist=KERN.filter(m=>[...gedaan].every(g=>!g.includes(m)));
+                if(gemist.length===0)return null;
+                return(
+                  <div style={{...S.card,padding:12,marginBottom:10,borderTop:"2px solid "+ORANGE,display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:11,color:ORANGE,fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:3}}>Nog niet getraind deze week</div>
+                      <div style={{fontSize:12,color:isDark?"#888":"#555"}}>{gemist.map(m=>m.charAt(0).toUpperCase()+m.slice(1)).join(" · ")}</div>
+                    </div>
+                  </div>
+                );
+              })()}
+              <button onClick={()=>setShowSchemaOpMaat(true)} style={{width:"100%",padding:"13px",borderRadius:14,border:"1px solid rgba(255,107,43,0.3)",background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+                  Schema op maat — Roan maakt een plan
+                </button>
+                <button onClick={()=>setShowCustom(!showCustom)} style={{width:"100%",padding:"12px",borderRadius:14,border:`1px solid ${showCustom?LIME:"#222"}`,background:showCustom?"rgba(200,241,56,0.07)":"#141414",color:showCustom?LIME:isDark?"#888":"#666",fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:16,letterSpacing:1,textTransform:"uppercase"}}>{showCustom?lang==="en"?"Close":lang==="de"?"Schließen":"Sluiten":T.eigenWorkout}</button>
+              {showCustom&&(
+                <div style={{...S.card,padding:16,marginBottom:16}}>
+                  <input value={customName} onChange={e=>setCustomName(e.target.value)} placeholder={T.eigenWorkout2} style={{width:"100%",padding:"11px 14px",borderRadius:12,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none",marginBottom:12,boxSizing:"border-box"}}/>
+                  {customExercises.map((ex,i)=>(
+                    <div key={i} style={{display:"grid",gridTemplateColumns:"1fr 44px 44px 50px 28px",gap:6,marginBottom:8,alignItems:"center"}}>
+                      <input value={ex.name} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,name:e.target.value}:x))} placeholder={T.oefening} style={{padding:"9px 10px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:12,outline:"none",boxSizing:"border-box"}}/>
+                      <input value={ex.sets} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,sets:e.target.value}:x))} placeholder={T.sets2} style={{padding:"9px 4px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
+                      <input value={ex.reps} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,reps:e.target.value}:x))} placeholder={T.reps2} style={{padding:"9px 4px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
+                      <input value={ex.weights} onChange={e=>setCustomExercises(p=>p.map((x,j)=>j===i?{...x,weights:e.target.value}:x))} placeholder="kg" style={{padding:"9px 4px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:12,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
+                      <button onClick={()=>setCustomExercises(p=>p.filter((_,j)=>j!==i))} style={{background:"none",border:"none",color:"#ef4444",fontSize:16,cursor:"pointer",padding:0}}>×</button>
+                    </div>
+                  ))}
+                  <button onClick={()=>setCustomExercises(p=>[...p,{name:"",sets:"3",reps:"10",weights:""}])} style={{width:"100%",padding:"9px",borderRadius:10,border:"1px dashed #333",background:"none",color:"#555",fontSize:12,cursor:"pointer",marginBottom:10}}>+ Toevoegen</button>
+                  <button onClick={()=>{if(!customName||!customExercises[0].name)return;startSess([],{name:customName,exercises:customExercises});setShowCustom(false);}} style={{width:"100%",padding:"12px",borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:13,fontWeight:800}}>Starten</button>
+                </div>
+              )}
+              {showMuscleGroups&&<>
+                <div style={{...S.lbl,marginBottom:14}}>{T.ofKiesSpiergroep}</div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20}}>
+                  {MUSCLE_GROUPS.map(m=>(
+                    <button key={m} onClick={()=>setTargetMuscles(p=>p.includes(m)?p.filter(x=>x!==m):[...p,m])} style={{height:140,borderRadius:18,border:`2px solid ${targetMuscles.includes(m)?LIME:"transparent"}`,cursor:"pointer",overflow:"hidden",position:"relative",textAlign:"left"}}>
+                      <img src={P[m]} alt="" style={{position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover"}}/>
+                      <div style={{position:"absolute",inset:0,background:targetMuscles.includes(m)?"rgba(200,241,56,0.15)":"linear-gradient(to bottom,transparent 20%,rgba(0,0,0,0.75))"}}/>
+                      {targetMuscles.includes(m)&&<div style={{position:"absolute",top:10,right:10,width:26,height:26,borderRadius:"50%",background:LIME,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:900,color:"#000"}}>✓</div>}
+                      <div style={{position:"relative",padding:12,height:"100%",display:"flex",flexDirection:"column",justifyContent:"flex-end"}}><div style={{fontSize:16,fontWeight:900,color:"#ffffff",marginBottom:3}}>{MUSCLE_META[m].label}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.75)"}}>{MUSCLE_META[m].sub}</div></div>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={()=>startSess(targetMuscles)} disabled={!targetMuscles.length} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:targetMuscles.length?"pointer":"default",background:targetMuscles.length?LIME:"#1C1C1C",color:targetMuscles.length?"#000":isDark?"#444":"#666",fontSize:15,fontWeight:800}}>
+                  {targetMuscles.length?`Start ${targetMuscles.map(m=>muscleLabel(m)).join(" + ")}`:"Kies een spiergroep"}
+                </button>
+              </>}
+            </div>
+          ):session&&(
+            <div>
+              <div style={{...S.card,padding:16,marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <div><div style={{...S.lbl,color:sportType==="hiit"?ORANGE:LIME,marginBottom:4}}>{lang==="en"?"Today":lang==="de"?"Heute":"Vandaag"}</div><div style={{fontSize:16,fontWeight:800}}>{targetMuscles.map(m=>muscleLabel(m)).join(" + ")}</div></div>
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={()=>setTab(T.home)} style={{padding:"8px 12px",borderRadius:10,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#666":"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>⏸ Pauze</button>
+                  <button onClick={()=>{if(window.confirm(lang==="en"?"Stop workout?":lang==="de"?"Training stoppen?":"Training stoppen?")){{setSession(null);setSelectingMuscles(true);setTargetMuscles([]);}}}} style={{padding:"8px 12px",borderRadius:10,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:12,fontWeight:700,cursor:"pointer"}}>■ Stop</button>
+                </div>
+              </div>
+              {!showWarmup?(
+                <div style={{...S.card,padding:16,marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <div><div style={{fontSize:13,fontWeight:700,color:TEXT,marginBottom:2}}>Warming up</div><div style={{fontSize:11,color:isDark?"#444":"#666"}}>{getWarmup(targetMuscles).length} {T.oefeningen2} · ~5 {T.minuten2}</div></div>
+                  <button onClick={()=>setShowWarmup(true)} style={{padding:"8px 16px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:LIME,fontSize:12,fontWeight:700,cursor:"pointer"}}>Toon</button>
+                </div>
+              ):(
+                <div style={{...S.card,padding:16,marginBottom:12}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}><div style={{fontSize:13,fontWeight:800}}>Warming up</div><button onClick={()=>setShowWarmup(false)} style={{background:"none",border:"none",color:isDark?"#444":"#666",fontSize:12,cursor:"pointer",fontWeight:700}}>Sluiten</button></div>
+                  {getWarmup(targetMuscles).map((w,i)=>(
+                    <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",paddingBottom:10,marginBottom:10,borderBottom:i<getWarmup(targetMuscles).length-1?"1px solid #111":"none"}}>
+                      <div style={{width:20,height:20,borderRadius:"50%",background:"rgba(200,241,56,0.1)",border:"1px solid rgba(200,241,56,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:900,color:LIME,flexShrink:0,marginTop:2}}>{i+1}</div>
+                      <div><div style={{fontSize:13,fontWeight:700,color:TEXT,marginBottom:2}}>{w.name}</div><div style={{fontSize:11,color:"#555"}}>{w.desc}</div></div>
+                    </div>
+                  ))}
+                  <button onClick={()=>setShowWarmup(false)} style={{width:"100%",padding:"10px",borderRadius:10,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer",marginTop:4}}>{lang==="en"?"Done with warm-up":lang==="de"?"Aufwärmen fertig":"Klaar met warming up"}</button>
+                </div>
+              )}
+
+              {sportType==="hiit"?(
+                <HiitWorkout exercises={session} voiceOn={voiceOn} onDone={saveWorkout}/>
+              ):targetMuscles.length>0&&targetMuscles[0].startsWith("cardio_")?(
+                targetMuscles[0]==="cardio_swim"?(
+                  <SwimTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Zwemmen",exercises:[],targetMuscles,runDist:data.afstand||0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"swim",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);
+    const fpVerdiend=FP_VERDIEN.training+Math.round((trainDurationMin||0)*FP_VERDIEN.perMinuut);
+    setFpAnimatie(fpVerdiend);setTimeout(()=>setFpAnimatie(null),2500);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
+                ):targetMuscles[0]==="cardio_bike"?(
+                  <SpinTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:"Spinning",exercises:[],targetMuscles,runDist:0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"spin",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
+                ):(
+                <RunTracker voiceOn={voiceOn} profile={profile} log={log} defaultRunType={activeCardioRunType} prevRun={(()=>{const muscle=targetMuscles[0]||"cardio_full";const r=log.find(e=>(e.targetMuscles||[]).some(m=>m.startsWith("cardio_")));return r?{dist:r.runDist||0,time:r.runTime||0,pace:r.runPace||"–",cal:r.runCal||0}:null;})()}
+                  onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:data.type==="wandel"?"Wandelen":"Hardlopen",exercises:[],targetMuscles,runDist:data.dist,runTime:data.time,runPace:data.pace,runCal:data.cal||0,runType:data.type||"steady",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}
+                />
+                )
+              ):(
+                <div>
+                  {session.map((ex,ei)=>{
+                    const unit=ex.unit||"kg",opts=getSetValueOptions(unit);
+                    const maxNow=Math.max(0,...ex.weights.filter(w=>w>0)),maxPrev=ex.prevWeights?Math.max(0,...ex.prevWeights.filter(w=>w>0)):0;
+                    const isPR=maxNow>0&&maxPrev>0&&maxNow>maxPrev;
+                    const exMuscle=EX_DB[ex.name]?.muscle||"full body";
+                    const photo=EX_PHOTOS[ex.name]||P[exMuscle]||P["full body"];
+                    const alts=Object.entries(EX_DB).filter(([n,db])=>db.muscle===exMuscle&&n!==ex.name).map(([n])=>n);
+                    const defaultRest=Math.min(90,EX_DB[ex.name]?.rest||60),restSecs=ex.restSecs!=null?ex.restSecs:defaultRest;                    const globalPR=prData[ex.name];const isAllTimePR=maxNow>0&&(!globalPR||maxNow>globalPR.weight);
+                    const allSetsDone=ex.weights.length>0&&ex.weights.every((_,si)=>ex.setsDone?.[si]);
+                    return(
+                      <div key={ex.name+ei} style={{...S.card,marginBottom:12,overflow:"hidden",position:"relative",border:`1px solid ${allSetsDone?"rgba(200,241,56,0.4)":ex.saved?"rgba(200,241,56,0.25)":BORDER}`,opacity:allSetsDone?0.75:1,transition:"all .3s"}}>
+                        <div style={{height:160,position:"relative",background:isDark?"#1C1C1C":"#E8E8E0"}}>
+                          {allSetsDone&&<div style={{position:"absolute",inset:0,background:"rgba(0,0,0,0.55)",zIndex:5,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                            <div style={{fontSize:72,filter:"drop-shadow(0 4px 12px rgba(200,241,56,0.5))"}}>✓</div>
+                          </div>}
+                          {photo&&<img src={photo} alt={ex.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center 30%"}} onError={e=>e.target.style.display="none"}/>}
+                          <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 30%,rgba(0,0,0,0.85))"}}/>
+                          <div style={{position:"absolute",bottom:12,left:16,right:12,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}>
+                            <div><div style={{fontSize:17,fontWeight:900,color:"#ffffff"}}>{ex.name}</div><div style={{fontSize:11,color:isDark?"rgba(255,255,255,0.7)":"#444",marginTop:2}}>{ex.weights.length} sets · {ex.reps}</div></div>
+                            <div style={{display:"flex",gap:6}}>
+                              <button onClick={()=>setInfoEx(ex)} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#ffffff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:13,fontWeight:700}}>i</button>
+                              {ei>0&&<button onClick={()=>setSession(p=>{const a=[...p];const tmp=a[ei-1];a[ei-1]=a[ei];a[ei]=tmp;return a;})} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#ffffff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:18,lineHeight:1}}>↑</button>}
+                              {ei<session.length-1&&<button onClick={()=>setSession(p=>{const a=[...p];const tmp=a[ei];a[ei]=a[ei+1];a[ei+1]=tmp;return a;})} style={{background:"rgba(0,0,0,0.55)",border:"none",color:"#ffffff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:18,lineHeight:1}}>↓</button>}
+                              <button onClick={()=>moveExercise(ei,-1)} disabled={ei===0} style={{background:"rgba(0,0,0,0.55)",border:"none",color:ei===0?"rgba(255,255,255,0.3)":"#fff",width:32,height:32,borderRadius:"50%",cursor:ei===0?"default":"pointer",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>↑</button>
+                              <button onClick={()=>moveExercise(ei,1)} disabled={ei===session.length-1} style={{background:"rgba(0,0,0,0.55)",border:"none",color:ei===session.length-1?"rgba(255,255,255,0.3)":"#fff",width:32,height:32,borderRadius:"50%",cursor:ei===session.length-1?"default":"pointer",fontSize:15,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>↓</button>
+                              <button onClick={()=>removeExercise(ei)} style={{background:"rgba(239,68,68,0.7)",border:"none",color:"#ffffff",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:14,fontWeight:700}}>×</button>
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{padding:16}}>
+                          {isPR&&<div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:6}}>Sessie PR!</div>}
+                          {isAllTimePR&&<div style={{background:"rgba(200,241,56,0.08)",border:"1px solid rgba(200,241,56,0.2)",borderRadius:8,padding:"6px 12px",marginBottom:10,fontSize:11,color:LIME,fontWeight:700}}>All-time PR! Vorige: {globalPR?.weight||0}{unit}</div>}
+                          {ex.isCardioFinish&&<div style={{fontSize:10,color:ORANGE,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10,borderBottom:`1px solid rgba(255,107,43,0.15)`,paddingBottom:8}}>Cardio finish · Vetverbranding</div>}
+                          {ex.unit==="sec"&&!["Plank","Mountain Climber","High Knees","Bear Crawl","Hollow Hold","L-sit","Wall Handstand","Frog Stand","Bar Hang","Touwtjespringen","Speed Rope","Sprint op de plaats","Lateral Shuffle","Skipping"].includes(ex.name)&&(
+                            <CardioTimer ex={ex} ei={ei} profile={profile} lang={lang} isDark={isDark} LIME={LIME} ORANGE={ORANGE} TEXT={TEXT} CARD_BG={CARD_BG} BORDER={BORDER} BG={BG}
+                              onDone={(data)=>{
+                                setSession(p=>p.map((e,i)=>i!==ei?e:{...e,weights:[data.elapsed],setsDone:{0:true},saved:true,cardioData:data}));
+                                verdienFP("cardio");
+                              }}
+                            />
+                          )}
+                          {profile?.goal==="spiermassa"&&ex.prevWeights&&!ex.isCardioFinish&&(()=>{const maxP=Math.max(0,...ex.prevWeights.filter(w=>w>0));const maxN=Math.max(0,...ex.weights.filter(w=>w>0));const inc=maxP<20?1.25:maxP<50?2.5:5;const sug=Math.round((maxP+inc)/2.5)*2.5;if(maxP>0&&maxN===maxP)return<div style={{background:"rgba(200,241,56,0.04)",border:"1px solid rgba(200,241,56,0.12)",borderRadius:10,padding:"8px 12px",marginBottom:10,fontSize:11,color:LIME}}>Vorige keer {maxP}kg — probeer vandaag {sug}kg voor progressie</div>;return null;})()}
+                          {ex.prevWeights&&<div style={{background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>Vorige training</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:isDark?"#444":"#666",marginBottom:3}}>{setLabel(unit,i)}</div><div style={{fontSize:13,fontWeight:700,color:isDark?"#666":"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
+                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+    <div style={{...S.lbl}}>{unitLabel(unit,ex.name)}</div>
+
+  </div>
+                          <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:8}}>
+                            {ex.weights.map((w,si)=>{
+                              const pv=ex.prevWeights?.[si];const up=w>0&&pv>0&&w>pv;const setDone=ex.setsDone&&ex.setsDone[si];
+                              const curReps=(ex.repsPerSet&&ex.repsPerSet[si]!=null)?ex.repsPerSet[si]:(parseInt(ex.reps)||10);
+                              const REPS_OPTS=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20,25,30];
+                              const cardBg=setDone?(isDark?"rgba(200,241,56,0.08)":"rgba(200,241,56,0.1)"):(isDark?"#141414":"#F8F8F5");
+                              const cardBorder=setDone?LIME:isDark?"#222":"#E0E0D8";
+                              return(<div key={si} style={{background:cardBg,borderRadius:14,padding:"12px 14px",border:`1px solid ${cardBorder}`,transition:"all .2s"}}>
+                                <div style={{fontSize:10,fontWeight:900,color:setDone?LIME:isDark?"#555":"#888",letterSpacing:1,textAlign:"center",marginBottom:8}}>
+                                  SET {si+1}{setDone&&" ✓"}
+                                </div>
+                                <div style={{display:"flex",gap:8,alignItems:"flex-end"}}>
+                                  <div style={{flex:"0 0 auto",minWidth:90}}>
+                                    <div style={{fontSize:10,color:isDark?"#555":"#999",fontWeight:700,marginBottom:4}}>
+                                      {unit==="kg"?"KG":unit==="reps"?"REPS":unit.toUpperCase()}
+                                      {pv>0&&<span style={{color:isDark?"#333":"#bbb",fontWeight:400}}> ({fmtVal(pv,unit)})</span>}
+                                    </div>
+                                    <select value={w} onChange={e=>setW2(ei,si,Number(e.target.value))} style={{width:"100%",padding:"11px 4px",borderRadius:10,border:`1px solid ${up?"rgba(200,241,56,0.5)":isDark?"#2a2a2a":"#ccc"}`,background:up?"rgba(200,241,56,0.08)":isDark?"#1C1C1C":"#fff",color:up?LIME:TEXT,fontSize:16,fontWeight:900,cursor:"pointer",textAlign:"center"}}>
+                                      {opts.map(o=><option key={o} value={o}>{o>0?fmtVal(o,unit):"–"}</option>)}
+                                    </select>
+                                    {up&&<div style={{fontSize:10,color:LIME,marginTop:3,fontWeight:700}}>↑ PR</div>}
+                                  </div>
+                                  {unit==="kg"&&<div style={{flex:1}}>
+                                    <div style={{fontSize:10,color:isDark?"#555":"#999",fontWeight:700,marginBottom:4}}>REPS</div>
+                                    <div style={{display:"flex",gap:4,alignItems:"center"}}>
+                                      <button onClick={()=>setSession(p=>p.map((ex2,i2)=>i2!==ei?ex2:{...ex2,repsPerSet:(ex2.repsPerSet||ex2.weights.map(()=>10)).map((r,ri)=>ri===si?Math.max(1,r-1):r)}))} style={{width:36,height:44,borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#1C1C1C":"#e8e8e0",color:TEXT,fontSize:20,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:300,flexShrink:0}}>−</button>
+                                      <div style={{flex:1,textAlign:"center",fontSize:20,fontWeight:900,color:TEXT,height:44,display:"flex",alignItems:"center",justifyContent:"center",background:isDark?"#1C1C1C":"#e8e8e0",borderRadius:10}}>{curReps}</div>
+                                      <button onClick={()=>setSession(p=>p.map((ex2,i2)=>i2!==ei?ex2:{...ex2,repsPerSet:(ex2.repsPerSet||ex2.weights.map(()=>10)).map((r,ri)=>ri===si?r+1:r)}))} style={{width:36,height:44,borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#1C1C1C":"#e8e8e0",color:TEXT,fontSize:20,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:300,flexShrink:0}}>+</button>
+                                    </div>
+                                  </div>}
+                                  {!setDone&&<button onClick={()=>{const newSetsDone={...(ex.setsDone||{}),[si]:true};const allDone=ex.weights.every((_,idx)=>newSetsDone[idx]);setSession(p=>p.map((e,i)=>i!==ei?e:{...e,setsDone:newSetsDone,activeRest:si<e.weights.length-1?si:null,saved:allDone?true:e.saved}));if(allDone){setSavedFlash(ei);setTimeout(()=>setSavedFlash(null),2000);}}} style={{flexShrink:0,height:44,padding:"0 16px",borderRadius:10,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:14,fontWeight:900}}>✓</button>}
+                                </div>
+                                  :<div style={{textAlign:"center",fontSize:20}}>✓</div>
+                                }
+                              </div>);
+                            })}
+                            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",gap:4,paddingBottom:4}}>
+                              <button onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,weights:[...e.weights,e.weights[e.weights.length-1]||0]}))} style={{width:48,height:48,borderRadius:12,border:"1px dashed #333",background:"none",color:"#555",fontSize:24,cursor:"pointer",fontWeight:300,lineHeight:1}}>+</button>
+                              {ex.weights.length>1&&<button onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,weights:e.weights.slice(0,-1)}))} style={{width:40,height:24,borderRadius:8,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#333":"#666",fontSize:10,cursor:"pointer",fontWeight:700}}>–set</button>}
+                            </div>
+                          </div>
+                          {ex.activeRest!=null&&<RestTimer key={`${ei}-${ex.activeRest}`} seconds={restSecs} onDone={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,activeRest:null}))}/>}
+                          <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:12,marginTop:8}}>
+                            <span style={{fontSize:12,color:isDark?"#555":"#666",fontWeight:700,flexShrink:0}}>{T.rustLabel2}:</span>
+                            <div style={{display:"flex",gap:4}}>{REST_OPTS.map(s=><button key={s} onClick={()=>setSession(p=>p.map((e,i)=>i!==ei?e:{...e,restSecs:s}))} style={{padding:"7px 10px",borderRadius:8,border:"none",cursor:"pointer",background:restSecs===s?LIME:isDark?"#1C1C1C":"#E0E0D8",color:restSecs===s?"#000":isDark?"#555":"#888",fontSize:12,fontWeight:700}}>{s}s</button>)}</div>
+                          </div>
+                          <button onClick={()=>markSave(ei)} style={{width:"100%",padding:"10px",borderRadius:12,border:"none",cursor:"pointer",background:ex.saved?LIME:isDark?"#1C1C1C":"#E8E8E0",color:ex.saved?"#000":isDark?"#666":"#444",fontSize:13,fontWeight:800,marginBottom:10}}>{ex.saved?"✓ Opgeslagen":T.oefeningOpslaan}</button>
+                          <div style={{display:"flex",gap:8}}>
+                            <input value={ex.note} onChange={e=>setN(ei,e.target.value)} placeholder={T.notitiePlaceholder} style={{flex:1,padding:"10px 12px",borderRadius:12,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:12,outline:"none",minWidth:0}}/>
+                            <button onClick={()=>submitNote(ei)} disabled={!ex.note.trim()||noteLoading[ei]} style={{padding:"10px 14px",borderRadius:12,border:"none",fontWeight:700,fontSize:11,cursor:ex.note.trim()?"pointer":"default",background:ex.note.trim()?ORANGE:"#1C1C1C",color:ex.note.trim()?"#fff":isDark?"#444":"#666",opacity:noteLoading[ei]?0.5:1,flexShrink:0}}>{noteLoading[ei]?"...":"Roan"}</button>
+                          </div>
+                          {noteAdvice[ei]&&<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:12,marginTop:8,fontSize:12,lineHeight:1.7,color:"#bbb",position:"relative"}}><button onClick={()=>setNoteAdvice(p=>({...p,[ei]:null}))} style={{position:"absolute",top:8,right:8,background:"none",border:"none",color:isDark?"#555":"#aaa",fontSize:16,cursor:"pointer",lineHeight:1}}>×</button>{noteAdvice[ei].text}</div>}
+                          {wisselIndex===ei&&(<div style={{position:"absolute",top:0,left:0,right:0,bottom:0,zIndex:10,background:isDark?"rgba(13,13,13,0.97)":"rgba(245,245,240,0.97)",borderRadius:"inherit",padding:16,overflowY:"auto"}} onClick={e=>e.stopPropagation()}>
+                            <div style={{marginTop:12,background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:14,padding:14}}>
+                              <div style={{...S.lbl,marginBottom:10}}>Wissel of voeg toe</div>
+                              {swapMemory[ex.name]&&<div style={{background:"rgba(200,241,56,0.06)",borderRadius:10,padding:"8px 12px",marginBottom:10,fontSize:12,color:LIME}}>Eerder gewisseld naar: <strong>{swapMemory[ex.name]}</strong></div>}
+                              <input
+                                placeholder={lang==="en"?"Search or type exercise...":lang==="de"?"Übung suchen...":"Zoek oefening of typ zelf..."}
+                                onChange={e=>{
+                                  const q=e.target.value.toLowerCase();
+                                  if(q.length<2)return;
+                                  // Show matching exercises from DB
+                                  const matches=Object.keys(EX_DB).filter(n=>n.toLowerCase().includes(q)).slice(0,8);
+                                  setWisselSearch({q:e.target.value,results:matches});
+                                }}
+                                style={{width:"100%",padding:"10px 12px",borderRadius:10,border:`1px solid ${isDark?"#333":"#D0D0C8"}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none",marginBottom:10,boxSizing:"border-box"}}
+                              />
+                              {wisselSearch?.results?.length>0&&<div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:10}}>
+                                {wisselSearch.results.map(name=><button key={name} onClick={()=>{wisselOefening(ei,name);setWisselSearch(null);}} style={{padding:"10px 14px",borderRadius:10,border:"1px solid #444",background:CARD_BG,color:TEXT,fontSize:13,cursor:"pointer",textAlign:"left",display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:isDark?"#888":"#666"}}>{EX_DB[name]?.muscle}</span></button>)}
+                              </div>}
+                              <div style={{borderTop:"1px solid #333",paddingTop:10,marginBottom:10}}>
+                                <div style={{fontSize:11,color:isDark?"#888":"#666",marginBottom:8}}>Oefening niet gevonden? Voeg zelf toe:</div>
+                                <input
+                                  id={`custom-ex-${ei}`}
+                                  placeholder={lang==="en"?"Custom exercise name...":lang==="de"?"Name der Übung...":"Naam eigen oefening..."}
+                                  style={{width:"100%",padding:"10px 12px",borderRadius:10,border:`1px solid ${isDark?"#333":"#D0D0C8"}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none",marginBottom:8,boxSizing:"border-box"}}
+                                />
+                                <button onClick={()=>{
+                                  const naam=document.getElementById(`custom-ex-${ei}`)?.value?.trim();
+                                  if(!naam)return;
+                                  // Add to EX_DB
+                                  EX_DB[naam]={muscle:EX_DB[ex.name]?.muscle||"full body",unit:EX_DB[ex.name]?.unit||"kg",rest:60,info:`Eigen oefening: ${naam}`,yt:naam.replace(/ /g,"+")};
+                                  // Save to localStorage
+                                  const custom=LS.get("fitcoach_custom_ex")||{};
+                                  custom[naam]=EX_DB[naam];
+                                  LS.set("fitcoach_custom_ex",custom);
+                                  wisselOefening(ei,naam);
+                                  setWisselSearch(null);
+                                }} style={{width:"100%",padding:"9px",borderRadius:10,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer"}}>Toevoegen & wisselen</button>
+                              </div>
+                              {alts.length>0&&!wisselSearch?.results?.length&&<><div style={{fontSize:11,color:isDark?"#888":"#666",marginBottom:8}}>Suggesties ({EX_DB[ex.name]?.muscle}):</div>
+                              <div style={{display:"flex",flexDirection:"column",gap:6}}>{[...new Set([swapMemory[ex.name],...alts].filter(Boolean))].slice(0,5).map(name=><button key={name} onClick={()=>wisselOefening(ei,name)} style={{padding:"10px 14px",borderRadius:10,border:`1px solid ${name===swapMemory[ex.name]?"rgba(200,241,56,0.2)":BORDER}`,background:name===swapMemory[ex.name]?"rgba(200,241,56,0.04)":isDark?"#141414":CARD_BG,color:TEXT,fontSize:13,cursor:"pointer",textAlign:"left",fontWeight:600,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{name}</span><span style={{fontSize:11,color:isDark?"#888":"#666"}}>{EX_DB[name]?.muscle}</span></button>)}</div></>}
+
+                              <button onClick={()=>{setWisselIndex(null);setWisselSearch(null);}} style={{width:"100%",marginTop:10,padding:"9px",borderRadius:10,border:`1px solid ${isDark?"#333":"#D0D0C8"}`,background:"none",color:"#555",fontSize:12,cursor:"pointer"}}>{lang==="en"?"Close":lang==="de"?"Schließen":"Sluiten"}</button>
+                            </div></div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <div style={{marginBottom:12}}>
+                    <div style={{...S.lbl,marginBottom:8}}>Oefening toevoegen</div>
+                    <div style={{display:"flex",gap:8}}>
+                      <input
+                        id="add-ex-input"
+                        placeholder={lang==="en"?"Search exercise (e.g. Crunches)...":lang==="de"?"Übung suchen (z.B. Crunches)...":"Zoek oefening (bijv. Crunches)..."}
+                        list="ex-suggestions"
+                        style={{flex:1,padding:"11px 14px",borderRadius:12,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none"}}
+                      />
+                      <datalist id="ex-suggestions">
+                        {Object.keys(EX_DB).map(n=><option key={n} value={n}/>)}
+                      </datalist>
+                      <button onClick={()=>{
+                        const input=document.getElementById("add-ex-input");
+                        const naam=input?.value?.trim();
+                        if(!naam)return;
+                        // Check of het een spiergroep is
+                        const allExForMuscle=Object.keys(EX_DB).filter(n=>EX_DB[n]?.muscle?.toLowerCase().includes(naam.toLowerCase()));
+                        if(allExForMuscle.length>0){
+                          // Toon alle oefeningen van die spiergroep
+                          setWisselSearch({q:naam,results:allExForMuscle.slice(0,15)});
+                          return;
+                        }
+                        if(!EX_DB[naam])EX_DB[naam]={muscle:"full body",unit:"kg",rest:60,info:`Eigen oefening: ${naam}`,yt:naam.replace(/ /g,"+")};
+                        const newEx={name:naam,sets:3,weights:[0,0,0],unit:EX_DB[naam]?.unit||"kg",setsDone:{},restSecs:EX_DB[naam]?.rest||60};
+                        setSession(p=>[...p,newEx]);
+                        input.value="";
+                      }} style={{padding:"11px 16px",borderRadius:12,border:"none",background:isDark?"#1C1C1C":"#E8E8E0",color:LIME,fontWeight:800,fontSize:14,cursor:"pointer",flexShrink:0}}>+</button>
+                    </div>
+                  </div>
+                  <button onClick={saveWorkout} style={{width:"100%",padding:18,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>{T.trainingOpslaan}</button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+      {tab===T.voortgang&&(
+        <div style={{padding:"24px 16px"}}>
+          <div style={{...S.lbl,color:LIME,marginBottom:4}}>{T.statistieken}</div>
+          <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:4}}>{lang==="en"?"Progress":lang==="de"?"Fortschritt":"Voortgang"}</div>
+          <div style={{fontSize:14,color:"#999",marginBottom:20}}>{profile.name} · {startW}→{goalW}kg</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:8,background:isDark?"#111":CARD_BG,borderRadius:12,padding:8,marginBottom:20}}>
+            {[{k:"gewicht",l:T.gewichtTab},{k:"lichaam",l:T.lichaamsTab},{k:"trainings",l:T.trainingsTab},{k:"records",l:T.recordsTab}].map(t=>(
+              <button key={t.k} onClick={()=>setMeasSubTab(t.k)} style={{flex:1,padding:"8px 4px",borderRadius:10,border:"none",cursor:"pointer",background:measSubTab===t.k?isDark?"#1C1C1C":"#E0E0D8":"none",color:measSubTab===t.k?TEXT:"#555",fontSize:10,fontWeight:measSubTab===t.k?700:400,transition:"all .15s"}}>{t.l}</button>
+            ))}
+          </div>
+
+          {measSubTab==="gewicht"&&<>
+            <div style={{...S.card,padding:24,marginBottom:14}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20}}>
+                <div><div style={{...S.lbl,marginBottom:8}}>{T.huidigGewicht}</div><div style={{fontSize:52,fontWeight:900,letterSpacing:-2,color:LIME,lineHeight:1}}>{curW}</div><div style={{fontSize:14,color:"#555",marginTop:4}}>{T.kilogram}</div></div>
+                <div style={{textAlign:"right"}}>{curW>goalW&&<div style={{fontSize:11,color:"#ef4444",fontWeight:700,marginBottom:4}}>{T.nogKg} {(curW-goalW).toFixed(1)}kg</div>}<div style={{fontSize:24,fontWeight:900,marginTop:8}}>{pct}%</div><div style={{fontSize:10,color:isDark?"#444":"#666"}}>{T.behaald}</div></div>
+              </div>
+              <div style={{background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:99,height:8,overflow:"hidden",marginBottom:6}}><div style={{width:`${pct}%`,height:8,background:`linear-gradient(90deg,${LIME},#A8D020)`,borderRadius:99,transition:"width .8s ease"}}/></div>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:isDark?"#444":"#666"}}><span>{T.startLabel} {startW}kg</span><span>{T.doelLabel} {goalW}kg</span></div>
+            </div>
+            <div style={{...S.card,padding:20,marginBottom:14}}><div style={{...S.lbl,marginBottom:16}}>{T.gewichtsverloop}</div><LineChart data={wLog.slice(-14)} height={130}/></div>
+            <div style={{...S.card,padding:16,marginBottom:14}}>
+              <div style={{...S.lbl,marginBottom:12}}>{T.gewichtInvoeren}</div>
+              <div style={{display:"flex",gap:8,width:"100%"}}><input type="number" value={newW} onChange={e=>setNewW(e.target.value)} placeholder="kg" step="0.1" style={{flex:1,minWidth:0,padding:"12px 14px",borderRadius:12,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:15,fontWeight:700,outline:"none"}}/><button onClick={addWeight} style={{flexShrink:0,padding:"12px 20px",borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontWeight:800,fontSize:14}}>{T.opslaan}</button></div>
+            </div>
+            {wLog.length>0&&<><div style={{...S.lbl,marginBottom:10}}>Metingen</div>{wLog.slice().reverse().slice(0,10).map((e,i,arr)=>{const prev=arr[i+1];const diff=prev?(e.w-prev.w).toFixed(1):null;return(<div key={e.id||i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",...S.card,padding:"12px 16px",marginBottom:6}}><div style={{fontSize:13,color:isDark?"#666":"#666"}}>{e.date}</div><div style={{display:"flex",gap:12,alignItems:"center"}}>{diff!==null&&<div style={{fontSize:12,fontWeight:700,color:parseFloat(diff)<0?LIME:parseFloat(diff)>0?"#ef4444":"#555"}}>{parseFloat(diff)>0?`+${diff}`:diff}kg</div>}<div style={{fontWeight:800,fontSize:16,color:LIME}}>{e.w}kg</div><button onClick={()=>deleteWeight(e.id)} style={{background:"none",border:"none",color:isDark?"#444":"#666",fontSize:16,cursor:"pointer",padding:"0 4px"}}>×</button></div></div>);})}</>}
+          </>}
+
+          {measSubTab==="lichaam"&&<>
+            <div style={{...S.card,padding:16,marginBottom:14}}>
+              <div style={{...S.lbl,marginBottom:12}}>{T.nieuweMeting}</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:12}}>
+                {[{k:"waist",l:"Taille (cm)"},{k:"chest",l:"Borst (cm)"},{k:"hips",l:"Heupen (cm)"}].map(f=>(
+                  <div key={f.k}>
+                    <div style={{fontSize:9,color:"#555",fontWeight:700,textTransform:"uppercase",letterSpacing:1,marginBottom:4}}>{f.l}</div>
+                    <input type="number" value={newMeas[f.k]} onChange={e=>setNewMeas(m=>({...m,[f.k]:e.target.value}))} placeholder="cm" style={{width:"100%",padding:"10px 8px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:14,fontWeight:700,outline:"none",textAlign:"center",boxSizing:"border-box"}}/>
+                  </div>
+                ))}
+              </div>
+              <button onClick={saveMeas} style={{width:"100%",padding:"11px",borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:13,fontWeight:800}}>{T.metingOpslaan}</button>
+            </div>
+            {bodyMeas.length>0&&(
+              <div style={{...S.card,padding:16,marginBottom:14}}>
+                <div style={{...S.lbl,marginBottom:12}}>Laatste metingen</div>
+                {bodyMeas.slice(0,6).map((m,i)=>(
+                  <div key={m.id||i} style={{display:"flex",justifyContent:"space-between",paddingBottom:10,marginBottom:10,borderBottom:i<Math.min(5,bodyMeas.length-1)?"1px solid #111":"none"}}>
+                    <div style={{fontSize:11,color:"#555"}}>{m.date}</div>
+                    <div style={{display:"flex",gap:14}}>
+                      {m.waist&&<div style={{textAlign:"center"}}><div style={{fontSize:14,fontWeight:800,color:LIME}}>{m.waist}</div><div style={{fontSize:9,color:isDark?"#444":"#666"}}>taille</div></div>}
+                      {m.chest&&<div style={{textAlign:"center"}}><div style={{fontSize:14,fontWeight:800}}>{m.chest}</div><div style={{fontSize:9,color:isDark?"#444":"#666"}}>borst</div></div>}
+                      {m.hips&&<div style={{textAlign:"center"}}><div style={{fontSize:14,fontWeight:800}}>{m.hips}</div><div style={{fontSize:9,color:isDark?"#444":"#666"}}>heupen</div></div>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {bodyMeas.length===0&&<div style={{...S.card,padding:24,textAlign:"center",marginBottom:14}}><div style={{fontSize:12,color:isDark?"#444":"#666",marginBottom:4}}>Nog geen metingen</div><div style={{fontSize:11,color:isDark?"#333":"#666"}}>Voeg je eerste lichaamsmeting toe</div></div>}
+          </>}
+
+          {measSubTab==="trainings"&&<>
+            <div onClick={()=>setShowFPModal(true)} style={{...S.card,padding:16,marginBottom:14,cursor:"pointer",borderTop:"3px solid "+fpRang.kleur}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+                <div style={{display:"flex",gap:10,alignItems:"center"}}>
+                  <div style={{fontSize:28}}>{fpRang.emoji}</div>
+                  <div>
+                    <div style={{fontSize:14,fontWeight:900,color:fpRang.kleur}}>{fpRang.naam}</div>
+                    <div style={{fontSize:11,color:isDark?"#444":"#888"}}>Tik voor details</div>
+                  </div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:24,fontWeight:900,color:TEXT,lineHeight:1}}>{fitPoints.toLocaleString()}</div>
+                  <div style={{fontSize:10,color:isDark?"#444":"#888",marginTop:2}}>FitPoints</div>
+                </div>
+              </div>
+              <div style={{background:isDark?"#1C1C1C":"#E0E0D8",borderRadius:99,height:7,overflow:"hidden"}}>
+                <div style={{width:fpVolgende?Math.min(100,Math.round((fitPoints-fpRang.min)/(fpVolgende.min-fpRang.min)*100))+"%":"100%",height:7,background:fpRang.kleur,borderRadius:99}}/>
+              </div>
+              {fpVolgende&&<div style={{fontSize:11,color:isDark?"#444":"#888",marginTop:6}}>{(fpVolgende.min-fitPoints).toLocaleString()} FP tot <span style={{color:fpVolgende.kleur,fontWeight:700}}>{fpVolgende.naam}</span></div>}
+            </div>
+            <div style={{...S.card,padding:16,marginBottom:14}}>
+              <div style={{...S.lbl,marginBottom:12}}>{T.wekelijksVolume}</div>
+              <VolumeBarChart log={log}/>
+              <div style={{fontSize:10,color:isDark?"#333":"#666",textAlign:"center",marginTop:6}}>Aantal trainingen per week</div>
+            </div>
+            {log.length>0&&<><div style={{...S.lbl,marginBottom:12}}>Trainingslog</div>
+              {log.slice(0,10).map((e,i)=><div key={e.id||i} style={{...S.card,padding:16,marginBottom:8}}>
+                <div style={{display:"flex",justifyContent:"space-between",marginBottom:10,alignItems:"flex-start"}}>
+    <div style={{flex:1,minWidth:0}}>
+      {editLogId===e.id?(
+        <input value={editLogName} onChange={ev=>setEditLogName(ev.target.value)} onKeyDown={ev=>{if(ev.key==="Enter"){setLog(p=>p.map(x=>x.id===e.id?{...x,workout:editLogName}:x));LS.set("fitcoach_log",log.map(x=>x.id===e.id?{...x,workout:editLogName}:x));setEditLogId(null);}if(ev.key==="Escape")setEditLogId(null);}} autoFocus style={{width:"100%",fontSize:14,fontWeight:800,padding:"4px 8px",borderRadius:8,border:"1px solid "+LIME,background:isDark?"#111":CARD_BG,color:TEXT,outline:"none",boxSizing:"border-box"}}/>
+      ):(
+        <div style={{fontSize:14,fontWeight:800,color:TEXT}}>{e.workout}</div>
+      )}
+      <div style={{fontSize:11,color:isDark?"#444":"#666",marginTop:2}}>{e.day} · {e.date}{e.duration?" · "+e.duration+" min":""}{e.kcal?" · "+e.kcal+" kcal":""}</div>
+    </div>
+    <div style={{display:"flex",gap:6,flexShrink:0}}>
+      {editLogId===e.id?(
+        <button onClick={()=>{const updated=log.map(x=>x.id===e.id?{...x,workout:editLogName}:x);setLog(updated);LS.set("fitcoach_log",updated);setEditLogId(null);}} style={{background:"rgba(200,241,56,0.1)",border:"1px solid rgba(200,241,56,0.3)",borderRadius:8,color:LIME,fontSize:11,cursor:"pointer",padding:"4px 10px",fontWeight:600}}>✓</button>
+      ):(
+        <button onClick={()=>{setEditLogId(e.id);setEditLogName(e.workout);}} style={{background:isDark?"rgba(255,255,255,0.05)":"rgba(0,0,0,0.05)",border:"1px solid "+BORDER,borderRadius:8,color:isDark?"#666":"#888",fontSize:11,cursor:"pointer",padding:"4px 10px",fontWeight:600}}>Wijzig</button>
+      )}
+      <button onClick={()=>deleteWorkout(e.id)} style={{background:"rgba(239,68,68,0.1)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:8,color:"#ef4444",fontSize:11,cursor:"pointer",padding:"4px 10px",fontWeight:600}}>×</button>
+    </div>
+  </div>
+                {(e.exercises||[]).slice(0,4).map((ex,j)=><div key={j} style={{display:"flex",justifyContent:"space-between",paddingBottom:6,marginBottom:6,borderBottom:j<Math.min(3,(e.exercises||[]).length-1)?"1px solid #1C1C1C":"none"}}><div style={{fontSize:11,color:isDark?"#666":"#666"}}>{ex.name}</div><div style={{fontSize:11,fontWeight:700,color:LIME}}>{(ex.weights||[]).filter(w=>w>0).map(w=>fmtVal(w,ex.unit||"kg")).join("·")||"–"}</div></div>)}
+              </div>)}</>}
+          </>}
+
+          {measSubTab==="records"&&<>
+            <div style={{fontSize:12,color:"#555",marginBottom:16}}>Automatisch bijgehouden bij elke training</div>
+            {Object.keys(prData).length===0?(
+              <div style={{...S.card,padding:24,textAlign:"center"}}><div style={{fontSize:12,color:isDark?"#444":"#666",marginBottom:4}}>Nog geen records</div><div style={{fontSize:11,color:isDark?"#333":"#666"}}>Sla een training op om je eerste PR te registreren</div></div>
+            ):(
+              <div style={{...S.card,padding:16}}>
+                {Object.entries(prData).sort((a,b)=>b[1].date.localeCompare(a[1].date)).map(([name,pr],i,arr)=>(
+                  <div key={name} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:12,marginBottom:12,borderBottom:i<arr.length-1?"1px solid #111":"none"}}>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:13,fontWeight:700,color:isDark?"#ccc":"#333",marginBottom:2}}>{name}</div>
+                      <div style={{fontSize:10,color:isDark?"#444":"#666"}}>{pr.date}</div>
+                    </div>
+                    <div style={{display:"flex",alignItems:"center",gap:10}}>
+                      <div style={{textAlign:"right"}}>
+                        <div style={{fontSize:20,fontWeight:900,color:LIME,letterSpacing:-0.5}}>{pr.weight}</div>
+                        <div style={{fontSize:10,color:"#555"}}>{pr.unit}</div>
+                      </div>
+                      <button onClick={()=>{
+                        const nieuw=window.prompt(`Nieuw PR voor ${name} (${pr.unit}):`, pr.weight);
+                        if(nieuw&&!isNaN(parseFloat(nieuw))){
+                          const updated={...prData,[name]:{...pr,weight:parseFloat(nieuw)}};
+                          setPrData(updated);
+                          LS.set("fitcoach_prs",updated);
+                        }
+                      }} style={{background:isDark?"#1C1C1C":"#E8E8E0",border:`1px solid ${isDark?"#333":"#D0D0C8"}`,color:isDark?"#666":"#666",width:28,height:28,borderRadius:8,cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",justifyContent:"center"}}>✏️</button>
+                      <button onClick={()=>{
+                        if(window.confirm(`PR van ${name} verwijderen?`)){
+                          const updated={...prData};
+                          delete updated[name];
+                          setPrData(updated);
+                          LS.set("fitcoach_prs",updated);
+                        }
+                      }} style={{background:isDark?"#1C1C1C":"#E8E8E0",border:`1px solid ${isDark?"#333":"#D0D0C8"}`,color:"#ef4444",width:28,height:28,borderRadius:8,cursor:"pointer",fontSize:12,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {Object.keys(prData).length>0&&<button onClick={()=>{if(window.confirm("Alle PR records wissen?")){{setPrData({});LS.set("fitcoach_prs",{});}}}} style={{width:"100%",padding:"11px",borderRadius:12,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#333":"#666",fontSize:11,cursor:"pointer",marginTop:12}}>{T.recordsWissen}</button>}
+          </>}
+        </div>
+      )}
+      {tab===T.voeding&&(
+        <div style={{padding:"16px 16px 0"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+            <div>
+              <div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:2}}>Voeding</div>
+              <div style={{fontSize:28,fontWeight:900,color:TEXT,letterSpacing:-1.5,lineHeight:1}}>{foodDate===TODAY_KEY?lang==="en"?"Today":lang==="de"?"Heute":"Vandaag":DAYS[parseDate(foodDate).getDay()]}</div>
+            </div>
+            <div style={{display:"flex",gap:6}}>
+              <button onClick={()=>setFoodDate(d=>fmtDate(new Date(parseDate(d).getTime()-86400000)))} style={{width:32,height:32,borderRadius:"50%",border:`1px solid ${BORDER}`,background:"none",color:"#555",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>‹</button>
+              <button onClick={()=>{if(foodDate!==TODAY_KEY)setFoodDate(d=>fmtDate(new Date(parseDate(d).getTime()+86400000)));}} disabled={foodDate===TODAY_KEY} style={{width:32,height:32,borderRadius:"50%",border:`1px solid ${BORDER}`,background:"none",color:foodDate===TODAY_KEY?isDark?"#333":"#aaa":"#555",fontSize:14,cursor:foodDate===TODAY_KEY?"default":"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>›</button>
+            </div>
+          </div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:6,marginBottom:14}}>
+            {[{k:"dagelijks",l:T.dagelijks},{k:"weekmenu",l:T.weekmenu},{k:"boodschappen",l:T.boodschappen},{k:"recepten",l:T.recepten}].map(t=>(
+              <button key={t.k} onClick={()=>setFoodSubTab(t.k)} style={{width:"calc(50% - 3px)",padding:"10px 8px",borderRadius:10,border:`1px solid ${foodSubTab===t.k?isDark?"#333":"#888":"#1C1C1C"}`,cursor:"pointer",background:foodSubTab===t.k?isDark?"#1C1C1C":"#E0E0D8":isDark?"#111":CARD_BG,color:foodSubTab===t.k?TEXT:TEXT2,fontSize:12,fontWeight:foodSubTab===t.k?700:400}}>{t.l}</button>
+            ))}
+          </div>
+
+          {foodSubTab==="dagelijks"&&<>
+            <div style={{padding:"0 0 14px"}}>
+              <div style={{background:CARD_BG,borderRadius:14,padding:"14px 16px",marginBottom:10,display:"flex",justifyContent:"space-between",alignItems:"center",border:`1px solid ${BORDER}`,borderTop:`3px solid ${LIME}`}}>
+                <div>
+                  <div style={{fontSize:10,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>{T.vandaagGegeten}</div>
+                  <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+                    <div style={{fontSize:36,fontWeight:900,color:selTotals.kcal>=kcalT?LIME:TEXT,letterSpacing:-2,lineHeight:1}}>{selTotals.kcal}</div>
+                    <div style={{fontSize:13,color:isDark?"#444":"#666"}}>/ {kcalT} kcal</div>
+                  </div>
+                  <div style={{background:BG,borderRadius:99,height:3,width:"100%",marginTop:8,maxWidth:160}}>
+                    <div style={{width:`${Math.min(100,selTotals.kcal/kcalT*100)}%`,height:3,borderRadius:99,background:LIME,transition:"width .3s"}}/>
+                  </div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:10,color:isDark?"#444":"#666",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>{lang==="en"?"Phase":lang==="de"?"Phase":"Fase"}</div>
+                  <div style={{fontSize:13,fontWeight:800,color:faseObj.c}}>{getFaseLabel(fase,lang)}</div>
+                  <button onClick={()=>setShowSettings(true)} style={{marginTop:6,padding:"4px 10px",borderRadius:8,border:`1px solid ${BORDER}`,background:"none",color:"#555",fontSize:10,cursor:"pointer",fontWeight:600}}>Wijzig</button>
+                </div>
+              </div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+                <div style={{background:CARD_BG,borderRadius:12,padding:"10px 8px",textAlign:"center",borderTop:`2px solid #60a5fa`}}>
+                  <div style={{fontSize:10,color:"#60a5fa",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>Eiwit</div>
+                  <div style={{fontSize:20,fontWeight:900,color:TEXT}}>{selTotals.prot}g</div>
+                  <div style={{fontSize:9,color:isDark?"#333":"#666",marginTop:2}}>{protT}g doel</div>
+                  <div style={{background:BG,borderRadius:99,height:2,marginTop:5}}>
+                    <div style={{width:`${Math.min(100,selTotals.prot/protT*100)}%`,height:2,borderRadius:99,background:"#60a5fa"}}/>
+                  </div>
+                </div>
+                <div style={{background:CARD_BG,borderRadius:12,padding:"10px 8px",textAlign:"center",borderTop:`2px solid #f59e0b`}}>
+                  <div style={{fontSize:10,color:"#f59e0b",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>Koolh.</div>
+                  <div style={{fontSize:20,fontWeight:900,color:TEXT}}>{selTotals.carbs}g</div>
+                  <div style={{fontSize:9,color:isDark?"#333":"#666",marginTop:2}}>{carbsT}g doel</div>
+                  <div style={{background:BG,borderRadius:99,height:2,marginTop:5}}>
+                    <div style={{width:`${Math.min(100,selTotals.carbs/Math.max(1,carbsT)*100)}%`,height:2,borderRadius:99,background:"#f59e0b"}}/>
+                  </div>
+                </div>
+                <div style={{background:CARD_BG,borderRadius:12,padding:"10px 8px",textAlign:"center",borderTop:`2px solid #a78bfa`}}>
+                  <div style={{fontSize:10,color:"#a78bfa",fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:4}}>Vet</div>
+                  <div style={{fontSize:20,fontWeight:900,color:TEXT}}>{selTotals.fat}g</div>
+                  <div style={{fontSize:9,color:isDark?"#333":"#666",marginTop:2}}>{fatT}g doel</div>
+                  <div style={{background:BG,borderRadius:99,height:2,marginTop:5}}>
+                    <div style={{width:`${Math.min(100,selTotals.fat/Math.max(1,fatT)*100)}%`,height:2,borderRadius:99,background:"#a78bfa"}}/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style={{...S.card,padding:"12px 16px",marginBottom:14}}>
+              {(()=>{const weekStart=new Date(TODAY);weekStart.setDate(TODAY.getDate()-TODAY.getDay());const cheatKey="fitcoach_cheat_"+fmtDate(weekStart);const hadCheat=LS.get(cheatKey);if(!hadCheat&&(TODAY.getDay()===5||TODAY.getDay()===6))return<div style={{background:"rgba(255,107,43,0.06)",border:"1px solid rgba(255,107,43,0.15)",borderRadius:12,padding:"10px 14px",display:"flex",justifyContent:"space-between",alignItems:"center"}}><div><div style={{fontSize:12,color:ORANGE,fontWeight:700,marginBottom:2}}>Cheatdag voorstel</div><div style={{fontSize:11,color:"#555"}}>Je doet het goed deze week. Gun jezelf iets lekkers.</div></div><button onClick={()=>LS.set(cheatKey,true)} style={{padding:"6px 12px",borderRadius:8,border:"none",background:ORANGE,color:TEXT,fontSize:11,fontWeight:700,cursor:"pointer"}}>Deal!</button></div>;return null;})()}
+            </div>
+            <div style={{display:"flex",gap:8,marginBottom:16}}>
+              <button onClick={()=>{setRecipeTab(!recipeTab);if(!recipeTab&&!recipe)getRecipe();}} style={{flex:1,padding:14,borderRadius:14,border:`1px solid ${recipeTab?ORANGE:"#222"}`,background:recipeTab?"rgba(255,107,43,0.08)":"none",color:recipeTab?ORANGE:isDark?"#888":"#666",fontSize:13,fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                <div style={{textAlign:"left"}}>
+                  <div style={{fontSize:13,fontWeight:700}}>Roan recept van de dag</div>
+                  <div style={{fontSize:10,color:"#555",marginTop:2}}>AI-gegenereerd recept op basis van jouw doel</div>
+                </div>
+                <span style={{marginLeft:8}}>{recipeTab?"↑":"↓"}</span>
+              </button>
+              <button onClick={()=>setFoodSubTab("recepten")} style={{padding:"14px 16px",borderRadius:14,border:`1px solid ${BORDER}`,background:"none",color:"#555",fontSize:11,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>Alle recepten</button>
+            </div>
+            {recipeTab&&<div style={{...S.card,padding:16,marginBottom:16}}>{loadingRecipe?<div style={{textAlign:"center",padding:20,color:"#555"}}>Roan maakt een recept...</div>:<div><div style={{fontSize:13,lineHeight:1.8,color:isDark?"#bbb":"#333",whiteSpace:"pre-wrap"}}>{recipe}</div><div style={{display:"flex",gap:8,marginTop:12}}><button onClick={getRecipe} style={{padding:"9px 16px",borderRadius:10,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#888":"#666",fontSize:12,cursor:"pointer"}}>{T.nieuwRecept}</button><button onClick={()=>{if(!recipe)return;const newR={id:Date.now(),text:recipe,date:TODAY_KEY};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"9px 16px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:LIME,fontSize:12,cursor:"pointer",fontWeight:700}}>{T.opslaan}</button></div></div>}</div>}
+            {MEALS.map(meal=>{
+              const items=selFood[meal]||[];const mKcal=items.reduce((s,i)=>s+(i.kcal||0),0),mProt=items.reduce((s,i)=>s+(i.prot||0),0);
+              const customFoods=LS.get("fitcoach_custom_foods")||{};const snelkeuzes=[...(customFoods[meal]||[]),...QUICK_FOODS[meal]].filter((v,i,a)=>a.indexOf(v)===i).slice(0,6);
+              return(<div key={meal} style={{...S.card,marginBottom:12,overflow:"hidden"}}>
+                <div style={{height:110,position:"relative",overflow:"hidden",background:isDark?"#1C1C1C":"#E8E8E0"}}>
+                  <img src={FOOD_PHOTOS[meal]} alt={meal} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>e.target.style.display="none"}/>
+                  <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent 20%,rgba(13,13,13,0.92))"}}/>
+                  <div style={{position:"absolute",bottom:10,left:14,right:14,display:"flex",justifyContent:"space-between",alignItems:"flex-end"}}><div style={{fontSize:17,fontWeight:900,color:"#fff"}}>{getMealLabel(meal,lang)}</div>{items.length>0&&<div style={{display:"flex",gap:8}}><span style={{fontSize:11,color:"rgba(255,255,255,0.55)"}}>{mKcal} kcal</span><span style={{padding:"2px 8px",borderRadius:99,background:"rgba(200,241,56,0.15)",color:LIME,fontSize:10,fontWeight:700}}>{mProt}g eiwit</span></div>}</div>
+                </div>
+                <div style={{padding:14}}>
+                  <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>{snelkeuzes.map(q=><button key={q} onClick={()=>addFood(meal,q)} style={{padding:"5px 10px",borderRadius:20,border:`1px solid ${BORDER}`,background:isDark?"#1C1C1C":CARD_BG,color:isDark?"#888":"#555",fontSize:10,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>{q}</button>)}</div>
+                  {items.map((item,idx)=><div key={idx} style={{display:"flex",alignItems:"center",background:isDark?"#1C1C1C":"#EDEDEA",borderRadius:12,padding:"10px 12px",marginBottom:8}}><div style={{flex:1}}><div style={{fontSize:13,fontWeight:700,marginBottom:3,color:TEXT}}>{item.desc}</div><div style={{display:"flex",gap:8,fontSize:11,color:"#999"}}><span>{item.kcal}kcal</span><span>{item.prot}g eiwit</span><span>{item.carbs}g koolh</span><span>{item.fat}g vet</span></div></div><button onClick={()=>remFood(meal,idx)} style={{background:"none",border:"none",color:"#555",fontSize:18,cursor:"pointer",padding:"0 4px",marginLeft:8}}>×</button></div>)}
+                  <div style={{display:"flex",gap:8}}>
+                    <input value={foodInput[meal]} onChange={e=>setFoodInput(p=>({...p,[meal]:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&addFood(meal,null)} placeholder="Toevoegen bijv. '150g kip'..." style={{flex:1,padding:"11px 14px",borderRadius:12,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none"}}/>
+                    <button onClick={()=>addFood(meal,null)} disabled={foodLoading[meal]} style={{width:44,height:44,borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontWeight:900,fontSize:18,opacity:foodLoading[meal]?0.5:1,flexShrink:0}}>{foodLoading[meal]?"·":"+"}</button>
+                  </div>
+                </div>
+              </div>);
+            })}
+            <button onClick={async()=>{setLoadingFA(true);setFoodAdvice("");const ms=MEALS.map(m=>{const its=selFood[m]||[];return its.length?`${m}: ${its.map(i=>i.desc).join(", ")}`:`${m}: leeg`;}).join("\n");const txt=await ai(`Roan, coach voor ${profile?.name} (fase: ${fase}).\n${ms}\nTotaal: ${selTotals.kcal}/${kcalT}kcal. Geef voedingsadvies. Respond in: ${lang==="en"?"English":lang==="de"?"German":"Dutch"}, max 180 words.`);setFoodAdvice(txt);setLoadingFA(false);}} disabled={loadingFA} style={{width:"100%",padding:14,borderRadius:14,border:"none",cursor:"pointer",background:ORANGE,color:TEXT,fontSize:14,fontWeight:800,marginBottom:12,opacity:loadingFA?0.7:1}}>{loadingFA?"Roan analyseert...":"Vraag voedingsadvies aan Roan"}</button>
+            {foodAdvice&&<div style={{...S.card,padding:16,fontSize:13,lineHeight:1.8,color:"#bbb",marginBottom:12}}>{foodAdvice}</div>}
+          </>}
+
+          {foodSubTab==="weekmenu"&&(
+            <div>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+                <div style={{fontSize:13,fontWeight:800}}>Weekmenu</div>
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={()=>setShowWeekMenuPrefs(v=>!v)} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${showWeekMenuPrefs?isDark?"#555":"#888":BORDER}`,background:"none",color:showWeekMenuPrefs?"#fff":"#555",fontSize:11,fontWeight:700,cursor:"pointer"}}>{T.voorkeuren}</button>
+                  {weekMenu&&<button onClick={async()=>{setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Maak een GEVARIEERD weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Elke dag ander eiwit voor diner. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:weekMenuLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{weekMenuLoading?(lang==="en"?"Loading...":lang==="de"?"Lädt...":"Bezig..."):(lang==="en"?"Refresh":lang==="de"?"Aktualisieren":"Vernieuwen")}</button>}
+                </div>
+              </div>
+              {showWeekMenuPrefs&&(
+                <div style={{...S.card,padding:16,marginBottom:16}}>
+                  <div style={{fontSize:11,letterSpacing:2,color:"#555",fontWeight:700,textTransform:"uppercase",marginBottom:12}}>Jouw voorkeuren</div>
+                  <div style={{marginBottom:10}}><div style={{fontSize:12,color:isDark?"#888":"#666",marginBottom:6}}>Wat eet je graag?</div><input value={foodPrefs.likes} onChange={e=>{const v={...foodPrefs,likes:e.target.value};setFoodPrefs(v);LS.set("fitcoach_food_prefs",v);}} placeholder="bijv. kip, pasta, Aziatisch..." style={{width:"100%",padding:"10px 12px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none",boxSizing:"border-box"}}/></div>
+                  <div style={{marginBottom:10}}><div style={{fontSize:12,color:isDark?"#888":"#666",marginBottom:6}}>Wat eet je liever niet?</div><input value={foodPrefs.dislikes} onChange={e=>{const v={...foodPrefs,dislikes:e.target.value};setFoodPrefs(v);LS.set("fitcoach_food_prefs",v);}} placeholder="bijv. vis, bloemkool..." style={{width:"100%",padding:"10px 12px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none",boxSizing:"border-box"}}/></div>
+                  <div style={{marginBottom:14}}><div style={{fontSize:12,color:isDark?"#888":"#666",marginBottom:8}}>Dieet</div><div style={{display:"flex",gap:6,flexWrap:"wrap"}}>{["Geen","Vegetarisch","Vegan","Lactosevrij","Glutenvrij","Halal"].map(d=><button key={d} onClick={()=>{const v={...foodPrefs,diet:d==="Geen"?"":d};setFoodPrefs(v);LS.set("fitcoach_food_prefs",v);}} style={{padding:"6px 12px",borderRadius:20,border:`1px solid ${(foodPrefs.diet===d||(d==="Geen"&&!foodPrefs.diet))?LIME:BORDER}`,background:(foodPrefs.diet===d||(d==="Geen"&&!foodPrefs.diet))?"rgba(200,241,56,0.07)":isDark?"#111":CARD_BG,color:(foodPrefs.diet===d||(d==="Geen"&&!foodPrefs.diet))?"#fff":isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{d}</button>)}</div></div>
+                  <button onClick={async()=>{setShowWeekMenuPrefs(false);setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Elke dag ander eiwit. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{width:"100%",padding:"11px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{lang==="en"?"Generate menu with preferences":lang==="de"?"Menü mit Vorlieben erstellen":"Menu genereren met voorkeuren"}</button>
+                </div>
+              )}
+              <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{[lang==="en"?"High protein":lang==="de"?"Hoher Proteingehalt":"Hoog eiwit",lang==="en"?"Quick & easy":lang==="de"?"Schnell & einfach":"Snel & makkelijk","Vegetarisch","Bulken",lang==="en"?"Lose weight":lang==="de"?"Abnehmen":"Afvallen"].map(s=><button key={s} onClick={async()=>{setWeekMenuLoading(true);const txt=await ai(`Weekmenu voor ${profile.name}, stijl: "${s}". Fase: ${fase}. Elke dag ander eiwit. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"6px 14px",borderRadius:20,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:isDark?"#666":"#666",fontSize:11,cursor:"pointer",fontWeight:600,opacity:weekMenuLoading?0.5:1}}>{s}</button>)}</div>
+              {weekMenuLoading&&<div style={{...S.card,padding:24,textAlign:"center"}}><div style={{fontSize:13,color:"#555"}}>Roan maakt jouw weekmenu...</div></div>}
+              {!weekMenuLoading&&weekMenu?(
+                <div>
+                  <div style={{display:"flex",gap:8,marginBottom:12}}>
+                    <div style={{...S.card,padding:"10px 14px",flex:1}}><div style={{fontSize:10,color:isDark?"#444":"#666",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:6}}>Personen</div><div style={{display:"flex",gap:6}}>{[1,2,3,4,5,6].map(n=><button key={n} onClick={()=>{setPersons(n);LS.set("fitcoach_persons",n);}} style={{width:28,height:28,borderRadius:8,border:`1px solid ${persons===n?LIME:BORDER}`,background:persons===n?"rgba(200,241,56,0.1)":isDark?"#111":CARD_BG,color:persons===n?LIME:isDark?"#444":"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>{n}</button>)}</div></div>
+                    <div style={{...S.card,padding:"10px 14px",flex:1}}><div style={{fontSize:10,color:isDark?"#444":"#666",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:6}}>Cheatdag</div><div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:4,marginBottom:4}}>{["ma","di","wo","do"].map(d=><button key={d} onClick={()=>{setCheatDag(d);LS.set("fitcoach_cheatdag",d);}} style={{padding:"6px 2px",borderRadius:6,border:`1px solid ${cheatDag===d?ORANGE:BORDER}`,background:cheatDag===d?"rgba(255,107,43,0.1)":isDark?"#111":CARD_BG,color:cheatDag===d?ORANGE:isDark?"#444":"#666",fontSize:10,fontWeight:700,cursor:"pointer"}}>{d}</button>)}</div><div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:4}}>{["vr","za","zo"].map(d=><button key={d} onClick={()=>{setCheatDag(d);LS.set("fitcoach_cheatdag",d);}} style={{padding:"6px 2px",borderRadius:6,border:`1px solid ${cheatDag===d?ORANGE:BORDER}`,background:cheatDag===d?"rgba(255,107,43,0.1)":isDark?"#111":CARD_BG,color:cheatDag===d?ORANGE:isDark?"#444":"#666",fontSize:10,fontWeight:700,cursor:"pointer"}}>{d}</button>)}</div></div>
+                  </div>
+                  <div style={{display:"flex",flexDirection:"column",gap:8,marginBottom:16}}>
+                    {Object.entries(weekMenu).map(([dag,meals])=>{
+                      const isCheat=dag===cheatDag,isEditing=editingDay===dag;
+                      return(
+                        <div key={dag} style={{...S.card,padding:14,border:`1px solid ${isCheat?"rgba(255,107,43,0.2)":BORDER}`}}>
+                          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+                            <div style={{display:"flex",gap:8,alignItems:"center"}}><div style={{fontSize:10,letterSpacing:2,color:isCheat?ORANGE:LIME,fontWeight:700,textTransform:"uppercase"}}>{dag}</div>{isCheat&&<div style={{fontSize:9,background:"rgba(255,107,43,0.1)",border:"1px solid rgba(255,107,43,0.2)",borderRadius:10,padding:"2px 8px",color:ORANGE,fontWeight:700}}>Cheatdag</div>}</div>
+                            <button onClick={async()=>{if(isEditing){setEditingDay(null);return;}setEditingDay(dag);setEditDayLoading(true);const txt=await ai(`Geef alternatieven voor ${dag}: ontbijt, lunch en diner. Andere maaltijden dan: ${JSON.stringify(meals)}. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ontbijt":"...","lunch":"...","diner":"..."}`);try{const alt=JSON.parse(txt.replace(/```json|```/g,"").trim());const u={...weekMenu,[dag]:alt};setWeekMenu(u);LS.set("fitcoach_weekmenu",u);}catch(e){}setEditDayLoading(false);setEditingDay(null);}} style={{padding:"4px 10px",borderRadius:8,border:`1px solid ${isCheat?ORANGE:BORDER}`,background:"none",color:isCheat?ORANGE:isDark?"#555":"#888",fontSize:10,fontWeight:700,cursor:"pointer"}}>{isEditing&&editDayLoading?T.bezig:lang==="en"?"Change day":lang==="de"?"Tag ändern":"Verander dag"}</button>
+                          </div>
+                          {Object.entries(meals).map(([type,meal])=>(
+                            <div key={type} style={{display:"flex",gap:8,marginBottom:6,alignItems:"flex-start"}}>
+                              <div style={{fontSize:10,color:isCheat?"rgba(255,107,43,0.6)":isDark?"#444":"#666",fontWeight:700,width:52,flexShrink:0,textTransform:"capitalize",paddingTop:2}}>{type}</div>
+                              <div style={{fontSize:12,color:isCheat?"#ccc":"#aaa",lineHeight:1.5,flex:1}}>{meal}{persons>1?<span style={{fontSize:10,color:isDark?"#333":"#666"}}> · {persons} pers.</span>:""}</div>
+                              <button onClick={async()=>{
+                                const txt=await ai(`Geef één alternatief voor ${type} op ${dag}. Anders dan: "${meal}". Kort en concreet. NL. ALLEEN JSON: {"${type}":"..."}`);
+                                try{const alt=JSON.parse(txt.replace(/\`\`\`json|\`\`\`/g,"").trim());const u={...weekMenu,[dag]:{...meals,...alt}};setWeekMenu(u);LS.set("fitcoach_weekmenu",u);}catch(e){}
+                              }} style={{padding:"3px 8px",borderRadius:6,border:`1px solid ${BORDER}`,background:"none",color:"#555",fontSize:9,fontWeight:700,cursor:"pointer",flexShrink:0,whiteSpace:"nowrap"}}>Wijzig</button>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button onClick={()=>setFoodSubTab("boodschappen")} style={{width:"100%",padding:"12px 14px",borderRadius:12,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.04)",color:LIME,fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:8,display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>Boodschappenlijst voor {persons} {persons===1?"persoon":"personen"}</span><span>→</span></button>
+                  <button onClick={()=>{setWeekMenu(null);LS.set("fitcoach_weekmenu",null);}} style={{width:"100%",padding:"10px",borderRadius:12,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#333":"#666",fontSize:11,cursor:"pointer"}}>{T.menuWissen}</button>
+                </div>
+              ):!weekMenuLoading&&(
+                <div style={{...S.card,padding:24,textAlign:"center"}}>
+                  <div style={{fontSize:13,color:isDark?"#444":"#666",marginBottom:6}}>Roan maakt een persoonlijk weekmenu</div>
+                  <div style={{fontSize:11,color:isDark?"#333":"#666",marginBottom:16}}>Stel voorkeuren in of kies een stijl hierboven</div>
+                  <button onClick={async()=>{setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar, ${persons} ${persons===1?"persoon":"personen"}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Cheatdag op ${cheatDag}. Elke dag ander eiwit. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{padding:"12px 28px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{T.weekmenuGenereren}</button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {foodSubTab==="boodschappen"&&(
+            <div>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+                <div><div style={{fontSize:13,fontWeight:800}}>Boodschappenlijst</div><div style={{fontSize:11,color:isDark?"#444":"#666",marginTop:2}}>{shoppingList.filter(i=>!i.checked).length} items over</div></div>
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={async()=>{setGenShoppingLoading(true);const menu=weekMenu?JSON.stringify(weekMenu):`gezonde maaltijden voor ${profile.goal}`;const txt=await ai(`Boodschappenlijst voor ${persons} ${persons===1?"persoon":"personen"} voor dit weekmenu: ${menu}. Geef HOEVEELHEDEN erbij (bijv. "500g kipfilet"). Groepeer per categorie. ALLEEN JSON array: ["500g kipfilet",...]. Max 28 items.`);try{const raw=JSON.parse(txt.replace(/```json|```/g,"").trim());const items=(Array.isArray(raw)?raw:[]).map(l=>({name:typeof l==="string"?l:l.name||String(l),checked:false}));setShoppingList(items);LS.set("fitcoach_shopping",items);}catch(e){}setGenShoppingLoading(false);}} disabled={genShoppingLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:genShoppingLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{genShoppingLoading?T.bezig:lang==="en"?"Generate":lang==="de"?"Generieren":"Genereer"}</button>
+                  {shoppingList.length>0&&<button onClick={()=>{setShoppingList([]);LS.set("fitcoach_shopping",[]);}} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{T.leeg}</button>}
+                </div>
+              </div>
+              {!weekMenu&&<div style={{...S.card,padding:"10px 14px",marginBottom:14,display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{fontSize:11,color:"#555"}}>Maak eerst een weekmenu voor een slimme lijst</div><button onClick={()=>setFoodSubTab("weekmenu")} style={{padding:"5px 10px",borderRadius:8,border:`1px solid ${LIME}`,background:"none",color:LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>Weekmenu →</button></div>}
+              <div style={{display:"flex",gap:8,marginBottom:12}}>
+                <input
+                  value={newShoppingItem}
+                  onChange={e=>setNewShoppingItem(e.target.value)}
+                  onKeyDown={e=>{if(e.key==="Enter"&&newShoppingItem.trim()){const u=[...shoppingList,{name:newShoppingItem.trim(),checked:false}];setShoppingList(u);LS.set("fitcoach_shopping",u);setNewShoppingItem("");}}}
+                  placeholder={lang==="en"?"Add item...":lang==="de"?"Artikel hinzufügen...":"Item toevoegen..."}
+                  style={{flex:1,padding:"11px 14px",borderRadius:12,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none"}}
+                />
+                <button onClick={()=>{if(!newShoppingItem.trim())return;const u=[...shoppingList,{name:newShoppingItem.trim(),checked:false}];setShoppingList(u);LS.set("fitcoach_shopping",u);setNewShoppingItem("");}} style={{padding:"11px 16px",borderRadius:12,border:"none",background:LIME,color:"#000",fontWeight:800,fontSize:16,cursor:"pointer"}}>+</button>
+              </div>
+              {shoppingList.length>0?(
+                <div style={{...S.card,padding:14}}>
+                  {shoppingList.map((item,i)=>(
+                    <div key={i} style={{display:"flex",alignItems:"center",gap:12,paddingBottom:11,marginBottom:11,borderBottom:i<shoppingList.length-1?"1px solid #111":"none"}}>
+                      <div onClick={()=>{const u=[...shoppingList];u[i]={...u[i],checked:!u[i].checked};setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{width:20,height:20,borderRadius:5,border:`1.5px solid ${item.checked?LIME:isDark?"#333":"#666"}`,background:item.checked?"rgba(200,241,56,0.15)":"none",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:LIME,flexShrink:0,cursor:"pointer"}}>{item.checked?"✓":""}</div>
+                      <div onClick={()=>{const u=[...shoppingList];u[i]={...u[i],checked:!u[i].checked};setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{fontSize:13,color:item.checked?isDark?"#444":"#777":"#ccc",textDecoration:item.checked?"line-through":"none",flex:1,cursor:"pointer"}}>{typeof item==="string"?item:item.name}</div>
+                      <button onClick={()=>{const u=shoppingList.filter((_,j)=>j!==i);setShoppingList(u);LS.set("fitcoach_shopping",u);}} style={{background:"none",border:"none",color:isDark?"#444":"#666",fontSize:16,cursor:"pointer",padding:"0 4px",flexShrink:0}}>×</button>
+                    </div>
+                  ))}
+                </div>
+              ):<div style={{...S.card,padding:24,textAlign:"center"}}><div style={{fontSize:13,color:isDark?"#444":"#666",marginBottom:8}}>Nog geen items</div><div style={{fontSize:11,color:isDark?"#333":"#666"}}>Typ hierboven om te beginnen of genereer via weekmenu</div></div>}
+            </div>
+          )}
+
+          {foodSubTab==="recepten"&&(
+            <div>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+                <div style={{fontSize:13,fontWeight:800}}>{T.opgeslagenRecepten}</div>
+                <button onClick={async()=>{const txt=await ai(`Één gezond recept voor ${profile.name}, fase: ${fase}, doel: ${profile.goal}. NL, max 150 woorden.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"7px 14px",borderRadius:10,border:`1px solid ${ORANGE}`,background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:11,fontWeight:700,cursor:"pointer"}}>+ Roan recept</button>
+              </div>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{[lang==="en"?"High protein breakfast":lang==="de"?"Eiweißreiches Frühstück":"Hoog eiwit ontbijt",lang==="en"?"Quick lunch":lang==="de"?"Schnelles Mittagessen":"Snelle lunch",lang==="en"?"Post-workout meal":lang==="de"?"Post-Workout Mahlzeit":"Post-workout maaltijd",lang==="en"?"Low carb dinner":lang==="de"?"Low Carb Abendessen":"Laag carb diner"].map(s=><button key={s} onClick={async()=>{const txt=await ai(`Recept: ${s}. Voor ${profile.name}, fase: ${fase}. NL, max 120 woorden.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY,tag:s};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"6px 12px",borderRadius:20,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:isDark?"#666":"#666",fontSize:11,cursor:"pointer",fontWeight:600}}>{s}</button>)}</div>
+              {savedRecipes.length===0?<div style={{...S.card,padding:20,textAlign:"center"}}><div style={{fontSize:12,color:isDark?"#444":"#666",marginBottom:4}}>Geen recepten opgeslagen</div></div>:savedRecipes.map(r=><div key={r.id} style={{...S.card,padding:16,marginBottom:8}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><div style={{display:"flex",gap:8,alignItems:"center"}}><div style={{fontSize:10,color:isDark?"#444":"#666"}}>{r.date}</div>{r.tag&&<div style={{fontSize:9,color:ORANGE,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{r.tag}</div>}</div><button onClick={()=>{const u=savedRecipes.filter(x=>x.id!==r.id);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{background:"none",border:"none",color:isDark?"#333":"#666",fontSize:14,cursor:"pointer"}}>×</button></div><div style={{fontSize:12,lineHeight:1.7,color:"#bbb",whiteSpace:"pre-wrap"}}>{r.text}</div></div>)}
+            </div>
+          )}
+        </div>
+      )}
+      {tab===T.coach&&(
+        <div style={{padding:"24px 16px",display:"flex",flexDirection:"column",alignItems:"center"}}>
+          <div style={{...S.lbl,color:LIME,marginBottom:4,alignSelf:"flex-start"}}>{T.jouwCoach}</div>
+          <div style={{fontSize:32,fontWeight:900,letterSpacing:-1,marginBottom:24,alignSelf:"flex-start"}}>{T.meetRoan}</div>
+          <div style={{marginBottom:16,position:"relative",display:"flex",justifyContent:"center",flexDirection:"column",alignItems:"center"}}>
+            <div style={{position:"relative"}}>
+              <FinnImg size={200} emotion="cool"/>
+              <div style={{position:"absolute",top:8,right:-10,background:LIME,borderRadius:99,padding:"4px 12px",fontSize:10,fontWeight:800,color:"#000"}}>{T.online}</div>
+            </div>
+            <div style={{fontSize:28,fontWeight:900,letterSpacing:-1,color:TEXT,marginTop:8}}>Roan</div>
+            <div style={{fontSize:13,color:"#555",marginTop:2}}>Jouw persoonlijke AI coach</div>
+          </div>
+          <div style={{...S.card,padding:16,marginBottom:16,width:"100%"}}>
+            <div style={{display:"flex",gap:10,alignItems:"center"}}>
+              <div style={{width:8,height:8,borderRadius:"50%",background:LIME,flexShrink:0}}/>
+              <div style={{fontSize:13,color:isDark?"#888":"#666",lineHeight:1.7}}>Ik ken jouw trainingen, voeding en doelen. Stel me een vraag of geef me een opdracht — ik voer het uit.</div>
+            </div>
+          </div>
+          <div style={{width:"100%",marginBottom:16}}>
+            <div style={{...S.lbl,marginBottom:12}}>{T.vraagRoan}</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>{[lang==="en"?"Motivate me!":lang==="de"?"Motivier mich!":"Motiveer me!",lang==="en"?"What to eat today?":lang==="de"?"Was essen heute?":"Wat eten vandaag?",lang==="en"?"Analyze my week":lang==="de"?"Meine Woche analysieren":"Analyseer mijn week",lang==="en"?"Create a schedule":lang==="de"?"Plan erstellen":"Maak een schema",lang==="en"?"I am tired":lang==="de"?"Ich bin müde":"Ik ben moe",lang==="en"?"How do I lose weight?":lang==="de"?"Wie nehme ich ab?":"Hoe val ik af?"].map(q=><button key={q} onClick={()=>openFinnWith(q)} style={{padding:"12px 14px",borderRadius:14,border:`1px solid ${BORDER}`,background:CARD_BG,color:isDark?"#888":"#666",fontSize:12,cursor:"pointer",fontWeight:600,textAlign:"left"}}>{q}</button>)}</div>
+          </div>
+          <button onClick={()=>openFinnWith(null)} style={{width:"100%",padding:16,borderRadius:16,border:"none",cursor:"pointer",background:ORANGE,color:TEXT,fontSize:15,fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",gap:12}}><FinnImg size={32}/>{T.chatRoan}</button>
+        </div>
+      )}
+      {tab==="sociaal"&&(()=>{
+        const myRank=ranglijst.findIndex(r=>r.user_id===sbUser?.id)+1;
+        const myEntry=ranglijst.find(r=>r.user_id===sbUser?.id);
+        const top3=ranglijst.slice(0,3);
+        const rest=ranglijst.slice(3);
+        return(
+          <div style={{padding:"24px 16px"}}>
+            <div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>{T.community}</div>
+            <div style={{fontSize:30,fontWeight:900,letterSpacing:-1,marginBottom:16,color:TEXT}}>{T.ranglijst}</div>
+            <div style={{display:"flex",gap:6,marginBottom:20,background:isDark?"#111":CARD_BG,borderRadius:12,padding:6}}>
+              {[{k:"ranglijst",l:"🏆 "+T.ranglijst},{k:"profiel",l:"👤 "+T.mijnProfiel}].map(t=>(
+                <button key={t.k} onClick={()=>setSociaalTab(t.k)} style={{flex:1,padding:"9px",borderRadius:9,border:"none",cursor:"pointer",background:sociaalTab===t.k?isDark?"#1C1C1C":"#E0E0D8":"none",color:sociaalTab===t.k?TEXT:isDark?"#555":"#888",fontSize:12,fontWeight:sociaalTab===t.k?700:400}}>
+                  {t.l}
+                </button>
+              ))}
+            </div>
+
+            {sociaalTab==="ranglijst"&&<>
+              {myEntry&&(
+                <div style={{...S.card,padding:"12px 16px",marginBottom:16,borderTop:"2px solid "+LIME,display:"flex",alignItems:"center",gap:12}}>
+                  <div style={{fontSize:20,fontWeight:900,color:LIME,width:32,textAlign:"center"}}>{myRank||"–"}</div>
+                  <div style={{width:40,height:40,borderRadius:"50%",overflow:"hidden",flexShrink:0,border:"2px solid "+LIME,background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                    {myEntry.foto_url?<img src={myEntry.foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:16}}>👤</span>}
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:14,fontWeight:800,color:TEXT}}>{myEntry.display_name} <span style={{fontSize:10,color:LIME}}>(jij)</span></div>
+                    <div style={{fontSize:11,color:isDark?"#444":"#888"}}>{myEntry.rang_emoji} {myEntry.rang_naam} · Level {myEntry.level}</div>
+                  </div>
+                  <div style={{textAlign:"right"}}>
+                    <div style={{fontSize:16,fontWeight:900,color:LIME}}>{(myEntry.fit_points||0).toLocaleString()}</div>
+                    <div style={{fontSize:10,color:isDark?"#444":"#888"}}>FP</div>
+                  </div>
+                </div>
+              )}
+
+              {rangLaden&&<div style={{textAlign:"center",padding:40,color:isDark?"#444":"#888",fontSize:13}}>Ranglijst laden...</div>}
+              {!rangLaden&&top3.length>=3&&(
+                <div style={{...S.card,padding:20,marginBottom:16}}>
+                  <div style={{display:"flex",alignItems:"flex-end",justifyContent:"center",gap:8,marginBottom:16}}>
+                    <div style={{textAlign:"center",flex:1}}>
+                      <div style={{width:56,height:56,borderRadius:"50%",overflow:"hidden",margin:"0 auto 8px",border:"2px solid #C0C0C0",background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        {top3[1]?.foto_url?<img src={top3[1].foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:22}}>👤</span>}
+                      </div>
+                      <div style={{fontSize:18,marginBottom:4}}>🥈</div>
+                      <div style={{fontSize:11,fontWeight:800,color:TEXT}}>{top3[1]?.display_name?.split(" ")[0]||"–"}</div>
+                      <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{(top3[1]?.fit_points||0).toLocaleString()} FP</div>
+                    </div>
+                    <div style={{textAlign:"center",flex:1.2}}>
+                      <div style={{width:72,height:72,borderRadius:"50%",overflow:"hidden",margin:"0 auto 8px",border:"3px solid #FFD700",background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        {top3[0]?.foto_url?<img src={top3[0].foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:28}}>👤</span>}
+                      </div>
+                      <div style={{fontSize:24,marginBottom:4}}>🥇</div>
+                      <div style={{fontSize:13,fontWeight:900,color:TEXT}}>{top3[0]?.display_name?.split(" ")[0]||"–"}</div>
+                      <div style={{fontSize:11,color:LIME,fontWeight:700}}>{(top3[0]?.fit_points||0).toLocaleString()} FP</div>
+                    </div>
+                    <div style={{textAlign:"center",flex:1}}>
+                      <div style={{width:56,height:56,borderRadius:"50%",overflow:"hidden",margin:"0 auto 8px",border:"2px solid #CD7F32",background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                        {top3[2]?.foto_url?<img src={top3[2].foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:22}}>👤</span>}
+                      </div>
+                      <div style={{fontSize:18,marginBottom:4}}>🥉</div>
+                      <div style={{fontSize:11,fontWeight:800,color:TEXT}}>{top3[2]?.display_name?.split(" ")[0]||"–"}</div>
+                      <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{(top3[2]?.fit_points||0).toLocaleString()} FP</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {!rangLaden&&rest.length>0&&(
+                <div style={{...S.card,padding:"0 4px"}}>
+                  {rest.map((user,i)=>{
+                    const pos=i+4;
+                    const isMe=user.user_id===sbUser?.id;
+                    const liked=myLikes.has(user.user_id);
+                    return(
+                      <div key={user.user_id} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 12px",borderBottom:i<rest.length-1?"1px solid "+(isDark?"#111":"#E8E8E0"):"none",background:isMe?"rgba(200,241,56,0.04)":"none"}}>
+                        <div style={{fontSize:13,fontWeight:700,color:isDark?"#444":"#888",width:24,textAlign:"center"}}>{pos}</div>
+                        <div style={{width:36,height:36,borderRadius:"50%",overflow:"hidden",flexShrink:0,border:"1px solid "+(isMe?LIME:BORDER),background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                          {user.foto_url?<img src={user.foto_url} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:14}}>👤</span>}
+                        </div>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:13,fontWeight:700,color:TEXT,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+                            {user.display_name}{isMe&&<span style={{fontSize:9,color:LIME,marginLeft:4}}>(jij)</span>}
+                          </div>
+                          <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{user.rang_emoji} {user.rang_naam} · {user.trainingen_count||0} trainingen</div>
+                        </div>
+                        <div style={{display:"flex",alignItems:"center",gap:8}}>
+                          <div style={{textAlign:"right"}}>
+                            <div style={{fontSize:13,fontWeight:800,color:LIME}}>{(user.fit_points||0).toLocaleString()}</div>
+                            <div style={{fontSize:9,color:isDark?"#444":"#888"}}>FP</div>
+                          </div>
+                          {!isMe&&(
+                            <button onClick={async()=>{
+                              const nu=await sbToggleLike(sbUser.id,user.user_id);
+                              setMyLikes(prev=>{const n=new Set(prev);nu?n.add(user.user_id):n.delete(user.user_id);return n;});
+                            }} style={{width:32,height:32,borderRadius:"50%",border:"1px solid "+(liked?"rgba(239,68,68,0.4)":BORDER),background:liked?"rgba(239,68,68,0.1)":"none",color:liked?"#ef4444":isDark?"#444":"#888",fontSize:14,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                              {liked?"❤️":"🤍"}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {!rangLaden&&ranglijst.length===0&&(
+                <div style={{...S.card,padding:32,textAlign:"center"}}>
+                  <div style={{fontSize:32,marginBottom:12}}>🏋️</div>
+                  <div style={{fontSize:14,fontWeight:800,color:TEXT,marginBottom:8}}>Nog geen andere sporters</div>
+                  <div style={{fontSize:12,color:isDark?"#444":"#888",lineHeight:1.6}}>Nodig vrienden uit om samen op de ranglijst te staan.</div>
+                </div>
+              )}
+
+              <button onClick={()=>{setRangLaden(true);sbGetLeaderboard().then(d=>{setRanglijst(d);setRangLaden(false);});sbUpdateSocialProfile(sbUser.id,profile,fitPoints,log);}} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid "+BORDER,background:"none",color:isDark?"#444":"#888",fontSize:12,cursor:"pointer",marginTop:12,marginBottom:80}}>
+                Vernieuwen
+              </button>
+            </>}
+
+            {sociaalTab==="profiel"&&(()=>{
+              const level=berekenLevel(fitPoints);
+              const rang=getRang(level);
+              return(
+                <div>
+                  <div style={{...S.card,padding:24,marginBottom:16,textAlign:"center"}}>
+                    <div style={{width:80,height:80,borderRadius:"50%",overflow:"hidden",margin:"0 auto 12px",border:"3px solid "+rang.kleur,background:isDark?"#1C1C1C":"#E8E8E0",display:"flex",alignItems:"center",justifyContent:"center"}}>
+                      {profile.fotoUrl?<img src={profile.fotoUrl} style={{width:"100%",height:"100%",objectFit:"cover"}}/>:<span style={{fontSize:36}}>👤</span>}
+                    </div>
+                    <div style={{fontSize:22,fontWeight:900,color:TEXT,marginBottom:4}}>{profile.name}</div>
+                    <div style={{fontSize:13,color:rang.kleur,fontWeight:700,marginBottom:2}}>{rang.emoji} {getRangNaam(rang,lang)}</div>
+                    <div style={{fontSize:12,color:isDark?"#555":"#888",marginBottom:16}}>Level {level}</div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:16}}>
+                      {[
+                        {l:"FitPoints",v:(fitPoints||0).toLocaleString(),c:rang.kleur},
+                        {l:lang==="en"?"Workouts":lang==="de"?"Trainings":"Trainingen",v:log.length,c:TEXT},
+                        {l:"Streak",v:calcStreak(log)+" d",c:LIME},
+                      ].map(s=>(
+                        <div key={s.l} style={{padding:"10px 8px",background:isDark?"#111":CARD_BG,borderRadius:10}}>
+                          <div style={{fontSize:18,fontWeight:900,color:s.c,marginBottom:2}}>{s.v}</div>
+                          <div style={{fontSize:10,color:isDark?"#444":"#888"}}>{s.l}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{fontSize:11,color:isDark?"#444":"#888",marginBottom:12}}>Dit is hoe anderen jou zien op de ranglijst</div>
+                    <button onClick={()=>{sbUpdateSocialProfile(sbUser.id,profile,fitPoints,log);alert(lang==="en"?"Profile updated!":lang==="de"?"Profil aktualisiert!":"Profiel bijgewerkt!");}} style={{padding:"10px 24px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer"}}>
+                      Profiel bijwerken
+                    </button>
+                  </div>
+                  <div style={{...S.card,padding:16,marginBottom:80}}>
+                    <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:12}}>Ranglijst positie</div>
+                    {myRank>0?(
+                      <div style={{display:"flex",alignItems:"center",gap:12}}>
+                        <div style={{fontSize:40,fontWeight:900,color:LIME}}>#{myRank}</div>
+                        <div>
+                          <div style={{fontSize:14,fontWeight:700,color:TEXT}}>van {ranglijst.length} sporters</div>
+                          <div style={{fontSize:11,color:isDark?"#444":"#888"}}>Train meer om te stijgen!</div>
+                        </div>
+                      </div>
+                    ):(
+                      <div style={{fontSize:12,color:isDark?"#444":"#888"}}>Sla eerst een training op om op de ranglijst te komen.</div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        );
+      })()}
+      {tab==="fitpoints"&&(()=>{
+        const level=berekenLevel(fitPoints);
+        const rang=getRang(level);
+        const fpDitLevel=getFPVoorLevel(level)||0;
+        const fpVolgend=getFPVoorLevel(level+1)||fpDitLevel+500;
+        const progress=fpVolgend>fpDitLevel?Math.min(100,((fitPoints-fpDitLevel)/(fpVolgend-fpDitLevel))*100):100;
+        return(
+          <div style={{padding:"24px 16px"}}>
+            <div style={{fontSize:11,color:rang.kleur,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>FitPoints</div>
+            <div style={{fontSize:30,fontWeight:900,letterSpacing:-1,marginBottom:20,color:TEXT}}>Jouw rang</div>
+            <div style={{...S.card,padding:24,marginBottom:16,textAlign:"center",borderTop:"3px solid "+rang.kleur}}>
+              <div style={{fontSize:64,marginBottom:8}}>{rang.emoji}</div>
+              <div style={{fontSize:28,fontWeight:900,color:rang.kleur,marginBottom:4}}>{getRangNaam(rang,lang)}</div>
+              <div style={{fontSize:14,color:isDark?"#555":"#888",marginBottom:16}}>Level {level}</div>
+              <div style={{fontSize:40,fontWeight:900,color:TEXT,marginBottom:4}}>{fitPoints.toLocaleString()}</div>
+              <div style={{fontSize:12,color:isDark?"#444":"#888",marginBottom:16}}>FitPoints totaal</div>
+              <div style={{background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:99,height:8,overflow:"hidden",marginBottom:6}}>
+                <div style={{width:progress+"%",height:8,background:"linear-gradient(90deg,"+rang.kleur+","+rang.kleur+"aa)",borderRadius:99,transition:"width .6s"}}/>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:isDark?"#444":"#888"}}>
+                <span>Level {level}</span>
+                <span>{fitPoints.toLocaleString()} / {fpVolgend?.toLocaleString()||"Max"} FP</span>
+                <span>Level {level+1}</span>
+              </div>
+            </div>
+            <div style={{...S.card,padding:16,marginBottom:16}}>
+              <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:12}}>FP verdienen</div>
+              {[
+                {actie:T.trainAfronden,fp:150,icon:"💪"},
+                {actie:T.cardioVoltooien,fp:100,icon:"🏃"},
+                {actie:T.maaltijdLoggen,fp:25,icon:"🥗"},
+                {actie:T.prVestigen,fp:75,icon:"🏆"},
+                {actie:T.gewichtBijhouden,fp:30,icon:"⚖️"},
+                {actie:T.dagdoelWater,fp:60,icon:"💧"},
+                {actie:T.driedaagseStreak,fp:50,icon:"🔥"},
+                {actie:T.zevenDaagseStreak,fp:200,icon:"⚡"},
+              ].map(({actie,desc,fp,icon})=>(
+                <div key={actie} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:10,marginBottom:10,borderBottom:"1px solid "+(isDark?"#111":"#E8E8E0")}}>
+                  <div style={{display:"flex",gap:10,alignItems:"center",flex:1}}>
+                    <span style={{fontSize:20,flexShrink:0}}>{icon}</span>
+                    <div><div style={{fontSize:13,color:TEXT,fontWeight:600}}>{actie}</div>{desc&&<div style={{fontSize:10,color:isDark?"#444":"#999",marginTop:1}}>{desc}</div>}</div>
+                  </div>
+                  <div style={{fontSize:14,fontWeight:900,color:rang.kleur,flexShrink:0,marginLeft:8}}>+{fp}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{...S.card,padding:16,marginBottom:16}}>
+              <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",letterSpacing:2,marginBottom:12}}>Alle rangen</div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10}}>
+                {RANGEN.map(r=>(
+                  <div key={r.naam} style={{textAlign:"center",padding:"12px 8px",borderRadius:12,background:rang.naam===r.naam?isDark?"rgba(200,241,56,0.08)":"rgba(200,241,56,0.05)":isDark?"#111":CARD_BG,border:"1px solid "+(rang.naam===r.naam?LIME:BORDER)}}>
+                    <div style={{fontSize:28,marginBottom:4}}>{r.emoji}</div>
+                    <div style={{fontSize:11,fontWeight:800,color:rang.naam===r.naam?LIME:TEXT,marginBottom:2}}>{r.naam}</div>
+                    <div style={{fontSize:9,color:isDark?"#444":"#888"}}>Lvl {r.minLevel}{r.maxLevel<999?"-"+r.maxLevel:"+"}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button onClick={()=>{if(window.confirm("FitPoints resetten?")){{setFitPoints(0);LS.set("fitcoach_fp",0);}}}} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid "+BORDER,background:"none",color:isDark?"#333":"#888",fontSize:11,cursor:"pointer",marginBottom:80}}>Reset FitPoints (dev)</button>
+          </div>
+        );
+      })()}
+      <div style={{position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",width:"100%",maxWidth:480,background:isDark?"rgba(13,13,13,0.97)":"rgba(245,245,240,0.97)",borderTop:`1px solid ${BORDER}`,display:"flex",zIndex:20,backdropFilter:"blur(24px)"}}>
+        {[
+          {id:T.home,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>},
+          {id:T.training,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 4v16M18 4v16M2 8h4M18 8h4M2 16h4M18 16h4"/></svg>},
+          {id:T.voortgang,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>},
+          {id:T.voeding,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8 2 4 6 4 10c0 5.25 8 12 8 12s8-6.75 8-12c0-4-4-8-8-8z"/></svg>},
+          {id:"sociaal",svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>},
+  {id:"fitpoints",svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>},
+  {id:T.coach,svg:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>},
+        ].map(t=>(
+          <button key={t.id} onClick={()=>{
+            if(t.id===T.training&&tab===T.training&&!selectingMuscles){setSelectingMuscles(true);setSession(null);setTargetMuscles([]);}
+            else{setTab(t.id);}
+          }} style={{flex:1,padding:"12px 4px 10px",border:"none",background:"none",cursor:"pointer",color:tab===t.id?(t.id===T.coach?ORANGE:LIME):isDark?"#777":"#999",display:"flex",flexDirection:"column",alignItems:"center",gap:4,transition:"color .15s"}}>
+            {t.svg}
+            <div style={{fontSize:9,fontWeight:700,letterSpacing:0.5}}>{t.id.toUpperCase()}</div>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
