@@ -2397,13 +2397,13 @@ function HiitWorkout({exercises,onDone,voiceOn}){
       <div style={{marginBottom:18}}><div style={{fontSize:13,color:isDark?"#888":"#666",marginBottom:10,fontWeight:600}}>Rondes</div><div style={{display:"flex",gap:8}}>{ROUNDS_OPTS.map(n=><button key={n} onClick={()=>setRounds(n)} style={{flex:1,padding:"13px 4px",borderRadius:12,border:`1px solid ${rounds===n?"#fff":"#1C1C1C"}`,background:rounds===n?"rgba(255,255,255,0.06)":"#111",color:rounds===n?"#fff":isDark?"#444":"#666",fontWeight:900,fontSize:16,cursor:"pointer"}}>{n}x</button>)}</div></div>
       <div style={{marginBottom:18}}><div style={{fontSize:13,color:isDark?"#888":"#666",marginBottom:10,fontWeight:600}}>Work tijd per oefening</div><div style={{display:"flex",gap:8}}>{WORK_OPTS.map(s=><button key={s} onClick={()=>setWorkSec(s)} style={{flex:1,padding:"13px 4px",borderRadius:12,border:`1px solid ${workSec===s?ORANGE:"#1C1C1C"}`,background:workSec===s?"rgba(255,107,43,0.1)":"#111",color:workSec===s?ORANGE:isDark?"#444":"#666",fontWeight:900,fontSize:15,cursor:"pointer"}}>{s}<span style={{fontSize:9,marginLeft:1}}>s</span></button>)}</div></div>
       <div style={{marginBottom:18}}><div style={{fontSize:13,color:isDark?"#888":"#666",marginBottom:10,fontWeight:600}}>Rust tussen oefeningen</div><div style={{display:"flex",gap:8}}>{REST_HIIT_OPTS.map(s=><button key={s} onClick={()=>setRestSec(s)} style={{flex:1,padding:"13px 4px",borderRadius:12,border:`1px solid ${restSec===s?LIME:"#1C1C1C"}`,background:restSec===s?"rgba(200,241,56,0.08)":"#111",color:restSec===s?LIME:isDark?"#444":"#666",fontWeight:900,fontSize:15,cursor:"pointer"}}>{s}<span style={{fontSize:9,marginLeft:1}}>s</span></button>)}</div></div>
-      <div style={{marginBottom:20}}><button onClick={()=>setUseWeights(v=>!v)} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:`1px solid ${useWeights?LIME:"#1C1C1C"}`,background:useWeights?"rgba(200,241,56,0.06)":"#111",color:useWeights?LIME:"#555",fontSize:13,fontWeight:700,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>Oefeningen met gewichten</span><span style={{fontSize:11,color:useWeights?LIME:isDark?"#333":"#666"}}>{useWeights?"Aan":"Uit"}</span></button></div>
+      <div style={{marginBottom:20}}><button onClick={()=>setUseWeights(v=>!v)} style={{width:"100%",padding:"12px 16px",borderRadius:12,border:`1px solid ${useWeights?LIME:"#1C1C1C"}`,background:useWeights?"rgba(200,241,56,0.06)":"#111",color:useWeights?LIME:"#555",fontSize:13,fontWeight:700,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}><span>{lang==="en"?"Weighted exercises":lang==="de"?"Übungen mit Gewichten":"Oefeningen met gewichten"}</span><span style={{fontSize:11,color:useWeights?LIME:isDark?"#333":"#666"}}>{useWeights?"Aan":"Uit"}</span></button></div>
       <div style={{background:BG,borderRadius:12,padding:"10px 14px",marginBottom:16,display:"flex",justifyContent:"space-between",alignItems:"center"}}><div style={{fontSize:12,color:"#555"}}>Geschatte duur</div><div style={{fontSize:14,fontWeight:900,color:estMin>45?"#ef4444":LIME}}>{estMin} min {estMin>45&&<span style={{fontSize:11,color:"#ef4444"}}>· te lang!</span>}</div></div>
       <div style={{background:BG,borderRadius:14,padding:14,marginBottom:20}}><div style={{fontSize:10,letterSpacing:3,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Circuit ({circuitEx.length} oefeningen · {rounds} rondes)</div>{circuitEx.map((name,i)=><div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",paddingBottom:8,marginBottom:8,borderBottom:i<circuitEx.length-1?"1px solid #111":"none"}}><div style={{fontSize:13,color:isDark?"#ccc":"#333",fontWeight:600}}>{name}</div><div style={{fontSize:10,color:isDark?"#444":"#888"}}>{workSec}s · {restSec}s rust</div></div>)}</div>
       <button onClick={()=>{setConfigured(true);setLeft(workSec);setTotalLeft(20*60);say(`${rounds} rondes. ${circuitEx.length} oefeningen. Ronde 1. ${circuitEx[0]}. Start.`);setRunning(true);}} disabled={estMin>45} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:estMin>45?"default":"pointer",background:estMin>45?"#1C1C1C":ORANGE,color:estMin>45?isDark?"#444":"#777":"#fff",fontSize:16,fontWeight:900,letterSpacing:-0.5}}>{estMin>45?"Verklein circuit (max 45 min)":"Start circuit"}</button>
     </div>
   );
-  if(phase==="done")return(<div style={{padding:"60px 0",textAlign:"center"}}><div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:16}}>Voltooid</div><div style={{fontSize:52,fontWeight:900,letterSpacing:-2,color:LIME,marginBottom:4,lineHeight:1}}>{rounds} rondes</div><div style={{fontSize:14,color:"#555",marginBottom:8}}>{circuitEx.length} oefeningen · HIIT circuit</div><button onClick={onDone} style={{padding:"16px 40px",borderRadius:14,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:900}}>{T.opslaan}</button></div>);
+  if(phase==="done")return(<div style={{padding:"60px 0",textAlign:"center"}}><div style={{fontSize:11,letterSpacing:4,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase",marginBottom:16}}>{lang==="en"?"Completed":lang==="de"?"Abgeschlossen":"Voltooid"}</div><div style={{fontSize:52,fontWeight:900,letterSpacing:-2,color:LIME,marginBottom:4,lineHeight:1}}>{rounds} rondes</div><div style={{fontSize:14,color:"#555",marginBottom:8}}>{circuitEx.length} oefeningen · HIIT circuit</div><button onClick={onDone} style={{padding:"16px 40px",borderRadius:14,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:15,fontWeight:900}}>{T.opslaan}</button></div>);
   const isWork=phase==="work",curEx=circuitEx[exIdx%circuitEx.length],nextExName=circuitEx[(exIdx+1)%circuitEx.length],curSec=isWork?workSec:restSec,pct=(left/curSec)*100,isAlert=left<=3&&running;
   return(
     <div>
@@ -2650,7 +2650,7 @@ function SwimTracker({onDone,profile}){
       <button onClick={baanGedaan} style={{width:"100%",padding:24,borderRadius:16,border:"none",cursor:"pointer",background:BLAUW,color:"#000",fontSize:20,fontWeight:900,marginBottom:10,letterSpacing:-0.5}}>
         Baan {banen+1} klaar
       </button>
-      <button onClick={stopLive} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>Stoppen</button>
+      <button onClick={stopLive} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>{lang==="en"?"Stop":lang==="de"?"Stoppen":"Stoppen"}</button>
     </div>
   );
 
@@ -3190,7 +3190,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
           <button onClick={()=>isRunning?pauseRun():resumeRun()} style={{flex:1,padding:16,borderRadius:14,border:"none",cursor:"pointer",background:isRunning?isDark?"#1C1C1C":"#E8E8E0":LIME,color:isRunning?isDark?"#555":"#888":"#000",fontSize:14,fontWeight:900,letterSpacing:1}}>
             {isRunning?"⏸ "+(lang==="en"?"Pause":"Pauze"):"▶ Hervat"}
           </button>
-          <button onClick={()=>{if(window.confirm("Run stoppen?"))stopRun(true);}} style={{padding:"16px 20px",borderRadius:14,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>⏹ Stop</button>
+          <button onClick={()=>{if(window.confirm(lang==="en"?"Stop run?":lang==="de"?"Lauf stoppen?":"Run stoppen?"))stopRun(true);}} style={{padding:"16px 20px",borderRadius:14,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>⏹ Stop</button>
         </div>
       </div>
     );
@@ -3210,7 +3210,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
         <div>
           {prevRun&&prevRun.dist>100&&(
             <div style={{...S.card,padding:"12px 16px",marginBottom:16,borderTop:"3px solid "+LIME}}>
-              <div style={{fontSize:10,letterSpacing:2,color:LIME,fontWeight:700,textTransform:"uppercase",marginBottom:10}}>Vorige run</div>
+              <div style={{fontSize:10,letterSpacing:2,color:LIME,fontWeight:700,textTransform:"uppercase",marginBottom:10}}>{lang==="en"?"Previous run":lang==="de"?"Vorheriger Lauf":"Vorige run"}</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
                 {[{l:"Afstand",v:(prevRun.dist/1000).toFixed(2)+" km",c:LIME},{l:"Tijd",v:fmtTime(prevRun.time||0),c:TEXT},{l:"Tempo",v:(prevRun.pace||"–")+" /km",c:TEXT}].map(s=>(
                   <div key={s.l} style={{textAlign:"center"}}>
@@ -3299,7 +3299,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
                     <div style={{...S.card,padding:16,marginBottom:14,background:"rgba(200,241,56,0.04)",border:"1px solid rgba(200,241,56,0.15)"}}>
                       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
                         <div><div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>{plan.icon} {plan.label}</div><div style={{fontSize:18,fontWeight:900,color:TEXT}}>Week {activePlan.week} van {plan.weken}</div></div>
-                        <button onClick={()=>{if(window.confirm("Plan stoppen?"))setActivePlan(null);LS.set("fitcoach_run_plan",null);}} style={{padding:"4px 10px",borderRadius:8,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:11,cursor:"pointer"}}>Stop plan</button>
+                        <button onClick={()=>{if(window.confirm(lang==="en"?"Stop plan?":lang==="de"?"Plan stoppen?":"Plan stoppen?"))setActivePlan(null);LS.set("fitcoach_run_plan",null);}} style={{padding:"4px 10px",borderRadius:8,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:11,cursor:"pointer"}}>Stop plan</button>
                       </div>
                       <div style={{background:isDark?"#111":"#E8E8E0",borderRadius:99,height:4,overflow:"hidden",marginBottom:6}}>
                         <div style={{width:((activePlan.week-1)/plan.weken*100)+"%",height:4,background:LIME,borderRadius:99}}/>
@@ -3712,8 +3712,8 @@ function AuthScreen({onAuth,lang}){ const T=TRANSLATIONS[lang]||TRANSLATIONS.nl;
         {mode==="register"&&(
           <input value={pw2} onChange={e=>setPw2(e.target.value)} placeholder={T.bevestigWachtwoord} type="password" onKeyDown={e=>e.key==="Enter"&&handle()} style={{...inputStyle,border:`1px solid ${pw2&&pw===pw2?"rgba(200,241,56,0.4)":pw2?"rgba(239,68,68,0.4)":BORDER}`}}/>
         )}
-        {mode==="register"&&pw2&&pw!==pw2&&<div style={{fontSize:12,color:"#ef4444",marginBottom:8,marginTop:-6}}>Wachtwoorden komen niet overeen</div>}
-        {mode==="register"&&pw2&&pw===pw2&&<div style={{fontSize:12,color:LIME,marginBottom:8,marginTop:-6}}>Wachtwoorden komen overeen</div>}
+        {mode==="register"&&pw2&&pw!==pw2&&<div style={{fontSize:12,color:"#ef4444",marginBottom:8,marginTop:-6}}>{lang==="en"?"Passwords do not match":lang==="de"?"Passwörter stimmen nicht überein":"Wachtwoorden komen niet overeen"}</div>}
+        {mode==="register"&&pw2&&pw===pw2&&<div style={{fontSize:12,color:LIME,marginBottom:8,marginTop:-6}}>{lang==="en"?"Passwords match":lang==="de"?"Passwörter stimmen überein":"Wachtwoorden komen overeen"}</div>}
         {err&&<div style={{fontSize:12,color:"#ef4444",marginBottom:8}}>{err}</div>}
         {ok&&<div style={{fontSize:12,color:LIME,marginBottom:8}}>{ok}</div>}
       </div>
@@ -4250,7 +4250,7 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
       <div style={{borderTop:`1px solid ${border}`,paddingTop:16}}>
         <button onClick={async()=>{
           if(window.confirm("Account verwijderen? Al je data gaat verloren!"))
-            if(window.confirm("Echt zeker? Dit kan NIET ongedaan worden.")){{
+            if(window.confirm(lang==="en"?"Are you sure? This CANNOT be undone.":lang==="de"?"Sicher? Dies kann NICHT rückgängig gemacht werden.":"Echt zeker? Dit kan NIET ongedaan worden.")){{
               await sb.auth.signOut();
               alert("Log contact op via contact@fitcoachpro.nl voor definitieve verwijdering.");
             }}
@@ -4285,15 +4285,15 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
       ].map(({icon,title,content:c})=>(
         <div key={title} onClick={()=>{
           if(title.includes("Contact")||title.includes("Kontakt")){
-            const naam=prompt("Je naam:",profile?.name||"");
+            const naam=prompt(lang==="en"?"Your name:":lang==="de"?"Dein Name:":"Je naam:",profile?.name||"");
             if(!naam)return;
-            const bericht=prompt("Wat wil je laten weten? (bug, suggestie, vraag)");
+            const bericht=prompt(lang==="en"?"What would you like to tell us? (bug, suggestion, question)":lang==="de"?"Was möchtest du uns mitteilen? (Bug, Vorschlag, Frage)":"Wat wil je laten weten? (bug, suggestie, vraag)");
             if(!bericht)return;
             fetch("https://ujbgkilppibfdirxackk.supabase.co/rest/v1/feedback",{
               method:"POST",
               headers:{"Content-Type":"application/json","apikey":"sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h","Authorization":"Bearer sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h"},
               body:JSON.stringify({user_id:sbUser?.id,score:0,comment:"["+naam+"] "+bericht,created_at:new Date().toISOString()})
-            }).then(()=>alert("Bedankt "+naam+"! We reageren binnen 24u op contact@fitcoachpro.nl")).catch(()=>alert("Verstuur mislukt. Mail direct naar contact@fitcoachpro.nl"));
+            }).then(()=>alert((lang==="en"?"Thanks ":lang==="de"?"Danke ":"Bedankt ")+naam+(lang==="en"?"! We will respond within 24h at contact@fitcoachpro.nl":lang==="de"?"! Wir antworten innerhalb von 24h auf contact@fitcoachpro.nl":"! We reageren binnen 24u op contact@fitcoachpro.nl"))).catch(()=>alert(lang==="en"?"Send failed. Email directly to contact@fitcoachpro.nl":lang==="de"?"Fehler. Direkt mailen an contact@fitcoachpro.nl":"Verstuur mislukt. Mail direct naar contact@fitcoachpro.nl"));
           } else {
             alert(c);
           }
@@ -4555,7 +4555,7 @@ function ChallengeBlok({T,setTab,profile}){
     }
   }
   function stopChallenge(){
-    if(window.confirm("Challenge stoppen? Voortgang blijft bewaard.")){setActief(null);LS.set("fitcoach_challenge_actief",null);}
+    if(window.confirm(lang==="en"?"Stop challenge? Progress is saved.":lang==="de"?"Challenge stoppen? Fortschritt bleibt erhalten.":"Challenge stoppen? Voortgang blijft bewaard.")){setActief(null);LS.set("fitcoach_challenge_actief",null);}
   }
 
   const vandaagKlaar=prog.some(p=>p.datum===TODAY_KEY);
@@ -4726,7 +4726,7 @@ Geef een schema per trainingsdag. Wees specifiek: noem oefeningen, sets en reps.
             {stap===1&&<>
               {(()=>{const opgeslagen=LS.get("fitcoach_saved_schemas")||[];if(opgeslagen.length===0)return null;return(
                 <div style={{marginBottom:18}}>
-                  <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📚 Jouw opgeslagen schemas</div>
+                  <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📚 {lang==="en"?"Your saved plans":lang==="de"?"Deine gespeicherten Pläne":"Jouw opgeslagen schemas"}</div>
                   <div style={{display:"flex",flexDirection:"column",gap:6}}>
                     {opgeslagen.map(s=>(
                       <div key={s.id} style={{display:"flex",gap:8,alignItems:"center",padding:"10px 12px",borderRadius:10,border:"1px solid "+BORDER,background:isDark?"#111":CARD_BG}}>
@@ -4734,13 +4734,13 @@ Geef een schema per trainingsdag. Wees specifiek: noem oefeningen, sets en reps.
                           <div style={{fontSize:13,fontWeight:700,color:TEXT,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.naam}</div>
                           <div style={{fontSize:10,color:isDark?"#555":"#888",marginTop:1}}>{s.datum}</div>
                         </div>
-                        <button onClick={()=>setSchema(s.schema)} style={{padding:"6px 12px",borderRadius:8,border:"none",background:LIME,color:"#000",fontSize:11,fontWeight:700,cursor:"pointer"}}>Gebruik</button>
-                        <button onClick={()=>{if(confirm("Schema '"+s.naam+"' verwijderen?")){const u=opgeslagen.filter(x=>x.id!==s.id);LS.set("fitcoach_saved_schemas",u);setStap(1);setStap(s=>s);}}} style={{padding:"6px 8px",borderRadius:8,border:"none",background:"none",color:isDark?"#444":"#888",fontSize:14,cursor:"pointer"}}>×</button>
+                        <button onClick={()=>setSchema(s.schema)} style={{padding:"6px 12px",borderRadius:8,border:"none",background:LIME,color:"#000",fontSize:11,fontWeight:700,cursor:"pointer"}}>{lang==="en"?"Use":lang==="de"?"Nutzen":"Gebruik"}</button>
+                        <button onClick={()=>{if(confirm((lang==="en"?"Delete plan '":lang==="de"?"Plan löschen '":"Schema '")+s.naam+"' "+(lang==="en"?"?":lang==="de"?"?":"verwijderen?"))){const u=opgeslagen.filter(x=>x.id!==s.id);LS.set("fitcoach_saved_schemas",u);setStap(1);setStap(s=>s);}}} style={{padding:"6px 8px",borderRadius:8,border:"none",background:"none",color:isDark?"#444":"#888",fontSize:14,cursor:"pointer"}}>×</button>
                       </div>
                     ))}
                   </div>
                   <div style={{height:1,background:BORDER,margin:"14px 0"}}/>
-                  <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Of maak een nieuw schema</div>
+                  <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>{lang==="en"?"Or create a new plan":lang==="de"?"Oder neuen Plan erstellen":"Of maak een nieuw schema"}</div>
                 </div>
               );})()}
               <div style={{fontSize:12,color:isDark?"#555":"#888",marginBottom:14,lineHeight:1.6}}>
@@ -4828,14 +4828,14 @@ Geef een schema per trainingsdag. Wees specifiek: noem oefeningen, sets en reps.
               {schema}
             </div>
             <button onClick={()=>{
-              const naam=prompt("Geef dit schema een naam:","Mijn schema "+new Date().toLocaleDateString("nl",{day:"2-digit",month:"short"}));
+              const naam=prompt(lang==="en"?"Name your plan:":lang==="de"?"Plan-Name:":"Geef dit schema een naam:",(lang==="en"?"My plan ":lang==="de"?"Mein Plan ":"Mijn schema ")+new Date().toLocaleDateString(lang==="en"?"en-GB":lang,{day:"2-digit",month:"short"}));
               if(!naam)return;
               const opgeslagen=LS.get("fitcoach_saved_schemas")||[];
               const nieuw={id:Date.now(),naam,schema,antwoorden,datum:new Date().toLocaleDateString("nl")};
               LS.set("fitcoach_saved_schemas",[nieuw,...opgeslagen].slice(0,10));
-              alert("Schema opgeslagen als '"+naam+"'");
+              alert(lang==="en"?"Plan saved as '"+naam+"'":lang==="de"?"Plan gespeichert als '"+naam+"'":"Schema opgeslagen als '"+naam+"'");
             }} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid "+LIME,background:"rgba(200,241,56,0.06)",color:LIME,fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:8,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-              💾 Opslaan voor later
+              {lang==="en"?"💾 Save for later":lang==="de"?"💾 Für später speichern":"💾 Opslaan voor later"}
             </button>
             <div style={{display:"flex",gap:8}}>
               <button onClick={()=>{setSchema(null);setStap(1);}} style={{flex:1,padding:13,borderRadius:12,border:"1px solid "+BORDER,background:"none",color:isDark?"#555":"#888",fontSize:13,cursor:"pointer"}}>Opnieuw</button>
@@ -5145,7 +5145,13 @@ function App(){
       const trainCount=lastWeekLog.length;
       const totalKg=lastWeekLog.reduce((s,e)=>s+(e.exercises||[]).reduce((sum,ex)=>sum+(ex.weights||[]).reduce((a,w)=>a+(w||0),0),0),0);
       const muscles=[...new Set(lastWeekLog.flatMap(e=>e.targetMuscles||[]))].slice(0,3).join(", ");
-      finnBericht=`Maandag ${profile.name}! Vorige week: ${trainCount} training${trainCount!==1?"en":""}${muscles?", focus op "+muscles:""}. ${trainCount>=3?"Sterke week! Houd dit ritme aan.":"Tijd om een tandje bij te zetten deze week!"}`;
+      if(lang==="en"){
+        finnBericht=`Monday ${profile.name}! Last week: ${trainCount} workout${trainCount!==1?"s":""}${muscles?", focus on "+muscles:""}. ${trainCount>=3?"Strong week! Keep this rhythm.":"Time to step it up this week!"}`;
+      } else if(lang==="de"){
+        finnBericht=`Montag ${profile.name}! Letzte Woche: ${trainCount} Training${trainCount!==1?"s":""}${muscles?", Fokus auf "+muscles:""}. ${trainCount>=3?"Starke Woche! Halte den Rhythmus.":"Zeit, einen Gang hochzuschalten!"}`;
+      } else {
+        finnBericht=`Maandag ${profile.name}! Vorige week: ${trainCount} training${trainCount!==1?"en":""}${muscles?", focus op "+muscles:""}. ${trainCount>=3?"Sterke week! Houd dit ritme aan.":"Tijd om een tandje bij te zetten deze week!"}`;
+      }
       LS.set(lastWeekKey,true);
     } else if(isRestDay){
       finnBericht=`Rustdag vandaag ${profile.name}! Je lichaam herstelt nu. Geen training, wel goed eten en hydrateren.`;
@@ -5221,7 +5227,7 @@ function App(){
     setFeedbackModal({entry,workout:entry.workout});setFeedbackReply("");
     }catch(e){
       console.error("Save workout error:",e);
-      alert("Er ging iets mis bij opslaan. Probeer het opnieuw.");
+      alert(lang==="en"?"Something went wrong while saving. Please try again.":lang==="de"?"Beim Speichern ist etwas schief gelaufen. Bitte erneut versuchen.":"Er ging iets mis bij opslaan. Probeer het opnieuw.");
     }
   }
   function verdienFP(actie,bonus){
@@ -5247,7 +5253,7 @@ function App(){
   async function addFood(meal,quickItem){
     const txt=quickItem||foodInput[meal].trim();if(!txt)return;
     if(!quickItem)setFoodLoading(p=>({...p,[meal]:true}));
-    const raw=await ai(`Voedingswaarden voor: "${txt}". ALLEEN JSON: {"desc":"${txt}","kcal":0,"prot":0,"carbs":0,"fat":0}.`);
+    const raw=await ai(`Nutritional values for: "${txt}". ${lang==="en"?"Respond in English":lang==="de"?"Respond in German":"Respond in Dutch"}. ONLY JSON: {"desc":"${txt}","kcal":0,"prot":0,"carbs":0,"fat":0}.`);
     try{const pp=JSON.parse(raw.replace(/```json|```/g,"").trim());const item={desc:pp.desc||txt,kcal:pp.kcal||0,prot:pp.prot||0,carbs:pp.carbs||0,fat:pp.fat||0};const day=food[foodDate]||{Ochtend:[],Middag:[],Avond:[],Snack:[]};const uFood={...food,[foodDate]:{...day,[meal]:[...(day[meal]||[]),item]}};setFood(uFood);LS.set("fitcoach_food",uFood);const ck="fitcoach_custom_foods";const custom=LS.get(ck)||{Ochtend:[],Middag:[],Avond:[],Snack:[]};if(custom[meal]&&!custom[meal].includes(txt)){custom[meal]=[txt,...custom[meal]].slice(0,6);LS.set(ck,custom);}if(!quickItem)setFoodInput(p=>({...p,[meal]:""}))}catch(e){}
     if(!quickItem)setFoodLoading(p=>({...p,[meal]:false}));
     verdienFP("voeding");
@@ -5286,8 +5292,8 @@ function App(){
           <div onClick={e=>e.stopPropagation()} style={{background:CARD_BG,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,padding:"28px 24px 40px",border:`1px solid ${BORDER}`,animation:"slideUp .4s cubic-bezier(.16,1,.3,1)"}}>
             <div style={{textAlign:"center",marginBottom:24}}>
               <FinnImg size={64} emotion="victory"/>
-              <div style={{fontSize:22,fontWeight:900,color:TEXT,marginBottom:8,marginTop:12}}>3 trainingen al!</div>
-              <div style={{fontSize:14,color:isDark?"#888":"#555",lineHeight:1.6}}>Goed bezig {profile?.name}! Hoe bevalt FitCoach Pro tot nu toe?</div>
+              <div style={{fontSize:22,fontWeight:900,color:TEXT,marginBottom:8,marginTop:12}}>{lang==="en"?"3 workouts already!":lang==="de"?"3 Trainings schon!":"3 trainingen al!"}</div>
+              <div style={{fontSize:14,color:isDark?"#888":"#555",lineHeight:1.6}}>{lang==="en"?"Great job ":lang==="de"?"Gut gemacht ":"Goed bezig "}{profile?.name}! {lang==="en"?"How do you like FitCoach Pro so far?":lang==="de"?"Wie gefällt dir FitCoach Pro bisher?":"Hoe bevalt FitCoach Pro tot nu toe?"}</div>
             </div>
             <div style={{display:"flex",gap:6,justifyContent:"center",marginBottom:20}}>
               {[1,2,3,4,5].map(s=>(
@@ -5298,7 +5304,7 @@ function App(){
                 }} style={{width:54,height:54,borderRadius:14,border:`1px solid ${BORDER}`,background:isDark?"#111":"#F5F5F0",fontSize:28,cursor:"pointer",transition:"all .15s"}}>{s<=2?"😕":s===3?"🙂":s===4?"😄":"🤩"}</button>
               ))}
             </div>
-            <button onClick={()=>{LS.set("fitcoach_rated",true);setShowRatingPrompt(false);}} style={{width:"100%",padding:12,borderRadius:12,border:"none",background:"none",color:isDark?"#444":"#888",fontSize:12,cursor:"pointer"}}>Misschien later</button>
+            <button onClick={()=>{LS.set("fitcoach_rated",true);setShowRatingPrompt(false);}} style={{width:"100%",padding:12,borderRadius:12,border:"none",background:"none",color:isDark?"#444":"#888",fontSize:12,cursor:"pointer"}}>{lang==="en"?"Maybe later":lang==="de"?"Vielleicht später":"Misschien later"}</button>
           </div>
         </div>
       )}
@@ -5317,7 +5323,7 @@ function App(){
               if(fbSent)return(
                 <div style={{textAlign:"center",padding:"20px 0"}}>
                   <div style={{fontSize:40,marginBottom:12}}>🙏</div>
-                  <div style={{fontSize:16,fontWeight:800,marginBottom:8}}>Bedankt voor je feedback!</div>
+                  <div style={{fontSize:16,fontWeight:800,marginBottom:8}}>{lang==="en"?"Thanks for your feedback!":lang==="de"?"Danke für dein Feedback!":"Bedankt voor je feedback!"}</div>
                   <div style={{fontSize:13,color:"#555",marginBottom:20}}>Dit helpt ons de app beter te maken.</div>
                   <button onClick={()=>setShowFeedbackRequest(false)} style={{background:LIME,color:"#000",padding:"12px 24px",borderRadius:12,border:"none",fontWeight:800,cursor:"pointer"}}>Sluiten</button>
                 </div>
@@ -5467,7 +5473,7 @@ function App(){
         onGenerateShopping={async()=>{
           setGenShoppingLoading(true);
           const menu=weekMenu?JSON.stringify(weekMenu):`gezonde maaltijden voor ${profile.goal}`;
-          const txt=await ai(`Boodschappenlijst voor 1 persoon: ${menu}. Geef hoeveelheden. ALLEEN JSON array: ["500g kipfilet",...]. Max 25 items.`);
+          const txt=await ai(`Shopping list for 1 person: ${menu}. Include quantities. ${lang==="en"?"Respond in English":lang==="de"?"Respond in German":"Respond in Dutch"}. ONLY JSON array. Max 25 items.`);
           try{const list=JSON.parse(txt.replace(/\`\`\`json|\`\`\`/g,"").trim());setShoppingList(list.map(l=>({name:l,checked:false})));LS.set("fitcoach_shopping",list.map(l=>({name:l,checked:false})));}catch(e){}
           setGenShoppingLoading(false);
           setFoodSubTab("boodschappen");
@@ -5883,7 +5889,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                       <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:10}}>
                         <FinnImg size={28}/>
                         <div style={{flex:1}}>
-                          <div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>Vorige keer · {daysAgo===0?"vandaag":daysAgo===1?"gisteren":daysAgo+" dagen geleden"}</div>
+                          <div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{lang==="en"?"Last time · ":lang==="de"?"Letztes Mal · ":"Vorige keer · "}{daysAgo===0?(lang==="en"?"today":lang==="de"?"heute":"vandaag"):daysAgo===1?(lang==="en"?"yesterday":lang==="de"?"gestern":"gisteren"):daysAgo+(lang==="en"?" days ago":lang==="de"?" Tage her":" dagen geleden")}</div>
                           <div style={{fontSize:13,fontWeight:700,color:TEXT,marginTop:2}}>{prevSession.workout}</div>
                         </div>
                       </div>
@@ -5899,7 +5905,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                         })}
                         {(prevSession.exercises||[]).length>3&&<div style={{fontSize:10,color:isDark?"#444":"#888",fontStyle:"italic"}}>+{(prevSession.exercises||[]).length-3} meer</div>}
                       </div>
-                      <div style={{fontSize:10,color:isDark?"#666":"#777",marginTop:10,padding:"6px 10px",background:isDark?"#0D0D0D":"#F5F5F0",borderRadius:8}}>💡 Roan stelt voor: probeer vandaag iets meer gewicht voor progressie</div>
+                      <div style={{fontSize:10,color:isDark?"#666":"#777",marginTop:10,padding:"6px 10px",background:isDark?"#0D0D0D":"#F5F5F0",borderRadius:8}}>{lang==="en"?"💡 Roan suggests: try a bit more weight today for progression":lang==="de"?"💡 Roan schlägt vor: heute etwas mehr Gewicht für Fortschritt":"💡 Roan stelt voor: probeer vandaag iets meer gewicht voor progressie"}</div>
                     </div>
                   );
                 })()}
@@ -5924,7 +5930,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 </div>
               ):(
                 <div style={{...S.card,padding:16,marginBottom:12}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}><div style={{fontSize:13,fontWeight:800}}>Warming up</div><button onClick={()=>setShowWarmup(false)} style={{background:"none",border:"none",color:isDark?"#444":"#666",fontSize:12,cursor:"pointer",fontWeight:700}}>Sluiten</button></div>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}><div style={{fontSize:13,fontWeight:800}}>Warming up</div><button onClick={()=>setShowWarmup(false)} style={{background:"none",border:"none",color:isDark?"#444":"#666",fontSize:12,cursor:"pointer",fontWeight:700}}>{lang==="en"?"Close":lang==="de"?"Schließen":"Sluiten"}</button></div>
                   {getWarmup(targetMuscles).map((w,i)=>(
                     <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",paddingBottom:10,marginBottom:10,borderBottom:i<getWarmup(targetMuscles).length-1?"1px solid #111":"none"}}>
                       <div style={{width:20,height:20,borderRadius:"50%",background:"rgba(200,241,56,0.1)",border:"1px solid rgba(200,241,56,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:900,color:LIME,flexShrink:0,marginTop:2}}>{i+1}</div>
@@ -5981,8 +5987,8 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                           </div>
                         </div>
                         <div style={{padding:16}}>
-                          {isPR&&!isAllTimePR&&<div style={{display:"flex",gap:6,alignItems:"center",marginBottom:8,padding:"6px 10px",background:"rgba(200,241,56,0.05)",borderRadius:8,border:"1px solid rgba(200,241,56,0.15)"}}><span style={{fontSize:14}}>🔥</span><div style={{fontSize:11,color:LIME,fontWeight:700}}>+{(maxNow-maxPrev).toFixed(1)}{unit} vs vorige keer — push door!</div></div>}
-                          {isAllTimePR&&<div style={{background:"rgba(200,241,56,0.08)",border:"1px solid rgba(200,241,56,0.2)",borderRadius:8,padding:"8px 12px",marginBottom:10,fontSize:11,color:LIME,fontWeight:700,display:"flex",gap:8,alignItems:"center"}}><FinnImg size={20}/><div><div>🏆 All-time PR!</div><div style={{fontSize:10,color:LIME,opacity:0.85,fontWeight:600,marginTop:1}}>Vorige: {globalPR?.weight||0}{unit} → nu {maxNow}{unit}. Beast mode {profile?.name}!</div></div></div>}
+                          {isPR&&!isAllTimePR&&<div style={{display:"flex",gap:6,alignItems:"center",marginBottom:8,padding:"6px 10px",background:"rgba(200,241,56,0.05)",borderRadius:8,border:"1px solid rgba(200,241,56,0.15)"}}><span style={{fontSize:14}}>🔥</span><div style={{fontSize:11,color:LIME,fontWeight:700}}>+{(maxNow-maxPrev).toFixed(1)}{unit} {lang==="en"?"vs last time — push on!":lang==="de"?"vs. letzte Mal — weiter so!":"vs vorige keer — push door!"}</div></div>}
+                          {isAllTimePR&&<div style={{background:"rgba(200,241,56,0.08)",border:"1px solid rgba(200,241,56,0.2)",borderRadius:8,padding:"8px 12px",marginBottom:10,fontSize:11,color:LIME,fontWeight:700,display:"flex",gap:8,alignItems:"center"}}><FinnImg size={20}/><div><div>🏆 {lang==="en"?"All-time PR!":lang==="de"?"All-time PR!":"All-time PR!"}</div><div style={{fontSize:10,color:LIME,opacity:0.85,fontWeight:600,marginTop:1}}>{lang==="en"?"Previous: ":lang==="de"?"Vorher: ":"Vorige: "}{globalPR?.weight||0}{unit} → {lang==="en"?"now":lang==="de"?"jetzt":"nu"} {maxNow}{unit}. {lang==="en"?"Beast mode":lang==="de"?"Beast Mode":"Beast mode"} {profile?.name}!</div></div></div>}
                           {ex.isCardioFinish&&<div style={{fontSize:10,color:ORANGE,fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10,borderBottom:`1px solid rgba(255,107,43,0.15)`,paddingBottom:8}}>Cardio finish · Vetverbranding</div>}
                           {ex.unit==="sec"&&!["Plank","Mountain Climber","High Knees","Bear Crawl","Hollow Hold","L-sit","Wall Handstand","Frog Stand","Bar Hang","Touwtjespringen","Speed Rope","Sprint op de plaats","Lateral Shuffle","Skipping"].includes(ex.name)&&(
                             <CardioTimer ex={ex} ei={ei} profile={profile} lang={lang} isDark={isDark} LIME={LIME} ORANGE={ORANGE} TEXT={TEXT} CARD_BG={CARD_BG} BORDER={BORDER} BG={BG}
@@ -5992,8 +5998,8 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                               }}
                             />
                           )}
-                          {profile?.goal==="spiermassa"&&ex.prevWeights&&!ex.isCardioFinish&&(()=>{const maxP=Math.max(0,...ex.prevWeights.filter(w=>w>0));const maxN=Math.max(0,...ex.weights.filter(w=>w>0));const inc=maxP<20?1.25:maxP<50?2.5:5;const sug=Math.round((maxP+inc)/2.5)*2.5;if(maxP>0&&maxN===maxP)return<div style={{background:"rgba(200,241,56,0.04)",border:"1px solid rgba(200,241,56,0.12)",borderRadius:10,padding:"8px 12px",marginBottom:10,fontSize:11,color:LIME}}>Vorige keer {maxP}kg — probeer vandaag {sug}kg voor progressie</div>;return null;})()}
-                          {ex.prevWeights&&<div style={{background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>Vorige training</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:isDark?"#444":"#666",marginBottom:3}}>{setLabel(unit,i)}</div><div style={{fontSize:13,fontWeight:700,color:isDark?"#666":"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
+                          {profile?.goal==="spiermassa"&&ex.prevWeights&&!ex.isCardioFinish&&(()=>{const maxP=Math.max(0,...ex.prevWeights.filter(w=>w>0));const maxN=Math.max(0,...ex.weights.filter(w=>w>0));const inc=maxP<20?1.25:maxP<50?2.5:5;const sug=Math.round((maxP+inc)/2.5)*2.5;if(maxP>0&&maxN===maxP)return<div style={{background:"rgba(200,241,56,0.04)",border:"1px solid rgba(200,241,56,0.12)",borderRadius:10,padding:"8px 12px",marginBottom:10,fontSize:11,color:LIME}}>{lang==="en"?"Last time ":lang==="de"?"Letztes Mal ":"Vorige keer "}{maxP}kg — {lang==="en"?"try ":lang==="de"?"versuche ":"probeer vandaag "}{sug}kg{lang==="en"?" today for progression":lang==="de"?" für Fortschritt":" voor progressie"}</div>;return null;})()}
+                          {ex.prevWeights&&<div style={{background:isDark?"#1C1C1C":"#E8E8E0",borderRadius:12,padding:"10px 14px",marginBottom:12}}><div style={{...S.lbl,marginBottom:8}}>{lang==="en"?"Previous workout":lang==="de"?"Vorheriges Training":"Vorige training"}</div><div style={{display:"flex",gap:8,flexWrap:"wrap"}}>{ex.prevWeights.map((w,i)=><div key={i} style={{textAlign:"center",minWidth:44}}><div style={{fontSize:9,color:isDark?"#444":"#666",marginBottom:3}}>{setLabel(unit,i)}</div><div style={{fontSize:13,fontWeight:700,color:isDark?"#666":"#666"}}>{fmtVal(w,unit)}</div></div>)}</div></div>}
                           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
     <div style={{...S.lbl}}>{unitLabel(unit,ex.name)}</div>
 
@@ -6046,7 +6052,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                           </div>
                           <button onClick={()=>markSave(ei)} style={{width:"100%",padding:"10px",borderRadius:12,border:"none",cursor:"pointer",background:ex.saved?LIME:isDark?"#1C1C1C":"#E8E8E0",color:ex.saved?"#000":isDark?"#666":"#444",fontSize:13,fontWeight:800,marginBottom:10}}>{ex.saved?"✓ Opgeslagen":T.oefeningOpslaan}</button>
                           <div style={{display:"flex",gap:6,marginBottom:8,flexWrap:"wrap"}}>
-                            {[{emoji:"😣",label:"Zwaar",text:"Voelde zwaar"},{emoji:"😊",label:"Goed",text:"Voelde goed"},{emoji:"💪",label:"Sterk",text:"Sterk gevoel"},{emoji:"🎯",label:"Spot on",text:"Perfect"},{emoji:"😵",label:"Kapot",text:"Kapot na deze"}].map(s=>(
+                            {(lang==="en"?[{emoji:"😣",label:"Tough",text:"Felt tough"},{emoji:"😊",label:"Good",text:"Felt good"},{emoji:"💪",label:"Strong",text:"Strong feel"},{emoji:"🎯",label:"Spot on",text:"Perfect"},{emoji:"😵",label:"Dead",text:"Dead after this"}]:lang==="de"?[{emoji:"😣",label:"Hart",text:"War hart"},{emoji:"😊",label:"Gut",text:"Fühlte gut"},{emoji:"💪",label:"Stark",text:"Starkes Gefühl"},{emoji:"🎯",label:"Top",text:"Perfekt"},{emoji:"😵",label:"Fertig",text:"Fertig danach"}]:[{emoji:"😣",label:"Zwaar",text:"Voelde zwaar"},{emoji:"😊",label:"Goed",text:"Voelde goed"},{emoji:"💪",label:"Sterk",text:"Sterk gevoel"},{emoji:"🎯",label:"Spot on",text:"Perfect"},{emoji:"😵",label:"Kapot",text:"Kapot na deze"}]).map(s=>(
                               <button key={s.emoji} onClick={()=>setN(ei,s.text)} style={{padding:"6px 10px",borderRadius:99,border:`1px solid ${ex.note===s.text?LIME:BORDER}`,background:ex.note===s.text?"rgba(200,241,56,0.1)":"none",color:ex.note===s.text?LIME:isDark?"#888":"#666",fontSize:11,cursor:"pointer",fontWeight:600,whiteSpace:"nowrap"}}>{s.emoji} {s.label}</button>
                             ))}
                           </div>
@@ -6133,7 +6139,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                       }} style={{padding:"11px 16px",borderRadius:12,border:"none",background:isDark?"#1C1C1C":"#E8E8E0",color:LIME,fontWeight:800,fontSize:14,cursor:"pointer",flexShrink:0}}>+</button>
                     </div>
                   </div>
-                  <button onClick={async()=>{try{await saveWorkout();}catch(e){console.error("Save error:",e);alert("Er ging iets mis bij opslaan. Probeer opnieuw.");}}} style={{width:"100%",padding:18,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>{T.trainingOpslaan}</button>
+                  <button onClick={async()=>{try{await saveWorkout();}catch(e){console.error("Save error:",e);alert(lang==="en"?"Something went wrong saving. Please try again.":lang==="de"?"Speichern fehlgeschlagen. Bitte erneut versuchen.":"Er ging iets mis bij opslaan. Probeer opnieuw.");}}} style={{width:"100%",padding:18,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>{T.trainingOpslaan}</button>
                 </div>
               )}
             </div>
@@ -6286,7 +6292,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 ))}
               </div>
             )}
-            {Object.keys(prData).length>0&&<button onClick={()=>{if(window.confirm("Alle PR records wissen?")){{setPrData({});LS.set("fitcoach_prs",{});}}}} style={{width:"100%",padding:"11px",borderRadius:12,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#333":"#666",fontSize:11,cursor:"pointer",marginTop:12}}>{T.recordsWissen}</button>}
+            {Object.keys(prData).length>0&&<button onClick={()=>{if(window.confirm(lang==="en"?"Clear all PR records?":lang==="de"?"Alle PR-Rekorde löschen?":"Alle PR records wissen?")){{setPrData({});LS.set("fitcoach_prs",{});}}}} style={{width:"100%",padding:"11px",borderRadius:12,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#333":"#666",fontSize:11,cursor:"pointer",marginTop:12}}>{T.recordsWissen}</button>}
           </>}
         </div>
       )}
@@ -6431,7 +6437,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                               <div style={{fontSize:10,color:isCheat?"rgba(255,107,43,0.6)":isDark?"#444":"#666",fontWeight:700,width:52,flexShrink:0,textTransform:"capitalize",paddingTop:2}}>{type}</div>
                               <div style={{fontSize:12,color:isCheat?"#ccc":"#aaa",lineHeight:1.5,flex:1}}>{meal}{persons>1?<span style={{fontSize:10,color:isDark?"#333":"#666"}}> · {persons} pers.</span>:""}</div>
                               <button onClick={async()=>{
-                                const txt=await ai(`Geef één alternatief voor ${type} op ${dag}. Anders dan: "${meal}". Kort en concreet. NL. ALLEEN JSON: {"${type}":"..."}`);
+                                const txt=await ai(`Give one alternative for ${type} on ${dag}. Different from: "${meal}". Short and concrete. ${lang==="en"?"Respond in English":lang==="de"?"Respond in German":"Respond in Dutch"}. ONLY JSON: {"${type}":"..."}`);
                                 try{const alt=JSON.parse(txt.replace(/\`\`\`json|\`\`\`/g,"").trim());const u={...weekMenu,[dag]:{...meals,...alt}};setWeekMenu(u);LS.set("fitcoach_weekmenu",u);}catch(e){}
                               }} style={{padding:"3px 8px",borderRadius:6,border:`1px solid ${BORDER}`,background:"none",color:"#555",fontSize:9,fontWeight:700,cursor:"pointer",flexShrink:0,whiteSpace:"nowrap"}}>Wijzig</button>
                             </div>
@@ -6458,7 +6464,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
                 <div><div style={{fontSize:13,fontWeight:800}}>Boodschappenlijst</div><div style={{fontSize:11,color:isDark?"#444":"#666",marginTop:2}}>{shoppingList.filter(i=>!i.checked).length} items over</div></div>
                 <div style={{display:"flex",gap:8}}>
-                  <button onClick={async()=>{setGenShoppingLoading(true);const menu=weekMenu?JSON.stringify(weekMenu):`gezonde maaltijden voor ${profile.goal}`;const txt=await ai(`Boodschappenlijst voor ${persons} ${persons===1?"persoon":"personen"} voor dit weekmenu: ${menu}. Geef HOEVEELHEDEN erbij (bijv. "500g kipfilet"). Groepeer per categorie. ALLEEN JSON array: ["500g kipfilet",...]. Max 28 items.`);try{const raw=JSON.parse(txt.replace(/```json|```/g,"").trim());const items=(Array.isArray(raw)?raw:[]).map(l=>({name:typeof l==="string"?l:l.name||String(l),checked:false}));setShoppingList(items);LS.set("fitcoach_shopping",items);}catch(e){}setGenShoppingLoading(false);}} disabled={genShoppingLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:genShoppingLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{genShoppingLoading?T.bezig:lang==="en"?"Generate":lang==="de"?"Generieren":"Genereer"}</button>
+                  <button onClick={async()=>{setGenShoppingLoading(true);const menu=weekMenu?JSON.stringify(weekMenu):`gezonde maaltijden voor ${profile.goal}`;const txt=await ai(`Shopping list for ${persons} ${persons===1?"person":"people"} for this menu: ${menu}. Include QUANTITIES (e.g. "500g chicken"). Group by category. ${lang==="en"?"Respond in English":lang==="de"?"Respond in German":"Respond in Dutch"}. ONLY JSON array. Max 28 items.`);try{const raw=JSON.parse(txt.replace(/```json|```/g,"").trim());const items=(Array.isArray(raw)?raw:[]).map(l=>({name:typeof l==="string"?l:l.name||String(l),checked:false}));setShoppingList(items);LS.set("fitcoach_shopping",items);}catch(e){}setGenShoppingLoading(false);}} disabled={genShoppingLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:genShoppingLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{genShoppingLoading?T.bezig:lang==="en"?"Generate":lang==="de"?"Generieren":"Genereer"}</button>
                   {shoppingList.length>0&&<button onClick={()=>{setShoppingList([]);LS.set("fitcoach_shopping",[]);}} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{T.leeg}</button>}
                 </div>
               </div>
@@ -6491,9 +6497,9 @@ setFeedbackReply(reply);setFeedbackLoading(false);
             <div>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
                 <div style={{fontSize:13,fontWeight:800}}>{T.opgeslagenRecepten}</div>
-                <button onClick={async()=>{const txt=await ai(`Één gezond recept voor ${profile.name}, fase: ${fase}, doel: ${profile.goal}. NL, max 150 woorden.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"7px 14px",borderRadius:10,border:`1px solid ${ORANGE}`,background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:11,fontWeight:700,cursor:"pointer"}}>+ Roan recept</button>
+                <button onClick={async()=>{const txt=await ai(`One healthy recipe for ${profile.name}, phase: ${fase}, goal: ${profile.goal}. ${lang==="en"?"Respond in English":lang==="de"?"Respond in German":"Respond in Dutch"}, max 150 words.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"7px 14px",borderRadius:10,border:`1px solid ${ORANGE}`,background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:11,fontWeight:700,cursor:"pointer"}}>+ Roan recept</button>
               </div>
-              <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{[lang==="en"?"High protein breakfast":lang==="de"?"Eiweißreiches Frühstück":"Hoog eiwit ontbijt",lang==="en"?"Quick lunch":lang==="de"?"Schnelles Mittagessen":"Snelle lunch",lang==="en"?"Post-workout meal":lang==="de"?"Post-Workout Mahlzeit":"Post-workout maaltijd",lang==="en"?"Low carb dinner":lang==="de"?"Low Carb Abendessen":"Laag carb diner"].map(s=><button key={s} onClick={async()=>{const txt=await ai(`Recept: ${s}. Voor ${profile.name}, fase: ${fase}. NL, max 120 woorden.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY,tag:s};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"6px 12px",borderRadius:20,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:isDark?"#666":"#666",fontSize:11,cursor:"pointer",fontWeight:600}}>{s}</button>)}</div>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{[lang==="en"?"High protein breakfast":lang==="de"?"Eiweißreiches Frühstück":"Hoog eiwit ontbijt",lang==="en"?"Quick lunch":lang==="de"?"Schnelles Mittagessen":"Snelle lunch",lang==="en"?"Post-workout meal":lang==="de"?"Post-Workout Mahlzeit":"Post-workout maaltijd",lang==="en"?"Low carb dinner":lang==="de"?"Low Carb Abendessen":"Laag carb diner"].map(s=><button key={s} onClick={async()=>{const txt=await ai(`Recipe: ${s}. For ${profile.name}, phase: ${fase}. ${lang==="en"?"Respond in English":lang==="de"?"Respond in German":"Respond in Dutch"}, max 120 words.`);const newR={id:Date.now(),text:txt,date:TODAY_KEY,tag:s};const u=[newR,...savedRecipes].slice(0,20);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{padding:"6px 12px",borderRadius:20,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:isDark?"#666":"#666",fontSize:11,cursor:"pointer",fontWeight:600}}>{s}</button>)}</div>
               {savedRecipes.length===0?<div style={{...S.card,padding:20,textAlign:"center"}}><div style={{fontSize:12,color:isDark?"#444":"#666",marginBottom:4}}>Geen recepten opgeslagen</div></div>:savedRecipes.map(r=><div key={r.id} style={{...S.card,padding:16,marginBottom:8}}><div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}><div style={{display:"flex",gap:8,alignItems:"center"}}><div style={{fontSize:10,color:isDark?"#444":"#666"}}>{r.date}</div>{r.tag&&<div style={{fontSize:9,color:ORANGE,fontWeight:700,letterSpacing:1,textTransform:"uppercase"}}>{r.tag}</div>}</div><button onClick={()=>{const u=savedRecipes.filter(x=>x.id!==r.id);setSavedRecipes(u);LS.set("fitcoach_recipes",u);}} style={{background:"none",border:"none",color:isDark?"#333":"#666",fontSize:14,cursor:"pointer"}}>×</button></div><div style={{fontSize:12,lineHeight:1.7,color:"#bbb",whiteSpace:"pre-wrap"}}>{r.text}</div></div>)}
             </div>
           )}
@@ -6757,7 +6763,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
         <button onClick={()=>{
           const huidigeOef=session.find(e=>!Object.values(e.setsDone||{}).every(Boolean))?.name||session[0]?.name;
           const klaar=session.filter(e=>Object.values(e.setsDone||{}).some(Boolean)).length;
-          openFinnWith(`Ik ben aan het trainen. Bezig met: ${huidigeOef}. ${klaar} van ${session.length} oefeningen voltooid. Geef me een korte motiverende tip of beantwoord mijn vraag over deze oefening.`);
+          const ctx=lang==="en"?`I'm training. Currently: ${huidigeOef}. ${klaar} of ${session.length} exercises done. Give me a short motivating tip or answer my question.`:lang==="de"?`Ich trainiere gerade. Aktuell: ${huidigeOef}. ${klaar} von ${session.length} Übungen fertig. Gib mir einen kurzen Motivationstipp oder beantworte meine Frage.`:`Ik ben aan het trainen. Bezig met: ${huidigeOef}. ${klaar} van ${session.length} oefeningen voltooid. Geef me een korte motiverende tip of beantwoord mijn vraag over deze oefening.`;openFinnWith(ctx);
         }} style={{position:"fixed",bottom:80,right:14,width:58,height:58,borderRadius:"50%",background:ORANGE,border:"3px solid #fff",cursor:"pointer",zIndex:25,display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 6px 24px rgba(255,107,43,0.5)",animation:"finnBob 3s ease-in-out infinite"}}>
           <FinnImg size={42}/>
         </button>
