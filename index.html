@@ -1102,7 +1102,7 @@ const RANGEN=[
   {naam:"Legende",   kleur:"#FF6B2B",emoji:"🔥", minLevel:81, maxLevel:99},
   {naam:"G.O.A.T.",  kleur:"#C8F138",emoji:"🐐", minLevel:100,maxLevel:999},
 ];
-function getRang(level){return RANGEN.find(r=>level>=r.minLevel&&level<=r.maxLevel)||RANGEN[0];}
+function getRang(level){const found=RANGEN.find(r=>level>=r.minLevel&&level<=r.maxLevel);return found||RANGEN[0]||{naam:"Starter",kleur:"#666",emoji:"⬜",minLevel:0,maxLevel:0};}
 function getRangNaam(rang,lang){
   const nl=rang.naam;
   const en={Starter:"Starter",Hout:"Wood",Steen:"Stone",IJzer:"Iron",Brons:"Bronze",Zilver:"Silver",Goud:"Gold",Platina:"Platinum",Saffier:"Sapphire",Smaragd:"Emerald",Diamant:"Diamond",Meester:"Master",Legende:"Legend"};
@@ -1201,7 +1201,7 @@ const FP={
   schema: 100,        // Schema gegenereerd
 };
 
-const APP_VERSION="3.2";
+const APP_VERSION="3.3";
 const TRANSLATIONS={
   nl:{
     // Nav
@@ -1573,6 +1573,17 @@ function berekenFP(log,food,weightLog,streak){
 }
 
 const CHANGELOG=[
+  {
+    version:"3.3",
+    title:"Eigen schemas, weekoverzicht & contact",
+    items:[
+      "Eigen schemas opslaan en hergebruiken — bewaar tot 10 favoriete schemas",
+      "Roan stuurt elke maandag een weekoverzicht — zie hoe vorige week ging",
+      "Contact formulier ingebouwd — direct vanuit de app feedback sturen",
+      "Crash fix bij rang promotie — null-safe getRang functie",
+      "Verbeterde all-time PR weergave",
+    ]
+  },
   {
     version:"3.2",
     title:"Slimme coach features",
@@ -4272,7 +4283,21 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
         {icon:"🔒",title:"Privacy",content:"FitCoach Pro deelt jouw data NOOIT met derden.\nAlle data wordt versleuteld opgeslagen via Supabase (Europese servers).\nJe kunt je account en alle data op elk moment verwijderen.\n\nVolledig beleid: www.fitcoachpro.nl/privacy"},
         {icon:"ℹ️",title:"Over FitCoach Pro",content:"Versie: "+APP_VERSION+"\n\nNieuw in 3.1:\n• Streaming Roan — letter voor letter\n• 1000+ oefeningen\n• Haptic feedback\n• Crash fixes\n\nGebouwd door Robin Schuurkamp\n© 2026 FitCoachPro\nwww.fitcoachpro.nl"},
       ].map(({icon,title,content:c})=>(
-        <div key={title} onClick={()=>alert(c)} style={{display:"flex",alignItems:"center",gap:12,padding:"14px 0",borderBottom:`1px solid ${border}`,cursor:"pointer"}}>
+        <div key={title} onClick={()=>{
+          if(title.includes("Contact")||title.includes("Kontakt")){
+            const naam=prompt("Je naam:",profile?.name||"");
+            if(!naam)return;
+            const bericht=prompt("Wat wil je laten weten? (bug, suggestie, vraag)");
+            if(!bericht)return;
+            fetch("https://ujbgkilppibfdirxackk.supabase.co/rest/v1/feedback",{
+              method:"POST",
+              headers:{"Content-Type":"application/json","apikey":"sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h","Authorization":"Bearer sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h"},
+              body:JSON.stringify({user_id:sbUser?.id,score:0,comment:"["+naam+"] "+bericht,created_at:new Date().toISOString()})
+            }).then(()=>alert("Bedankt "+naam+"! We reageren binnen 24u op contact@fitcoachpro.nl")).catch(()=>alert("Verstuur mislukt. Mail direct naar contact@fitcoachpro.nl"));
+          } else {
+            alert(c);
+          }
+        }} style={{display:"flex",alignItems:"center",gap:12,padding:"14px 0",borderBottom:`1px solid ${border}`,cursor:"pointer"}}>
           <div style={{fontSize:22,width:36,textAlign:"center"}}>{icon}</div>
           <div style={{flex:1,fontSize:14,fontWeight:700,color:txt}}>{title}</div>
           <div style={{color:txt3,fontSize:18}}>›</div>
@@ -4699,6 +4724,25 @@ Geef een schema per trainingsdag. Wees specifiek: noem oefeningen, sets en reps.
             </div>
 
             {stap===1&&<>
+              {(()=>{const opgeslagen=LS.get("fitcoach_saved_schemas")||[];if(opgeslagen.length===0)return null;return(
+                <div style={{marginBottom:18}}>
+                  <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:10}}>📚 Jouw opgeslagen schemas</div>
+                  <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                    {opgeslagen.map(s=>(
+                      <div key={s.id} style={{display:"flex",gap:8,alignItems:"center",padding:"10px 12px",borderRadius:10,border:"1px solid "+BORDER,background:isDark?"#111":CARD_BG}}>
+                        <div style={{flex:1,minWidth:0}}>
+                          <div style={{fontSize:13,fontWeight:700,color:TEXT,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{s.naam}</div>
+                          <div style={{fontSize:10,color:isDark?"#555":"#888",marginTop:1}}>{s.datum}</div>
+                        </div>
+                        <button onClick={()=>setSchema(s.schema)} style={{padding:"6px 12px",borderRadius:8,border:"none",background:LIME,color:"#000",fontSize:11,fontWeight:700,cursor:"pointer"}}>Gebruik</button>
+                        <button onClick={()=>{if(confirm("Schema '"+s.naam+"' verwijderen?")){const u=opgeslagen.filter(x=>x.id!==s.id);LS.set("fitcoach_saved_schemas",u);setStap(1);setStap(s=>s);}}} style={{padding:"6px 8px",borderRadius:8,border:"none",background:"none",color:isDark?"#444":"#888",fontSize:14,cursor:"pointer"}}>×</button>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{height:1,background:BORDER,margin:"14px 0"}}/>
+                  <div style={{fontSize:11,color:isDark?"#444":"#888",fontWeight:700,letterSpacing:2,textTransform:"uppercase",marginBottom:8}}>Of maak een nieuw schema</div>
+                </div>
+              );})()}
               <div style={{fontSize:12,color:isDark?"#555":"#888",marginBottom:14,lineHeight:1.6}}>
                 Roan kent al je basisgegevens. Vertel wat extra context voor een beter schema.
               </div>
@@ -4783,9 +4827,19 @@ Geef een schema per trainingsdag. Wees specifiek: noem oefeningen, sets en reps.
             <div style={{background:isDark?"#111":CARD_BG,borderRadius:14,padding:16,marginBottom:16,fontSize:13,lineHeight:1.8,color:isDark?"#ccc":"#333",whiteSpace:"pre-wrap"}}>
               {schema}
             </div>
+            <button onClick={()=>{
+              const naam=prompt("Geef dit schema een naam:","Mijn schema "+new Date().toLocaleDateString("nl",{day:"2-digit",month:"short"}));
+              if(!naam)return;
+              const opgeslagen=LS.get("fitcoach_saved_schemas")||[];
+              const nieuw={id:Date.now(),naam,schema,antwoorden,datum:new Date().toLocaleDateString("nl")};
+              LS.set("fitcoach_saved_schemas",[nieuw,...opgeslagen].slice(0,10));
+              alert("Schema opgeslagen als '"+naam+"'");
+            }} style={{width:"100%",padding:12,borderRadius:12,border:"1px solid "+LIME,background:"rgba(200,241,56,0.06)",color:LIME,fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:8,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              💾 Opslaan voor later
+            </button>
             <div style={{display:"flex",gap:8}}>
               <button onClick={()=>{setSchema(null);setStap(1);}} style={{flex:1,padding:13,borderRadius:12,border:"1px solid "+BORDER,background:"none",color:isDark?"#555":"#888",fontSize:13,cursor:"pointer"}}>Opnieuw</button>
-              <div style={{display:"flex",gap:8,flex:2}}><button onClick={()=>{setSchema(null);setStap(1);}} style={{flex:1,padding:13,borderRadius:12,border:"1px solid "+BORDER,background:"none",color:isDark?"#555":"#888",fontSize:12,cursor:"pointer",fontWeight:600}}>Nieuw</button><button onClick={onClose} style={{flex:2,padding:13,borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{lang==="en"?"Get started →":"Aan de slag →"}</button></div>
+              <button onClick={onClose} style={{flex:2,padding:13,borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{lang==="en"?"Get started →":"Aan de slag →"}</button>
             </div>
           </div>
         )}
@@ -5081,7 +5135,19 @@ function App(){
     const dayKeys2=["zo","ma","di","wo","do","vr","za"];
     const todayKey2=dayKeys2[TODAY.getDay()];
     const isRestDay=!trainDayNames2.includes(todayKey2);
-    if(isRestDay){
+    const isMonday=TODAY.getDay()===1;
+    const lastWeekKey="fitcoach_weekreview_"+Math.floor(TODAY.getTime()/(7*86400000));
+    const seenThisWeek=LS.get(lastWeekKey);
+    if(isMonday&&!seenThisWeek&&log.length>=2){
+      // Bereken vorige week stats
+      const weekAgo=new Date(TODAY.getTime()-7*86400000);
+      const lastWeekLog=log.filter(e=>{try{const d=parseDate(e.date);return d>=weekAgo&&d<TODAY;}catch{return false;}});
+      const trainCount=lastWeekLog.length;
+      const totalKg=lastWeekLog.reduce((s,e)=>s+(e.exercises||[]).reduce((sum,ex)=>sum+(ex.weights||[]).reduce((a,w)=>a+(w||0),0),0),0);
+      const muscles=[...new Set(lastWeekLog.flatMap(e=>e.targetMuscles||[]))].slice(0,3).join(", ");
+      finnBericht=`Maandag ${profile.name}! Vorige week: ${trainCount} training${trainCount!==1?"en":""}${muscles?", focus op "+muscles:""}. ${trainCount>=3?"Sterke week! Houd dit ritme aan.":"Tijd om een tandje bij te zetten deze week!"}`;
+      LS.set(lastWeekKey,true);
+    } else if(isRestDay){
       finnBericht=`Rustdag vandaag ${profile.name}! Je lichaam herstelt nu. Geen training, wel goed eten en hydrateren.`;
     } else if(log[0]){
       const d=parseDate(log[0].date),since=Math.floor((TODAY-d)/86400000);
@@ -5290,9 +5356,9 @@ function App(){
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.9)",zIndex:400,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={()=>setLevelUp(null)}>
       <div style={{textAlign:"center",padding:32,animation:"scaleIn .4s cubic-bezier(.16,1,.3,1)"}}>
         <div style={{fontSize:80,marginBottom:16,animation:"bounce 0.6s ease"}}>{levelUp.rang.emoji}</div>
-        <div style={{fontSize:14,color:levelUp.rang.kleur,fontWeight:700,letterSpacing:3,textTransform:"uppercase",marginBottom:8}}>Level Up!</div>
+        <div style={{fontSize:14,color:(levelUp.rang||{}).kleur||"#666",fontWeight:700,letterSpacing:3,textTransform:"uppercase",marginBottom:8}}>Level Up!</div>
         <div style={{fontSize:48,fontWeight:900,color:"#fff",letterSpacing:-2,marginBottom:4}}>Level {levelUp.level}</div>
-        <div style={{fontSize:20,fontWeight:800,color:levelUp.rang.kleur,marginBottom:24}}>{levelUp.rang.naam}</div>
+        <div style={{fontSize:20,fontWeight:800,color:(levelUp.rang||{}).kleur||"#666",marginBottom:24}}>{levelUp.rang.naam}</div>
         <div style={{fontSize:13,color:"#555",marginBottom:32}}>Tik om door te gaan</div>
       </div>
       <style>{`@keyframes scaleIn{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}`}</style>
