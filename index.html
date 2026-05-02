@@ -1201,7 +1201,7 @@ const FP={
   schema: 100,        // Schema gegenereerd
 };
 
-const APP_VERSION="3.3";
+const APP_VERSION="3.4";
 const TRANSLATIONS={
   nl:{
     // Nav
@@ -1574,6 +1574,17 @@ function berekenFP(log,food,weightLog,streak){
 
 const CHANGELOG=[
   {
+    version:"3.4",
+    title:"Geluid, feedback & vertaalsweep",
+    items:[
+      "Rust timer geluid — countdown beeps 3-2-1 en eindtoon (uit/aan in Instellingen)",
+      "Thumbs up/down op Roan chat berichten — help Roan beter worden",
+      "44 vertaalfixes voor Engelse en Duitse modus",
+      "AI prompts (recepten, boodschappen, voeding) respecteren nu jouw taalkeuze",
+      "Confirms en alerts in 3 talen",
+    ]
+  },
+  {
     version:"3.3",
     title:"Eigen schemas, weekoverzicht & contact",
     items:[
@@ -1906,6 +1917,21 @@ function haptic(type){
     else if(type==="success")navigator.vibrate([10,30,10]);
     else if(type==="pr")navigator.vibrate([20,50,20,50,80]);
     else navigator.vibrate(15);
+  }catch(e){}
+}
+function beep(freq,duration,vol){
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value=freq||440;
+    osc.type="sine";
+    gain.gain.setValueAtTime(vol||0.15,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+(duration||0.15));
+    osc.start();
+    osc.stop(ctx.currentTime+(duration||0.15));
   }catch(e){}
 }
 function speak(txt,lang){
@@ -2353,7 +2379,22 @@ function setLabel(unit,idx){if(unit==="sec")return`Ronde ${idx+1}`;if(unit==="ba
 function RestTimer({seconds,onDone}){
   const [left,setLeft]=useState(seconds);
   const ref=useRef(null);
-  useEffect(()=>{if(left>0){ref.current=setTimeout(()=>setLeft(l=>l-1),1000);}else{if(onDone)onDone();}return()=>clearTimeout(ref.current);},[left]);
+  useEffect(()=>{
+    const soundOn=LS.get("fitcoach_sound")!==false;
+    if(left>0){
+      ref.current=setTimeout(()=>{
+        const newLeft=left-1;
+        if(soundOn){
+          if(newLeft===3||newLeft===2||newLeft===1)beep(800,0.12,0.18);
+          else if(newLeft===0)beep(1200,0.3,0.25);
+        }
+        setLeft(newLeft);
+      },1000);
+    }else{
+      if(onDone)onDone();
+    }
+    return()=>clearTimeout(ref.current);
+  },[left]);
   const pct=(left/seconds)*100;
   return(
     <div style={{background:CARD_BG,border:"1px solid "+BORDER,borderRadius:14,padding:"14px 16px",marginBottom:10}}>
@@ -3661,7 +3702,7 @@ Roan:`
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}><div style={{display:"flex",gap:12,alignItems:"center"}}><FinnImg size={50}/><div><div style={{fontSize:16,fontWeight:900}}>Roan</div><div style={{fontSize:11,color:"#555"}}>AI Coach · Kent jouw data</div></div></div><button onClick={onClose} style={{background:isDark?"#1C1C1C":"#E8E8E0",border:`1px solid ${isDark?"#333":"#D0D0C8"}`,color:isDark?"#aaa":"#555",width:36,height:36,borderRadius:"50%",cursor:"pointer",fontSize:18,fontWeight:300,lineHeight:1,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button></div>
         <div style={{flex:1,overflowY:"auto",display:"flex",flexDirection:"column",gap:10,paddingBottom:8}}>
           {msgs.map((m,i)=>m.r==="a"
-            ?<div key={i} style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{background:isDark?"#1C1C1C":"#E8E8E0",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"10px 14px",maxWidth:"80%",fontSize:13,color:isDark?"rgba(255,255,255,0.85)":"#222",lineHeight:1.7}}>{m.t}{m.streaming&&<span style={{display:"inline-block",width:7,height:13,background:ORANGE,marginLeft:3,borderRadius:1,verticalAlign:"middle",animation:"pulse 0.8s infinite"}}/>}</div></div>
+            ?<div key={i} style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{display:"flex",flexDirection:"column",gap:4,maxWidth:"80%"}}><div style={{background:isDark?"#1C1C1C":"#E8E8E0",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"10px 14px",fontSize:13,color:isDark?"rgba(255,255,255,0.85)":"#222",lineHeight:1.7}}>{m.t}{m.streaming&&<span style={{display:"inline-block",width:7,height:13,background:ORANGE,marginLeft:3,borderRadius:1,verticalAlign:"middle",animation:"pulse 0.8s infinite"}}/>}</div>{!m.streaming&&m.t&&i>0&&<div style={{display:"flex",gap:4,paddingLeft:6}}><button onClick={()=>{setMsgs(p=>p.map((mm,j)=>j===i?{...mm,rating:mm.rating==="up"?null:"up"}:mm));try{fetch("https://ujbgkilppibfdirxackk.supabase.co/rest/v1/feedback",{method:"POST",headers:{"Content-Type":"application/json","apikey":"sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h","Authorization":"Bearer sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h"},body:JSON.stringify({score:5,comment:"chat:up:"+m.t.slice(0,200),created_at:new Date().toISOString()})}).catch(()=>{});}catch(e){}}} style={{background:m.rating==="up"?"rgba(200,241,56,0.15)":"none",border:"none",cursor:"pointer",padding:"3px 6px",borderRadius:6,fontSize:11,color:m.rating==="up"?LIME:isDark?"#444":"#888",opacity:0.7}}>👍</button><button onClick={()=>{setMsgs(p=>p.map((mm,j)=>j===i?{...mm,rating:mm.rating==="down"?null:"down"}:mm));try{fetch("https://ujbgkilppibfdirxackk.supabase.co/rest/v1/feedback",{method:"POST",headers:{"Content-Type":"application/json","apikey":"sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h","Authorization":"Bearer sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h"},body:JSON.stringify({score:1,comment:"chat:down:"+m.t.slice(0,200),created_at:new Date().toISOString()})}).catch(()=>{});}catch(e){}}} style={{background:m.rating==="down"?"rgba(239,68,68,0.15)":"none",border:"none",cursor:"pointer",padding:"3px 6px",borderRadius:6,fontSize:11,color:m.rating==="down"?"#ef4444":isDark?"#444":"#888",opacity:0.7}}>👎</button></div>}</div></div>
             :<div key={i} style={{display:"flex",justifyContent:"flex-end"}}><div style={{background:ORANGE,borderRadius:"16px 16px 4px 16px",padding:"10px 14px",maxWidth:"75%",fontSize:13,color:TEXT}}>{m.t}</div></div>
           )}
           {loading&&<div style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{background:isDark?"#1C1C1C":"#E8E8E0",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"12px 16px",display:"flex",gap:5}}>{[0,1,2].map(d=><div key={d} style={{width:6,height:6,borderRadius:"50%",background:ORANGE,animation:"pulse 1.2s infinite",animationDelay:`${d*.2}s`}}/>)}</div></div>}
@@ -4226,6 +4267,16 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
             <div style={{fontSize:11,fontWeight:700,color:lang===lg.v?LIME:txt2}}>{lg.n}</div>
           </button>
         ))}
+      </div>
+      <div style={{...S.lbl,marginTop:24,marginBottom:10,color:txt3}}>{lang==="en"?"Sound":lang==="de"?"Ton":"Geluid"}</div>
+      <div onClick={()=>{const cur=LS.get("fitcoach_sound")!==false;LS.set("fitcoach_sound",!cur);if(cur===false)beep(800,0.15,0.2);setSubPage(null);setTimeout(()=>setSubPage("thema"),50);}} style={{padding:"14px 16px",borderRadius:12,border:`1px solid ${border}`,background:bg2,cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <div>
+          <div style={{fontSize:13,fontWeight:700,color:txt}}>{lang==="en"?"Rest timer beep":lang==="de"?"Pausen-Ton":"Rust timer geluid"}</div>
+          <div style={{fontSize:11,color:txt3,marginTop:2}}>{lang==="en"?"Countdown 3-2-1 + done":lang==="de"?"Countdown 3-2-1 + Ende":"Aftellen 3-2-1 + klaar"}</div>
+        </div>
+        <div style={{width:42,height:24,borderRadius:12,background:LS.get("fitcoach_sound")!==false?"rgba(200,241,56,0.25)":isDark?"#222":"#D0D0C8",border:`1px solid ${LS.get("fitcoach_sound")!==false?LIME:border}`,position:"relative",flexShrink:0}}>
+          <div style={{width:18,height:18,borderRadius:"50%",background:LS.get("fitcoach_sound")!==false?LIME:isDark?"#444":"#888",position:"absolute",top:2,left:LS.get("fitcoach_sound")!==false?22:2,transition:"left .2s"}}/>
+        </div>
       </div>
     </>);
 
