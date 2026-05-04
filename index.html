@@ -3900,6 +3900,7 @@ function Onboarding({onComplete,lang="nl"}){
           {p.age&&parseInt(p.age)>=60&&<div style={{background:"rgba(200,241,56,0.06)",border:"1px solid rgba(200,241,56,0.15)",borderRadius:10,padding:"8px 12px",marginBottom:12,fontSize:11,color:isDark?"#aaa":"#555"}}>Roan houdt rekening met jouw leeftijd — veilige oefeningen en meer herstel.</div>}
           <label style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",borderRadius:12,border:"1px solid "+BORDER,background:CARD_BG,color:isDark?"#888":"#666",fontSize:12,cursor:"pointer",marginBottom:14}}>
             📷 Profielfoto (optioneel)<input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=ev=>u("fotoUrl",ev.target.result);r.readAsDataURL(f);}} style={{display:"none"}} id="foto-upload"/><span style={{color:isDark?"#888":"#666"}}>📸</span></label>
+          {Volgende(2,!p.name||!p.age||!p.weight||!p.gender)}
         </>}
         {step===2&&<>
           <StapHeader nr={2} titel={"Wat is jouw doel?"} sub={"Roan stelt je trainingen, voeding en coaching hierop af."}/>
