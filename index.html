@@ -5132,7 +5132,7 @@ function App(){
     await sbUpsert("user_data",{user_id:sbUser.id,email:sbUser.email,profile:np||profile,log:nl||log,food:nf||food,updated_at:new Date().toISOString()});
   }
 
-  const [showWhatsNew,setShowWhatsNew]=useState(()=>{const hasP=!!LS.get("fitcoach_profile");const ls=LS.get("fitcoach_seen_version");return hasP&&ls!==APP_VERSION;});
+  const [showWhatsNew,setShowWhatsNew]=useState(false);
   const [tab,setTab]=useState("Home");
   const [session,setSession]=useState(null);
   const [showWarmup,setShowWarmup]=useState(false);
