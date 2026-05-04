@@ -11,6 +11,7 @@
 <title>FitCoach Pro</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+button{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 body{background:#0D0D0D;color:#fff;font-family:-apple-system,BlinkMacSystemFont,sans-serif;overscroll-behavior:none}
 input,select,button{font-family:inherit}
 ::-webkit-scrollbar{width:0;height:0}
@@ -1201,7 +1202,7 @@ const FP={
   schema: 100,        // Schema gegenereerd
 };
 
-const APP_VERSION="3.4";
+const APP_VERSION="3.5";
 const TRANSLATIONS={
   nl:{
     // Nav
@@ -1574,6 +1575,17 @@ function berekenFP(log,food,weightLog,streak){
 
 const CHANGELOG=[
   {
+    version:"3.5",
+    title:"Freemium & fixes",
+    items:[
+      "Freemium model — gratis 5 Roan chats/dag, 1 weekmenu/maand",
+      "Pro upgrade via Stripe — maandelijks €7,99 of jaarlijks €59",
+      "Training kaarten klikken nu correct op Android (touch fix)",
+      "Taal fixes — Schema op maat, Warming up en meer in EN/DE",
+      "Pro badge zichtbaar in instellingen",
+    ]
+  },
+  {
     version:"3.4",
     title:"Geluid, feedback & vertaalsweep",
     items:[
@@ -1807,6 +1819,16 @@ const CHANGELOG=[
   },
 ];
 const WORKER="https://fitcoachai.robinschuurkamp.workers.dev";
+
+// ─── STRIPE CONFIG ───────────────────────────────────────────────────────────
+const STRIPE_PK="pk_test_51TT1PlPzGMwZfOoYtJD5VdqVoIbAZI42uYTPTdYxJyYCqAJ382yW5IyHGU2NoRJsfSMqHwd89U8CSRziZT6qjr2C00eEQOiEDX";
+const STRIPE_PRICE_MONTHLY="price_1TT1oIPzGMwZfOoYX8TMKuuz";
+const STRIPE_PRICE_YEARLY="price_1TT1rbPzGMwZfOoYdh1M3RVY";
+
+// ─── FREEMIUM LIMITS ─────────────────────────────────────────────────────────
+const FREE_ROAN_DAILY=5;       // max Roan chats per day for free users
+const FREE_WEEKMENU_MONTHLY=1; // max week menu generates per month
+
 const LS={get:(k)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch{return null;}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch{}}};
 
 function fmtDate(d){const dd=String(d.getDate()).padStart(2,'0'),mm=String(d.getMonth()+1).padStart(2,'0');return`${dd}/${mm}/${d.getFullYear()}`;}
@@ -2656,7 +2678,7 @@ function SwimTracker({onDone,profile}){
           startLive();
         }
       }} disabled={modus==="achteraf"&&!aNBanen} style={{width:"100%",padding:18,borderRadius:14,border:"none",cursor:modus==="achteraf"&&!aNBanen?"default":"pointer",background:modus==="achteraf"&&!aNBanen?"#1C1C1C":BLAUW,color:modus==="achteraf"&&!aNBanen?isDark?"#444":"#888":"#000",fontSize:16,fontWeight:900}}>
-        {modus==="achteraf"?"Opslaan":"Start zwemmen"}
+        {modus==="achteraf"?(lang==="en"?"Save":lang==="de"?"Speichern":"Opslaan"):(lang==="en"?"Start swimming":lang==="de"?"Schwimmen starten":"Start zwemmen")}
       </button>
     </div>
   );
@@ -4149,7 +4171,7 @@ function Onboarding({onComplete,lang="nl"}){
   );
 }
 
-function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setLang,sbUser}){ const T=TRANSLATIONS[lang]||TRANSLATIONS.nl;
+function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setLang,sbUser,isPro,onUpgrade}){ const T=TRANSLATIONS[lang]||TRANSLATIONS.nl;
   const [p,setP]=useState({...profile});
   const [subPage,setSubPage]=useState(null); // null=main menu
   const [pwMsg,setPwMsg]=useState("");
@@ -4335,7 +4357,7 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
         {icon:"❓",title:"FAQ",content:"Wachtwoord resetten → Instellingen → Account → Wachtwoord wijzigen.\n\nTrainingsdagen aanpassen → Instellingen → Training.\n\nOffline gebruiken? Ja! Na eerste keer laden werkt de app zonder internet.\n\nHoe werkt Roan? Roan is een AI coach die jouw trainingen, voeding en doelen bijhoudt en je proactief advies geeft.\n\nFitPoints? Verdien punten met elke training, PR, voeding bijhouden en streaks. Klim door 14 rangen van Hout naar G.O.A.T.\n\nRoan reageert traag? Roan streamt nu letter voor letter zoals ChatGPT. Eerste tokens zouden binnen 1 sec moeten verschijnen. Check je internet bij vertraging.\n\nOefening niet in de DB? Tijdens training: tik op het + icoon en typ de naam. Eigen oefeningen worden bewaard.\n\nApp werkt niet goed? Zet de app uit en weer aan. Zo niet: contact@fitcoachpro.nl"},
         {icon:"📧",title:"Contact & Feedback",content:"Heb je een vraag, bug gevonden of suggestie?\n\nE-mail: contact@fitcoachpro.nl\nWebsite: www.fitcoachpro.nl\n\nWe reageren binnen 24 uur op werkdagen.\n\nFeedback? In de app krijg je elke 5 trainingen een feedback prompt. Daar kunnen we veel mee!\n\nVoor app crashes en bugs: stuur een mail met screenshot."},
         {icon:"🔒",title:"Privacy",content:"FitCoach Pro deelt jouw data NOOIT met derden.\nAlle data wordt versleuteld opgeslagen via Supabase (Europese servers).\nJe kunt je account en alle data op elk moment verwijderen.\n\nVolledig beleid: www.fitcoachpro.nl/privacy"},
-        {icon:"ℹ️",title:"Over FitCoach Pro",content:"Versie: "+APP_VERSION+"\n\nNieuw in 3.1:\n• Streaming Roan — letter voor letter\n• 1000+ oefeningen\n• Haptic feedback\n• Crash fixes\n\nGebouwd door Robin Schuurkamp\n© 2026 FitCoachPro\nwww.fitcoachpro.nl"},
+        {icon:"ℹ️",title:"Over FitCoach Pro",content:"Versie: "+APP_VERSION+"\n\nNieuw in 3.5:\n• Freemium model met Pro upgrade\n• Stripe betalingen via iDEAL\n• Training touch fix Android\n• Vertaalfixes EN/DE\n\nGebouwd door Robin Schuurkamp\n© 2026 FitCoachPro\nwww.fitcoachpro.nl"},
       ].map(({icon,title,content:c})=>(
         <div key={title} onClick={()=>{
           if(title.includes("Contact")||title.includes("Kontakt")){
@@ -4382,6 +4404,9 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
         {row("🎨",T.themaLabel,T.settingsThemaSub,()=>setSubPage("thema"))}
         {row("👤","Account",sbUser?.email,()=>setSubPage("account"))}
       </div>
+      {/* Pro upgrade banner */}
+      {!isPro&&<button onClick={onUpgrade} style={{width:"100%",padding:14,borderRadius:14,border:"1px solid rgba(200,241,56,0.3)",background:"rgba(200,241,56,0.06)",color:LIME,fontSize:14,fontWeight:700,cursor:"pointer",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>⚡ Upgrade naar Pro — €7,99/mnd</button>}
+      {isPro&&<div style={{width:"100%",padding:12,borderRadius:14,border:"1px solid rgba(200,241,56,0.3)",background:"rgba(200,241,56,0.06)",color:LIME,fontSize:13,fontWeight:700,textAlign:"center",marginBottom:12}}>✓ FitCoach Pro actief</div>}
       <div style={{background:bg,borderRadius:16,border:`1px solid ${border}`,padding:"0 16px",marginBottom:20}}>
         {row("ℹ️",T.infoLabel,T.settingsInfoSub,()=>setSubPage("info"))}
       </div>
@@ -4680,7 +4705,7 @@ function ChallengeBlok({T,setTab,profile}){
       ):vandaagKlaar?(
         <div style={{display:"flex",alignItems:"center",gap:10,background:challenge.kleur+"18",borderRadius:10,padding:"10px 14px"}}>
           <div style={{fontSize:20}}>✅</div>
-          <div><div style={{fontSize:12,fontWeight:700,color:challenge.kleur}}>Vandaag klaar!</div><div style={{fontSize:10,color:isDark?"#555":"#888"}}>Kom morgen terug voor dag {vandaagDag+1}</div></div>
+          <div><div style={{fontSize:12,fontWeight:700,color:challenge.kleur}}>{lang==="en"?"Done for today!":lang==="de"?"Heute geschafft!":"Vandaag klaar!"}</div><div style={{fontSize:10,color:isDark?"#555":"#888"}}>{lang==="en"?`Come back tomorrow for day ${vandaagDag+1}`:lang==="de"?`Komm morgen für Tag ${vandaagDag+1} zurück`:`Kom morgen terug voor dag ${vandaagDag+1}`}</div></div>
         </div>
       ):vandaagSessie?.rust?(
         <div style={{display:"flex",alignItems:"center",gap:10,background:isDark?"#111":"#F0F0E8",borderRadius:10,padding:"10px 14px"}}>
@@ -5009,6 +5034,68 @@ function CardioTimer({ex,ei,onDone,profile,lang="nl",isDark,LIME,ORANGE,TEXT,CAR
   );
 }
 
+// ─── UPGRADE MODAL ───────────────────────────────────────────────────────────
+function UpgradeModal({onClose,onCheckout,lang,reason}){
+  const isDark=document.body.getAttribute("data-theme")!=="light";
+  const BG2=isDark?"#141414":"#ffffff";
+  const TEXT2=isDark?"#ffffff":"#111111";
+  const BORDER2=isDark?"#1C1C1C":"#E0E0D8";
+  const feats=[
+    {icon:"🤖",nl:"Onbeperkt chatten met Roan",en:"Unlimited Roan AI coaching",de:"Unbegrenzt mit Roan chatten"},
+    {icon:"📅",nl:"Onbeperkt weekmenu genereren",en:"Unlimited weekly menus",de:"Unbegrenzte Wochenpläne"},
+    {icon:"💾",nl:"Tot 10 schema's opslaan",en:"Save up to 10 custom plans",de:"Bis zu 10 Pläne speichern"},
+    {icon:"🔰",nl:"Streak Shield — 1 dag overslaan",en:"Streak Shield — skip 1 day",de:"Streak Shield — 1 Tag auslassen"},
+    {icon:"📊",nl:"Geavanceerde statistieken",en:"Advanced statistics",de:"Erweiterte Statistiken"},
+    {icon:"🚫",nl:"Geen advertenties ooit",en:"Ad-free forever",de:"Für immer werbefrei"},
+  ];
+  const reasonText={
+    roan:{nl:`Je hebt je dagelijkse limiet van ${FREE_ROAN_DAILY} Roan gesprekken bereikt.`,en:`You've reached your daily limit of ${FREE_ROAN_DAILY} Roan conversations.`,de:`Du hast dein Tageslimit von ${FREE_ROAN_DAILY} Roan-Gesprächen erreicht.`},
+    menu:{nl:"Je hebt je maandelijkse weekmenu limiet bereikt.",en:"You've reached your monthly menu limit.",de:"Du hast dein monatliches Menü-Limit erreicht."},
+  };
+  const r=reasonText[reason]||{};
+  return(
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:9000,display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div style={{background:BG2,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,padding:"28px 24px 48px",border:`1px solid ${BORDER2}`,borderBottom:"none"}}>
+        {/* Header */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+          <div>
+            <div style={{fontSize:11,fontWeight:700,color:LIME,letterSpacing:2,textTransform:"uppercase",marginBottom:4}}>FitCoach Pro</div>
+            <div style={{fontSize:24,fontWeight:900,color:TEXT2,letterSpacing:-0.5}}>Upgrade naar Pro ⚡</div>
+          </div>
+          <button onClick={onClose} style={{width:36,height:36,borderRadius:"50%",background:isDark?"#1C1C1C":"#F0F0E8",border:"none",color:isDark?"#555":"#888",fontSize:20,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>×</button>
+        </div>
+        {/* Reason */}
+        {r[lang]&&<div style={{background:"rgba(200,241,56,0.08)",border:"1px solid rgba(200,241,56,0.2)",borderRadius:12,padding:"10px 14px",marginBottom:16,fontSize:13,color:LIME,lineHeight:1.5}}>{r[lang]}</div>}
+        {/* Features */}
+        <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
+          {feats.map((f,i)=>(
+            <div key={i} style={{display:"flex",alignItems:"center",gap:12}}>
+              <span style={{fontSize:18}}>{f.icon}</span>
+              <span style={{fontSize:13,color:TEXT2,fontWeight:600}}>{f[lang]||f.nl}</span>
+              <span style={{marginLeft:"auto",color:LIME,fontSize:14,fontWeight:900}}>✓</span>
+            </div>
+          ))}
+        </div>
+        {/* Pricing */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+          <button onClick={()=>onCheckout("monthly")} style={{padding:"16px 12px",borderRadius:16,border:`1.5px solid ${BORDER2}`,background:isDark?"#1C1C1C":"#F5F5F0",cursor:"pointer",textAlign:"center"}}>
+            <div style={{fontSize:11,color:isDark?"#666":"#888",fontWeight:700,letterSpacing:1,marginBottom:4}}>MAANDELIJKS</div>
+            <div style={{fontSize:22,fontWeight:900,color:TEXT2}}>€7,99</div>
+            <div style={{fontSize:10,color:isDark?"#555":"#999"}}>per maand</div>
+          </button>
+          <button onClick={()=>onCheckout("yearly")} style={{padding:"16px 12px",borderRadius:16,border:`2px solid ${LIME}`,background:"rgba(200,241,56,0.06)",cursor:"pointer",textAlign:"center",position:"relative"}}>
+            <div style={{position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",background:LIME,color:"#000",fontSize:10,fontWeight:900,padding:"2px 10px",borderRadius:99,whiteSpace:"nowrap"}}>BESTE DEAL</div>
+            <div style={{fontSize:11,color:LIME,fontWeight:700,letterSpacing:1,marginBottom:4}}>JAARLIJKS</div>
+            <div style={{fontSize:22,fontWeight:900,color:TEXT2}}>€59</div>
+            <div style={{fontSize:10,color:LIME,fontWeight:700}}>≈ €4,92/mnd · 38% korting</div>
+          </button>
+        </div>
+        <div style={{textAlign:"center",fontSize:11,color:isDark?"#444":"#999",marginBottom:8}}>Veilig betalen via Stripe · iDEAL · Creditcard · Annuleer altijd</div>
+      </div>
+    </div>
+  );
+}
+
 function App(){
   const [sbUser,setSbUser]=useState(null);
   const [authChecked,setAuthChecked]=useState(false);
@@ -5048,6 +5135,66 @@ function App(){
   const [tab,setTab]=useState("Home");
   const [session,setSession]=useState(null);
   const [showWarmup,setShowWarmup]=useState(false);
+
+  // ─── FREEMIUM STATE ────────────────────────────────────────────────────────
+  const [isPro,setIsPro]=useState(()=>LS.get("fitcoach_is_pro")||false);
+  const [showUpgradeModal,setShowUpgradeModal]=useState(false);
+  const [upgradeReason,setUpgradeReason]=useState("");
+
+  // Roan daily chat counter
+  const getRoanCount=()=>{
+    const today=TODAY_KEY;
+    const stored=LS.get("fitcoach_roan_count")||{};
+    return stored[today]||0;
+  };
+  const incRoanCount=()=>{
+    const today=TODAY_KEY;
+    const stored=LS.get("fitcoach_roan_count")||{};
+    stored[today]=(stored[today]||0)+1;
+    LS.set("fitcoach_roan_count",stored);
+  };
+  const canChatRoan=()=>isPro||(getRoanCount()<FREE_ROAN_DAILY);
+
+  // Weekly menu monthly counter
+  const getMenuMonthCount=()=>{
+    const month=new Date().getFullYear()+"-"+(new Date().getMonth()+1);
+    const stored=LS.get("fitcoach_menu_count")||{};
+    return stored[month]||0;
+  };
+  const incMenuCount=()=>{
+    const month=new Date().getFullYear()+"-"+(new Date().getMonth()+1);
+    const stored=LS.get("fitcoach_menu_count")||{};
+    stored[month]=(stored[month]||0)+1;
+    LS.set("fitcoach_menu_count",stored);
+  };
+  const canGenerateMenu=()=>isPro||(getMenuMonthCount()<FREE_WEEKMENU_MONTHLY);
+
+  function openUpgrade(reason){setUpgradeReason(reason||"");setShowUpgradeModal(true);}
+
+  async function startStripeCheckout(priceId){
+    try{
+      const resp=await fetch(WORKER+"/create-checkout-session",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({priceId,userId:sbUser?.id,email:sbUser?.email,successUrl:window.location.href+"?pro=1",cancelUrl:window.location.href})
+      });
+      const data=await resp.json();
+      if(data.url){window.location.href=data.url;}
+      else{alert("Checkout kon niet worden gestart. Probeer opnieuw.");}
+    }catch(e){
+      // Fallback: direct to Stripe payment link if Worker not set up yet
+      alert("Stripe checkout komt beschikbaar zodra de Worker is geconfigureerd.");
+    }
+  }
+
+  // Check if returning from Stripe success
+  React.useEffect(()=>{
+    const params=new URLSearchParams(window.location.search);
+    if(params.get("pro")==="1"){
+      setIsPro(true);LS.set("fitcoach_is_pro",true);
+      window.history.replaceState({},"",window.location.pathname);
+    }
+  },[]);
   const [savedRecipes,setSavedRecipes]=useState(()=>LS.get("fitcoach_recipes")||[]);
   const [shoppingList,setShoppingList]=useState(()=>(LS.get("fitcoach_shopping")||[]).map(i=>typeof i==="string"?{name:i,checked:false}:i));
   const [genShoppingLoading,setGenShoppingLoading]=useState(false);
@@ -5208,12 +5355,12 @@ function App(){
       }
       LS.set(lastWeekKey,true);
     } else if(isRestDay){
-      finnBericht=`Rustdag vandaag ${profile.name}! Je lichaam herstelt nu. Geen training, wel goed eten en hydrateren.`;
+      finnBericht=lang==="en"?`Rest day today ${profile.name}! Your body is recovering. No workout, but eat well and stay hydrated.`:lang==="de"?`Ruhetag heute ${profile.name}! Dein Körper erholt sich. Kein Training, aber gut essen und hydrieren.`:`Rustdag vandaag ${profile.name}! Je lichaam herstelt nu. Geen training, wel goed eten en hydrateren.`;
     } else if(log[0]){
       const d=parseDate(log[0].date),since=Math.floor((TODAY-d)/86400000);
-      if(since>=3)finnBericht=`${profile.name}, het is al ${since} dagen geleden. Je lichaam mist de training! Vandaag kom je terug.`;
-      else if(yLog)finnBericht=`Super gedaan gisteren ${profile.name}! Die ${yLog.workout} training was geweldig. Vandaag ook?`;
-      else if(streak>=3)finnBericht=`${streak} dagen op rij ${profile.name}! Je bent on fire. Houd het vol!`;
+      if(since>=3)finnBericht=lang==="en"?`${profile.name}, it's been ${since} days. Your body misses the workout! Come back today.`:lang==="de"?`${profile.name}, es sind schon ${since} Tage her. Dein Körper vermisst das Training! Heute kommst du zurück.`:`${profile.name}, het is al ${since} dagen geleden. Je lichaam mist de training! Vandaag kom je terug.`;
+      else if(yLog)finnBericht=lang==="en"?`Great job yesterday ${profile.name}! That ${yLog.workout} workout was awesome. Again today?`:lang==="de"?`Super gemacht gestern ${profile.name}! Das ${yLog.workout} Training war toll. Heute wieder?`:`Super gedaan gisteren ${profile.name}! Die ${yLog.workout} training was geweldig. Vandaag ook?`;
+      else if(streak>=3)finnBericht=lang==="en"?`${streak} days in a row ${profile.name}! You're on fire. Keep it up!`:lang==="de"?`${streak} Tage in Folge ${profile.name}! Du bist on fire. Weiter so!`:`${streak} dagen op rij ${profile.name}! Je bent on fire. Houd het vol!`;
     }
   }catch(e){}}
 
@@ -5223,7 +5370,11 @@ function App(){
   useEffect(()=>{LS.set("fitcoach_food",food);syncToSupabase(null,null,food);},[food]);
   useEffect(()=>{if(!localStorage.getItem('fcp_installed')){localStorage.setItem('fcp_installed','true');setTimeout(()=>{const m=document.getElementById('installModal');if(m)m.classList.add('show');},1500);}},[]);
 
-  function openFinnWith(msg){setPendingMsg(msg||null);setFinnKey(k=>k+1);setShowFinn(true);}
+  function openFinnWith(msg){
+    if(!canChatRoan()){openUpgrade("roan");return;}
+    incRoanCount();
+    setPendingMsg(msg||null);setFinnKey(k=>k+1);setShowFinn(true);
+  }
   const swapMemory=LS.get("fitcoach_swaps")||{};
   // Laad eigen oefeningen uit localStorage
   useEffect(()=>{
@@ -5339,8 +5490,9 @@ function App(){
       )}
       {session&&session.length>0&&tab!==T.training&&<div style={{height:64}}/>}
       {infoEx&&<ExInfo ex={infoEx} onClose={()=>setInfoEx(null)}/>}
-      {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)} onLogout={async()=>{await sb.auth.signOut();setSbUser(null);setShowSettings(false);}} theme={theme} setTheme={(t)=>{setTheme(t);LS.set("fitcoach_theme",t);updateThemeVars(t);}} lang={lang} setLang={(l)=>{setLang(l);LS.set("fitcoach_lang",l);}} sbUser={sbUser}/>}
+      {showSettings&&<SettingsModal profile={profile} onSave={p=>{setProfile(p);setShowSettings(false);}} onClose={()=>setShowSettings(false)} onLogout={async()=>{await sb.auth.signOut();setSbUser(null);setShowSettings(false);}} theme={theme} setTheme={(t)=>{setTheme(t);LS.set("fitcoach_theme",t);updateThemeVars(t);}} lang={lang} setLang={(l)=>{setLang(l);LS.set("fitcoach_lang",l);}} sbUser={sbUser} isPro={isPro} onUpgrade={()=>{setShowSettings(false);openUpgrade();}}/>}
       {showWhatsNew&&<WhatsNewModal lang={lang} onClose={()=>{setShowWhatsNew(false);LS.set("fitcoach_seen_version",APP_VERSION);}}/>}
+      {showUpgradeModal&&<UpgradeModal lang={lang} reason={upgradeReason} onClose={()=>setShowUpgradeModal(false)} onCheckout={(plan)=>{setShowUpgradeModal(false);startStripeCheckout(plan==="yearly"?STRIPE_PRICE_YEARLY:STRIPE_PRICE_MONTHLY);}}/>}
       {showRatingPrompt&&(
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.85)",zIndex:301,display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={()=>{setShowRatingPrompt(false);LS.set("fitcoach_rated",true);}}>
           <div onClick={e=>e.stopPropagation()} style={{background:CARD_BG,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,padding:"28px 24px 40px",border:`1px solid ${BORDER}`,animation:"slideUp .4s cubic-bezier(.16,1,.3,1)"}}>
@@ -5634,7 +5786,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
             </button>
             <div style={{position:"absolute",bottom:0,left:0,right:0,padding:"0 20px 24px"}}>
               <div style={{...S.lbl,color:"rgba(200,241,56,0.8)",marginBottom:6}}>{getDayLong(TODAY.getDay(),lang).toUpperCase()} · {(lang==="en"?{kracht:"STRENGTH",cardio:"RUNNING",hiit:"HIIT",calisthenics:"CALISTHENICS",gemixed:"MIXED"}:lang==="de"?{kracht:"KRAFT",cardio:"LAUFEN",hiit:"HIIT",calisthenics:"CALISTHENICS",gemixed:"GEMISCHT"}:{kracht:"KRACHT",cardio:"HARDLOPEN",hiit:"HIIT",calisthenics:"CALISTHENICS",gemixed:"GEMIXED"})[sportType]||sportType.toUpperCase()}</div>
-              <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.5,marginBottom:4,color:"#fff"}}>{(()=>{const h=new Date().getHours();if(lang==="en")return h<12?"Good morning":h<18?"Good afternoon":"Good evening";if(lang==="de")return h<12?"Guten Morgen":h<18?"Guten Tag":"Guten Abend";return h<12?"Goedemorgen":h<18?"Goedemiddag":"Goedenavond";})()} , {profile.name}</div>
+              <div style={{fontSize:26,fontWeight:900,letterSpacing:-0.5,marginBottom:4,color:"#fff",display:"flex",alignItems:"center",gap:10}}><span>{(()=>{const h=new Date().getHours();if(lang==="en")return h<12?"Good morning":h<18?"Good afternoon":"Good evening";if(lang==="de")return h<12?"Guten Morgen":h<18?"Guten Tag":"Guten Abend";return h<12?"Goedemorgen":h<18?"Goedemiddag":"Goedenavond";})()} , {profile.name}</span>{isPro&&<span style={{fontSize:11,fontWeight:900,color:"#000",background:LIME,padding:"2px 8px",borderRadius:99,letterSpacing:0.5}}>PRO</span>}</div>
               <div style={{fontSize:13,color:"rgba(255,255,255,0.4)"}}>{T.doelLabel} {startW}→{goalW}kg · {pct}% {T.behaald}</div>
             </div>
           </div>
@@ -5803,7 +5955,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                     </div>
                     <div style={{fontSize:13,color:isDark?"rgba(255,255,255,0.6)":"#444",lineHeight:1.7,marginBottom:16}}>{tip.desc}</div>
                     <div style={{borderTop:`1px solid ${BORDER}`,paddingTop:14}}>
-                      <div style={{fontSize:11,color:"#555",marginBottom:8}}>Volgende training</div>
+                      <div style={{fontSize:11,color:"#555",marginBottom:8}}>{T.volgendeTraining}</div>
                       <div style={{display:"flex",alignItems:"center",gap:10}}>
                         <div style={{width:36,height:36,borderRadius:10,overflow:"hidden",flexShrink:0}}><img src={P[volg]} alt={volg} style={{width:"100%",height:"100%",objectFit:"cover"}}/></div>
                         <div><div style={{fontSize:13,fontWeight:800,color:isDark?"#ccc":"#333"}}>{MUSCLE_META[volg]?.label}</div><div style={{fontSize:11,color:isDark?"#444":"#666"}}>{MUSCLE_META[volg]?.sub?.split(" · ").map(m=>getMuscleLabel(m,lang)).join(" · ")}</div></div>
@@ -5896,14 +6048,14 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 return(
                   <div style={{...S.card,padding:12,marginBottom:10,borderTop:"2px solid "+ORANGE,display:"flex",alignItems:"center",gap:10}}>
                     <div style={{flex:1}}>
-                      <div style={{fontSize:11,color:ORANGE,fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:3}}>Nog niet getraind deze week</div>
+                      <div style={{fontSize:11,color:ORANGE,fontWeight:700,letterSpacing:1,textTransform:"uppercase",marginBottom:3}}>{lang==="en"?"Not trained this week":lang==="de"?"Diese Woche nicht trainiert":"Nog niet getraind deze week"}</div>
                       <div style={{fontSize:12,color:isDark?"#888":"#555"}}>{gemist.map(m=>m.charAt(0).toUpperCase()+m.slice(1)).join(" · ")}</div>
                     </div>
                   </div>
                 );
               })()}
               <button onClick={()=>setShowSchemaOpMaat(true)} style={{width:"100%",padding:"13px",borderRadius:14,border:"1px solid rgba(255,107,43,0.3)",background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-                  Schema op maat — Roan maakt een plan
+                  {lang==="en"?"Custom plan — Roan makes a plan":lang==="de"?"Maßgeschneiderter Plan — Roan erstellt einen Plan":"Schema op maat — Roan maakt een plan"}
                 </button>
                 <button onClick={()=>setShowCustom(!showCustom)} style={{width:"100%",padding:"12px",borderRadius:14,border:`1px solid ${showCustom?LIME:"#222"}`,background:showCustom?"rgba(200,241,56,0.07)":"#141414",color:showCustom?LIME:isDark?"#888":"#666",fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:16,letterSpacing:1,textTransform:"uppercase"}}>{showCustom?lang==="en"?"Close":lang==="de"?"Schließen":"Sluiten":T.eigenWorkout}</button>
               {showCustom&&(
@@ -5918,8 +6070,8 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                       <button onClick={()=>setCustomExercises(p=>p.filter((_,j)=>j!==i))} style={{background:"none",border:"none",color:"#ef4444",fontSize:16,cursor:"pointer",padding:0}}>×</button>
                     </div>
                   ))}
-                  <button onClick={()=>setCustomExercises(p=>[...p,{name:"",sets:"3",reps:"10",weights:""}])} style={{width:"100%",padding:"9px",borderRadius:10,border:"1px dashed #333",background:"none",color:"#555",fontSize:12,cursor:"pointer",marginBottom:10}}>+ Toevoegen</button>
-                  <button onClick={()=>{if(!customName||!customExercises[0].name)return;startSess([],{name:customName,exercises:customExercises});setShowCustom(false);}} style={{width:"100%",padding:"12px",borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:13,fontWeight:800}}>Starten</button>
+                  <button onClick={()=>setCustomExercises(p=>[...p,{name:"",sets:"3",reps:"10",weights:""}])} style={{width:"100%",padding:"9px",borderRadius:10,border:"1px dashed #333",background:"none",color:"#555",fontSize:12,cursor:"pointer",marginBottom:10}}>+ {T.toevoegen}</button>
+                  <button onClick={()=>{if(!customName||!customExercises[0].name)return;startSess([],{name:customName,exercises:customExercises});setShowCustom(false);}} style={{width:"100%",padding:"12px",borderRadius:12,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:13,fontWeight:800}}>{lang==="en"?"Start":lang==="de"?"Starten":"Starten"}</button>
                 </div>
               )}
               {showMuscleGroups&&<>
@@ -5964,7 +6116,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                   );
                 })()}
                 <button onClick={()=>startSess(targetMuscles)} disabled={!targetMuscles.length} style={{width:"100%",padding:16,borderRadius:14,border:"none",cursor:targetMuscles.length?"pointer":"default",background:targetMuscles.length?LIME:"#1C1C1C",color:targetMuscles.length?"#000":isDark?"#444":"#666",fontSize:15,fontWeight:800}}>
-                  {targetMuscles.length?`Start ${targetMuscles.map(m=>muscleLabel(m)).join(" + ")}`:"Kies een spiergroep"}
+                  {targetMuscles.length?`Start ${targetMuscles.map(m=>muscleLabel(m)).join(" + ")}`:(lang==="en"?"Choose a muscle group":lang==="de"?"Muskelgruppe wählen":"Kies een spiergroep")}
                 </button>
               </>}
             </div>
@@ -5979,8 +6131,8 @@ setFeedbackReply(reply);setFeedbackLoading(false);
               </div>
               {!showWarmup?(
                 <div style={{...S.card,padding:16,marginBottom:12,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <div><div style={{fontSize:13,fontWeight:700,color:TEXT,marginBottom:2}}>Warming up</div><div style={{fontSize:11,color:isDark?"#444":"#666"}}>{getWarmup(targetMuscles).length} {T.oefeningen2} · ~5 {T.minuten2}</div></div>
-                  <button onClick={()=>setShowWarmup(true)} style={{padding:"8px 16px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:LIME,fontSize:12,fontWeight:700,cursor:"pointer"}}>Toon</button>
+                  <div><div style={{fontSize:13,fontWeight:700,color:TEXT,marginBottom:2}}>{lang==="en"?"Warm up":lang==="de"?"Aufwärmen":"Warming up"}</div><div style={{fontSize:11,color:isDark?"#444":"#666"}}>{getWarmup(targetMuscles).length} {T.oefeningen2} · ~5 {T.minuten2}</div></div>
+                  <button onClick={()=>setShowWarmup(true)} style={{padding:"8px 16px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:LIME,fontSize:12,fontWeight:700,cursor:"pointer"}}>{lang==="en"?"Show":lang==="de"?"Zeigen":"Toon"}</button>
                 </div>
               ):(
                 <div style={{...S.card,padding:16,marginBottom:12}}>
@@ -6507,7 +6659,10 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <div style={{...S.card,padding:24,textAlign:"center"}}>
                   <div style={{fontSize:13,color:isDark?"#444":"#666",marginBottom:6}}>Roan maakt een persoonlijk weekmenu</div>
                   <div style={{fontSize:11,color:isDark?"#333":"#666",marginBottom:16}}>Stel voorkeuren in of kies een stijl hierboven</div>
-                  <button onClick={async()=>{setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar, ${persons} ${persons===1?"persoon":"personen"}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Cheatdag op ${cheatDag}. Elke dag ander eiwit. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{padding:"12px 28px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{T.weekmenuGenereren}</button>
+                  <button onClick={async()=>{
+                    if(!canGenerateMenu()){openUpgrade("menu");return;}
+                    incMenuCount();
+                    setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar, ${persons} ${persons===1?"persoon":"personen"}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Cheatdag op ${cheatDag}. Elke dag ander eiwit. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{padding:"12px 28px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{T.weekmenuGenereren}</button>
                 </div>
               )}
             </div>
@@ -6581,6 +6736,15 @@ setFeedbackReply(reply);setFeedbackLoading(false);
             <div style={{...S.lbl,marginBottom:12}}>{T.vraagRoan}</div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>{[lang==="en"?"Motivate me!":lang==="de"?"Motivier mich!":"Motiveer me!",lang==="en"?"What to eat today?":lang==="de"?"Was essen heute?":"Wat eten vandaag?",lang==="en"?"Analyze my week":lang==="de"?"Meine Woche analysieren":"Analyseer mijn week",lang==="en"?"Create a schedule":lang==="de"?"Plan erstellen":"Maak een schema",lang==="en"?"I am tired":lang==="de"?"Ich bin müde":"Ik ben moe",lang==="en"?"How do I lose weight?":lang==="de"?"Wie nehme ich ab?":"Hoe val ik af?"].map(q=><button key={q} onClick={()=>openFinnWith(q)} style={{padding:"12px 14px",borderRadius:14,border:`1px solid ${BORDER}`,background:CARD_BG,color:isDark?"#888":"#666",fontSize:12,cursor:"pointer",fontWeight:600,textAlign:"left"}}>{q}</button>)}</div>
           </div>
+          {/* Roan chat counter for free users */}
+          {!isPro&&(
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 14px",borderRadius:10,background:isDark?"#111":"#F0F0E8",border:`1px solid ${BORDER}`,marginBottom:12}}>
+              <div style={{fontSize:12,color:isDark?"#666":"#888"}}>
+                {lang==="en"?`${Math.max(0,FREE_ROAN_DAILY-getRoanCount())} of ${FREE_ROAN_DAILY} chats remaining today`:lang==="de"?`Noch ${Math.max(0,FREE_ROAN_DAILY-getRoanCount())} von ${FREE_ROAN_DAILY} Chats heute`:`Nog ${Math.max(0,FREE_ROAN_DAILY-getRoanCount())} van ${FREE_ROAN_DAILY} chats vandaag`}
+              </div>
+              <button onClick={()=>openUpgrade()} style={{padding:"4px 10px",borderRadius:8,border:`1px solid ${LIME}`,background:"none",color:LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>Pro ⚡</button>
+            </div>
+          )}
           <button onClick={()=>openFinnWith(null)} style={{width:"100%",padding:16,borderRadius:16,border:"none",cursor:"pointer",background:ORANGE,color:TEXT,fontSize:15,fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",gap:12}}><FinnImg size={32}/>{T.chatRoan}</button>
         </div>
       )}
