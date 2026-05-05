@@ -1435,7 +1435,7 @@ const TRANSLATIONS={
     laststeTrainLabel:"LAST WORKOUT",aanSlaan:"Get started →",
     goedemorgen:"Good morning",goedemiddag:"Good afternoon",goedenavond:"Good evening",goedendag:"Hello",
     vernieuwen3:"Refresh",mijnRang:"Your rank",fpTotaal:"FitPoints total",
-    hardlopenLabel:"Running",wandelenLabel:"Walking",spinningLabel:(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"),zwemmenLabel:"Swimming",
+    hardlopenLabel:"Running",wandelenLabel:"Walking",spinningLabel:"Spinning",zwemmenLabel:"Swimming",
     spiergroepKiezen:"Or choose muscle group",eigenWorkout:"Build your own workout",
     communityTab:"Community"
   ,klaarBtn:"Done",rustLabel2:"Rest",notitiePlaceholder:"Note...",minuten2:"minutes",nogKg:"Still",doelLabel:"Goal:",startLabel:"Start:"
@@ -2213,20 +2213,20 @@ const SPLITS_KRACHT=[
   {label:"Core",muscles:["buik"],pk:"buik",desc:"Abs · Obliques · Core"},
 ];
 const SPLITS_HIIT=[
-  {label:(lang==="en"?"HIIT Full Body":lang==="de"?"HIIT Ganzkörper":"HIIT Full Body"),muscles:["hiit_full"],pk:"hiit",desc:(lang==="en"?"Full body":lang==="de"?"Ganzkörper":"Volledig lichaam")},
-  {label:(lang==="en"?"HIIT Legs":lang==="de"?"HIIT Beine":"HIIT Benen"),muscles:["hiit_benen"],pk:"benen",desc:(lang==="en"?"Explosive leg training":lang==="de"?"Explosives Beintraining":"Explosieve benentraining")},
-  {label:(lang==="en"?"HIIT Core":lang==="de"?"HIIT Core":"HIIT Core"),muscles:["hiit_core"],pk:"buik",desc:(lang==="en"?"Core & conditioning":lang==="de"?"Core & Kondition":"Core & conditie")},
-  {label:(lang==="en"?"HIIT Upper":lang==="de"?"HIIT Oberkörper":"HIIT Upper"),muscles:["hiit_upper"],pk:"borst",desc:(lang==="en"?"Chest, shoulders & arms":lang==="de"?"Brust, Schultern & Arme":"Borst, schouders & armen")},
-  {label:(lang==="en"?"HIIT Tabata":lang==="de"?"HIIT Tabata":"HIIT Tabata"),muscles:["hiit_tabata"],pk:"hiit",desc:(lang==="en"?"20s work / 10s rest × 8":lang==="de"?"20s Arbeit / 10s Pause × 8":"20s werk / 10s rust × 8")},
-  {label:(lang==="en"?"HIIT Pyramid":lang==="de"?"HIIT Pyramide":"HIIT Pyramid"),muscles:["hiit_pyramid"],pk:"hiit",desc:(lang==="en"?"Progressive circuit":lang==="de"?"Aufbauendes Circuit":"Opbouwend circuit")},
+  {label:"HIIT Full Body",muscles:["hiit_full"],pk:"hiit",desc:"Volledig lichaam"},
+  {label:"HIIT Benen",muscles:["hiit_benen"],pk:"benen",desc:"Explosieve benentraining"},
+  {label:"HIIT Core",muscles:["hiit_core"],pk:"buik",desc:"Core & conditie"},
+  {label:"HIIT Upper",muscles:["hiit_upper"],pk:"borst",desc:"Borst, schouders & armen"},
+  {label:"HIIT Tabata",muscles:["hiit_tabata"],pk:"hiit",desc:"20s werk / 10s rust × 8"},
+  {label:"HIIT Pyramid",muscles:["hiit_pyramid"],pk:"hiit",desc:"Opbouwend circuit"},
 ];
 const SPLITS_CARDIO=[
   {label:"Hardlopen",muscles:["cardio_full"],pk:"cardio",desc:"Run, interval of wandeling",isCardio:true,runType:"steady"},
   {label:"Wandelen",muscles:["cardio_wandel"],pk:"cardio",desc:"Buiten wandelen, incline",isCardio:true,runType:"wandel"},
-  {label:(lang==="en"?"Interval Run":lang==="de"?"Intervall-Lauf":"Interval Run"),muscles:["cardio_interval"],pk:"cardio",desc:(lang==="en"?"Sprint & recovery alternating":lang==="de"?"Sprint & Erholung abwechselnd":"Sprint & herstel beurtelings"),isCardio:true,runType:"interval"},
-  {label:(lang==="en"?"Tempo Run":lang==="de"?"Tempolauf":"Tempoloop"),muscles:["cardio_tempo"],pk:"cardio",desc:(lang==="en"?"Hard but comfortable":lang==="de"?"Hart aber komfortabel":"Hard maar comfortabel"),isCardio:true,runType:"tempo"},
-  {label:(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"),muscles:["cardio_bike"],pk:"cardio",desc:(lang==="en"?"Bike & spin":lang==="de"?"Fahrrad & Spin":"Fiets & spin"),isCardio:true,runType:"wandel"},
-  {label:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"),muscles:["cardio_swim"],pk:"cardio",desc:(lang==="en"?"Lane counting, low impact":lang==="de"?"Bahnen zählen, geringer Impact":"Banen tellen, low impact"),isCardio:true,runType:"steady"},
+  {label:"Interval Run",muscles:["cardio_interval"],pk:"cardio",desc:"Sprint & herstel beurtelings",isCardio:true,runType:"interval"},
+  {label:"Tempoloop",muscles:["cardio_tempo"],pk:"cardio",desc:"Hard maar comfortabel",isCardio:true,runType:"tempo"},
+  {label:"Spinning",muscles:["cardio_bike"],pk:"cardio",desc:"Fiets & spin",isCardio:true,runType:"wandel"},
+  {label:"Zwemmen",muscles:["cardio_swim"],pk:"cardio",desc:"Banen tellen, low impact",isCardio:true,runType:"steady"},
 ];
 const MUSCLE_LABEL={cal_push:"Calisthenics Push",cal_pull:"Calisthenics Pull",cal_core:"Calisthenics Core",cal_full:"Calisthenics Full Body",cal_skills:"Calisthenics Skills",cal_beginner:"Calisthenics Beginner",hiit_full:(lang==="en"?"HIIT Full Body":lang==="de"?"HIIT Ganzkörper":"HIIT Full Body"),hiit_benen:(lang==="en"?"HIIT Legs":lang==="de"?"HIIT Beine":"HIIT Benen"),hiit_core:(lang==="en"?"HIIT Core":lang==="de"?"HIIT Core":"HIIT Core"),hiit_upper:(lang==="en"?"HIIT Upper":lang==="de"?"HIIT Oberkörper":"HIIT Upper"),hiit_tabata:(lang==="en"?"HIIT Tabata":lang==="de"?"HIIT Tabata":"HIIT Tabata"),hiit_pyramid:(lang==="en"?"HIIT Pyramid":lang==="de"?"HIIT Pyramide":"HIIT Pyramid"),cardio_full:"Hardlopen",cardio_wandel:"Wandelen",cardio_interval:(lang==="en"?"Interval Run":lang==="de"?"Intervall-Lauf":"Interval Run"),cardio_tempo:(lang==="en"?"Tempo Run":lang==="de"?"Tempolauf":"Tempoloop"),cardio_bike:(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"),cardio_swim:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"),cardio_stairs:"Stair Climber",cardio_cross:"Crosstrainer"};
 function muscleLabel(m){return MUSCLE_META[m]?.label||MUSCLE_LABEL[m]||m;}
@@ -2501,7 +2501,7 @@ const LOOP_PLANNEN=[
     ]
   },
   {
-    id:"10k",label:(lang==="en"?"10K training plan":lang==="de"?"10K Trainingsplan":"10K trainingsplan"),icon:"",weken:8,doel:"10 km uitlopen",
+    id:"10k",label:"10K trainingsplan",icon:"",weken:8,doel:"10 km uitlopen",
     beschrijving:"Bouw op naar 10 km in 8 weken. Ideaal als je al 5 km kunt lopen.",
     schema:[
       {week:1,sessies:[{type:"steady",minuten:30},{type:"steady",minuten:25},{type:"steady",minuten:35}]},
@@ -4574,7 +4574,7 @@ const CHALLENGES=[
     icon:"⚡",
     kleur:ORANGE,
     dagen:42,
-    beschrijving:(lang==="en"?"Burn fat with daily HIIT and strength training. Combine with Roan nutrition advice.":lang==="de"?"Fett verbrennen mit täglichem HIIT und Krafttraining. Kombiniere mit Roans Ernährungsberatung.":"Verbrand vet met dagelijkse HIIT en krachttraining. Combineer met Roan voedingsadvies."),
+    beschrijving:"Verbrand vet met dagelijkse HIIT en krachttraining. Combineer met Roan voedingsadvies.",
     schema:[
       // Week 1 — basis
       ...Array.from({length:7},(_, i)=>i===3||i===6?{dag:i+1,rust:true,tip:"Rust dag — minimaal 7k stappen"}:{dag:i+1,oefening:["Burpee","Jump Squat","High Knees","Mountain Climber"][i%4],sets:3,reps:i<3?"30s":"45s",rust:30}),
@@ -4596,7 +4596,7 @@ const CHALLENGES=[
     icon:"🏋️",
     kleur:"#60a5fa",
     dagen:56,
-    beschrijving:(lang==="en"?"Get structurally stronger in 8 weeks. Push/Pull/Legs plan with progressive overload.":lang==="de"?"In 8 Wochen strukturell stärker werden. Push/Pull/Beine-Plan mit progressiver Überlastung.":"Structureel sterker worden in 8 weken. Push/Pull/Legs schema met progressieve overload."),
+    beschrijving:"Structureel sterker worden in 8 weken. Push/Pull/Legs schema met progressieve overload.",
     schema:[
       ...Array.from({length:56},(_, i)=>{
         const dag=i+1;
@@ -6135,7 +6135,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <div><div style={{...S.lbl,color:sportType==="hiit"?ORANGE:LIME,marginBottom:4}}>{lang==="en"?"Today":lang==="de"?"Heute":"Vandaag"}</div><div style={{fontSize:16,fontWeight:800}}>{targetMuscles.map(m=>muscleLabel(m)).join(" + ")}</div></div>
                 <div style={{display:"flex",gap:8}}>
                   <button onClick={()=>setTab(T.home)} style={{padding:"8px 12px",borderRadius:10,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#666":"#666",fontSize:12,fontWeight:700,cursor:"pointer"}}>{lang==="en"?"⏸ Pause":lang==="de"?"⏸ Pause":"⏸ Pauze"}</button>
-                  <button onClick={()=>{if(window.confirm(lang==="en"?"Stop workout?":lang==="de"?(lang==="en"?"Stop workout?":lang==="de"?"Training stoppen?":"Training stoppen?"):(lang==="en"?"Stop workout?":lang==="de"?"Training stoppen?":"Training stoppen?"))){{setSession(null);setSelectingMuscles(true);setTargetMuscles([]);}}}} style={{padding:"8px 12px",borderRadius:10,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:12,fontWeight:700,cursor:"pointer"}}>■ Stop</button>
+                  <button onClick={()=>{if(window.confirm(lang==="en"?"Stop workout?":lang==="de"?"Training stoppen?":(lang==="en"?"Stop workout?":lang==="de"?"Training stoppen?":"Training stoppen?"))){{setSession(null);setSelectingMuscles(true);setTargetMuscles([]);}}}} style={{padding:"8px 12px",borderRadius:10,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:12,fontWeight:700,cursor:"pointer"}}>■ Stop</button>
                 </div>
               </div>
               {!showWarmup?(
