@@ -2225,9 +2225,9 @@ const SPLITS_CARDIO=[
   {label:(lang==="en"?"Interval Run":lang==="de"?"Intervall-Lauf":"Interval Run"),muscles:["cardio_interval"],pk:"cardio",desc:(lang==="en"?"Sprint & recovery alternating":lang==="de"?"Sprint & Erholung abwechselnd":"Sprint & herstel beurtelings"),isCardio:true,runType:"interval"},
   {label:(lang==="en"?"Tempo Run":lang==="de"?"Tempolauf":"Tempoloop"),muscles:["cardio_tempo"],pk:"cardio",desc:(lang==="en"?"Hard but comfortable":lang==="de"?"Hart aber komfortabel":"Hard maar comfortabel"),isCardio:true,runType:"tempo"},
   {label:(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"),muscles:["cardio_bike"],pk:"cardio",desc:(lang==="en"?"Bike & spin":lang==="de"?"Fahrrad & Spin":"Fiets & spin"),isCardio:true,runType:"wandel"},
-  {label:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen")),muscles:["cardio_swim"],pk:"cardio",desc:(lang==="en"?"Lane counting, low impact":lang==="de"?"Bahnen zählen, geringer Impact":"Banen tellen, low impact"),isCardio:true,runType:"steady"},
+  {label:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"),muscles:["cardio_swim"],pk:"cardio",desc:(lang==="en"?"Lane counting, low impact":lang==="de"?"Bahnen zählen, geringer Impact":"Banen tellen, low impact"),isCardio:true,runType:"steady"},
 ];
-const MUSCLE_LABEL={cal_push:"Calisthenics Push",cal_pull:"Calisthenics Pull",cal_core:"Calisthenics Core",cal_full:"Calisthenics Full Body",cal_skills:"Calisthenics Skills",cal_beginner:"Calisthenics Beginner",hiit_full:(lang==="en"?"HIIT Full Body":lang==="de"?"HIIT Ganzkörper":"HIIT Full Body"),hiit_benen:(lang==="en"?"HIIT Legs":lang==="de"?"HIIT Beine":"HIIT Benen"),hiit_core:(lang==="en"?"HIIT Core":lang==="de"?"HIIT Core":"HIIT Core"),hiit_upper:(lang==="en"?"HIIT Upper":lang==="de"?"HIIT Oberkörper":"HIIT Upper"),hiit_tabata:(lang==="en"?"HIIT Tabata":lang==="de"?"HIIT Tabata":"HIIT Tabata"),hiit_pyramid:(lang==="en"?"HIIT Pyramid":lang==="de"?"HIIT Pyramide":"HIIT Pyramid"),cardio_full:"Hardlopen",cardio_wandel:"Wandelen",cardio_interval:(lang==="en"?"Interval Run":lang==="de"?"Intervall-Lauf":"Interval Run"),cardio_tempo:(lang==="en"?"Tempo Run":lang==="de"?"Tempolauf":"Tempoloop"),cardio_bike:(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"),cardio_swim:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen")),cardio_stairs:"Stair Climber",cardio_cross:"Crosstrainer"};
+const MUSCLE_LABEL={cal_push:"Calisthenics Push",cal_pull:"Calisthenics Pull",cal_core:"Calisthenics Core",cal_full:"Calisthenics Full Body",cal_skills:"Calisthenics Skills",cal_beginner:"Calisthenics Beginner",hiit_full:(lang==="en"?"HIIT Full Body":lang==="de"?"HIIT Ganzkörper":"HIIT Full Body"),hiit_benen:(lang==="en"?"HIIT Legs":lang==="de"?"HIIT Beine":"HIIT Benen"),hiit_core:(lang==="en"?"HIIT Core":lang==="de"?"HIIT Core":"HIIT Core"),hiit_upper:(lang==="en"?"HIIT Upper":lang==="de"?"HIIT Oberkörper":"HIIT Upper"),hiit_tabata:(lang==="en"?"HIIT Tabata":lang==="de"?"HIIT Tabata":"HIIT Tabata"),hiit_pyramid:(lang==="en"?"HIIT Pyramid":lang==="de"?"HIIT Pyramide":"HIIT Pyramid"),cardio_full:"Hardlopen",cardio_wandel:"Wandelen",cardio_interval:(lang==="en"?"Interval Run":lang==="de"?"Intervall-Lauf":"Interval Run"),cardio_tempo:(lang==="en"?"Tempo Run":lang==="de"?"Tempolauf":"Tempoloop"),cardio_bike:(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"),cardio_swim:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"),cardio_stairs:"Stair Climber",cardio_cross:"Crosstrainer"};
 function muscleLabel(m){return MUSCLE_META[m]?.label||MUSCLE_LABEL[m]||m;}
 
 
@@ -2316,9 +2316,9 @@ cardio_stairs:[
   [{name:"Stair Climber",sets:3,reps:"5 min",weights:[300,300,300]},{name:"Treadmill Walk",sets:1,reps:"15 min",weights:[900]},{name:"High Knees",sets:3,reps:"45s",weights:[45,45,45]}]
 ],
 cardio_swim:[
-  [{name:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen")),sets:4,reps:"10 banen",weights:[10,10,10,10]}],
-  [{name:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen")),sets:1,reps:"40 banen",weights:[40]}],
-  [{name:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen")),sets:6,reps:"4 banen",weights:[4,4,4,4,4,4]}]
+  [{name:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"),sets:4,reps:"10 banen",weights:[10,10,10,10]}],
+  [{name:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"),sets:1,reps:"40 banen",weights:[40]}],
+  [{name:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"),sets:6,reps:"4 banen",weights:[4,4,4,4,4,4]}]
 ],
 cardio_cross:[
   [{name:"Crosstrainer",sets:1,reps:"30 min",weights:[1800]},{name:"Roeien (machine)",sets:3,reps:"5 min",weights:[300,300,300]}],
@@ -2586,7 +2586,7 @@ function SwimTracker({onDone,profile}){
   if(fase==="setup")return(
     <div>
       <div style={{height:130,borderRadius:14,overflow:"hidden",position:"relative",marginBottom:16,background:isDark?"#111":CARD_BG}}>
-        <img src={P.rug} alt=(lang==="en"?"Swimming":lang==="de"?"Schwimmen":(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen")) style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.6}}/>
+        <img src={P.rug} alt={(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen")} style={{width:"100%",height:"100%",objectFit:"cover",opacity:0.6}}/>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,transparent,rgba(0,0,0,0.8))"}}/>
         <div style={{position:"absolute",bottom:14,left:16}}>
           <div style={{fontSize:10,letterSpacing:3,color:BLAUW,fontWeight:700,textTransform:"uppercase",marginBottom:4}}>Zwemmen</div>
@@ -4639,7 +4639,7 @@ function ChallengeBlok({T,setTab,profile}){
     }
   }
   function stopChallenge(){
-    if(window.confirm(lang==="en"?"Stop challenge? Progress is saved.":lang==="de"?"Challenge stoppen? Fortschritt bleibt erhalten.":(lang==="en"?"Stop challenge? Progress is saved.":lang==="de"?"Challenge stoppen? Fortschritt bleibt erhalten.":"Challenge stoppen? Voortgang blijft bewaard."))){setActief(null);LS.set("fitcoach_challenge_actief",null);}
+    if(window.confirm(lang==="en"?"Stop challenge? Progress is saved.":lang==="de"?"Challenge stoppen? Fortschritt bleibt erhalten.":"Challenge stoppen? Voortgang blijft bewaard.")){setActief(null);LS.set("fitcoach_challenge_actief",null);}
   }
 
   const vandaagKlaar=prog.some(p=>p.datum===TODAY_KEY);
@@ -4912,7 +4912,7 @@ Geef een schema per trainingsdag. Wees specifiek: noem oefeningen, sets en reps.
               {schema}
             </div>
             <button onClick={()=>{
-              const naam=prompt(lang==="en"?"Name your plan:":lang==="de"?"Plan-Name:":(lang==="en"?"Name your plan:":lang==="de"?"Plan-Name:":"Geef dit schema een naam:"),(lang==="en"?"My plan ":lang==="de"?"Mein Plan ":(lang==="en"?"My plan ":lang==="de"?"Mein Plan ":"Mijn schema "))+new Date().toLocaleDateString(lang==="en"?"en-GB":lang,{day:"2-digit",month:"short"}));
+              const naam=prompt(lang==="en"?"Name your plan:":lang==="de"?"Plan-Name:":(lang==="en"?"Name your plan:":lang==="de"?"Plan-Name:":"Geef dit schema een naam:"),(lang==="en"?"My plan ":lang==="de"?"Mein Plan ":"Mijn schema ")+new Date().toLocaleDateString(lang==="en"?"en-GB":lang,{day:"2-digit",month:"short"}));
               if(!naam)return;
               const opgeslagen=LS.get("fitcoach_saved_schemas")||[];
               const nieuw={id:Date.now(),naam,schema,antwoorden,datum:new Date().toLocaleDateString("nl")};
@@ -5428,7 +5428,7 @@ function App(){
     setFeedbackModal({entry,workout:entry.workout});setFeedbackReply("");
     }catch(e){
       console.error("Save workout error:",e);
-      alert(lang==="en"?"Something went wrong while saving. Please try again.":lang==="de"?"Beim Speichern ist etwas schief gelaufen. Bitte erneut versuchen.":(lang==="en"?"Something went wrong saving. Please try again.":lang==="de"?"Fehler beim Speichern. Bitte erneut versuchen.":"Er ging iets mis bij opslaan. Probeer het opnieuw."));
+      alert(lang==="en"?"Something went wrong while saving. Please try again.":lang==="de"?"Beim Speichern ist etwas schief gelaufen. Bitte erneut versuchen.":"Er ging iets mis bij opslaan. Probeer het opnieuw.");
     }
   }
   function verdienFP(actie,bonus){
@@ -6161,7 +6161,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <HiitWorkout exercises={session} voiceOn={voiceOn} onDone={saveWorkout}/>
               ):targetMuscles.length>0&&targetMuscles[0].startsWith("cardio_")?(
                 targetMuscles[0]==="cardio_swim"?(
-                  <SwimTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen")),exercises:[],targetMuscles,runDist:data.afstand||0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"swim",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);
+                  <SwimTracker profile={profile} onDone={(data)=>{const entry={date:trainDate,day:DAYS[parseDate(trainDate).getDay()],workout:(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"),exercises:[],targetMuscles,runDist:data.afstand||0,runTime:data.tijd,runPace:"–",runCal:data.cal||0,runType:"swim",id:Date.now()};const u=[entry,...log].slice(0,100);setLog(u);LS.set("fitcoach_log",u);setSavedBanner(true);setTimeout(()=>setSavedBanner(false),3000);
     const fpVerdiend=FP_VERDIEN.training+Math.round((trainDurationMin||0)*FP_VERDIEN.perMinuut);
     setFpAnimatie(fpVerdiend);setTimeout(()=>setFpAnimatie(null),2500);setSelectingMuscles(true);setSession(null);setTargetMuscles([]);setTab(T.home);}}/>
                 ):targetMuscles[0]==="cardio_bike"?(
@@ -6355,7 +6355,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                       }} style={{padding:"11px 16px",borderRadius:12,border:"none",background:isDark?"#1C1C1C":"#E8E8E0",color:LIME,fontWeight:800,fontSize:14,cursor:"pointer",flexShrink:0}}>+</button>
                     </div>
                   </div>
-                  <button onClick={async()=>{try{await saveWorkout();}catch(e){console.error("Save error:",e);alert(lang==="en"?"Something went wrong saving. Please try again.":lang==="de"?"Speichern fehlgeschlagen. Bitte erneut versuchen.":(lang==="en"?"Something went wrong saving. Try again.":lang==="de"?"Fehler beim Speichern. Erneut versuchen.":"Er ging iets mis bij opslaan. Probeer opnieuw."));}}} style={{width:"100%",padding:18,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>{T.trainingOpslaan}</button>
+                  <button onClick={async()=>{try{await saveWorkout();}catch(e){console.error("Save error:",e);alert(lang==="en"?"Something went wrong saving. Please try again.":lang==="de"?"Speichern fehlgeschlagen. Bitte erneut versuchen.":"Er ging iets mis bij opslaan. Probeer opnieuw.");}}} style={{width:"100%",padding:18,borderRadius:16,border:"none",cursor:"pointer",background:LIME,color:"#000",fontSize:16,fontWeight:800}}>{T.trainingOpslaan}</button>
                 </div>
               )}
             </div>
@@ -6619,7 +6619,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <div style={{fontSize:13,fontWeight:800}}>{lang==="en"?"Week menu":lang==="de"?"Wochenmenü":"Weekmenu"}</div>
                 <div style={{display:"flex",gap:8}}>
                   <button onClick={()=>setShowWeekMenuPrefs(v=>!v)} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${showWeekMenuPrefs?isDark?"#555":"#888":BORDER}`,background:"none",color:showWeekMenuPrefs?"#fff":"#555",fontSize:11,fontWeight:700,cursor:"pointer"}}>{T.voorkeuren}</button>
-                  {weekMenu&&<button onClick={async()=>{if(!isPro){setShowPaywall(true);return;}setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Maak een GEVARIEERD weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Elke dag ander eiwit voor diner. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:weekMenuLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{weekMenuLoading?(lang==="en"?"Loading...":lang==="de"?"Lädt...":(lang==="en"?"Loading...":lang==="de"?"Lädt...":"Bezig...")):(lang==="en"?"Refresh":lang==="de"?"Aktualisieren":"Vernieuwen")}</button>}
+                  {weekMenu&&<button onClick={async()=>{if(!isPro){setShowPaywall(true);return;}setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Maak een GEVARIEERD weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Elke dag ander eiwit voor diner. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:weekMenuLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{weekMenuLoading?(lang==="en"?"Loading...":lang==="de"?"Lädt...":"Bezig..."):(lang==="en"?"Refresh":lang==="de"?"Aktualisieren":"Vernieuwen")}</button>}
                 </div>
               </div>
               {showWeekMenuPrefs&&(
@@ -6888,7 +6888,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                       ))}
                     </div>
                     <div style={{fontSize:11,color:isDark?"#444":"#888",marginBottom:12}}>Dit is hoe anderen jou zien op de ranglijst</div>
-                    <button onClick={()=>{sbUpdateSocialProfile(sbUser.id,profile,fitPoints,log);alert(lang==="en"?"Profile updated!":lang==="de"?"Profil aktualisiert!":(lang==="en"?"Profile updated!":lang==="de"?"Profil aktualisiert!":"Profiel bijgewerkt!"));}} style={{padding:"10px 24px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer"}}>
+                    <button onClick={()=>{sbUpdateSocialProfile(sbUser.id,profile,fitPoints,log);alert(lang==="en"?"Profile updated!":lang==="de"?"Profil aktualisiert!":"Profiel bijgewerkt!");}} style={{padding:"10px 24px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer"}}>
                       {lang==="en"?"Update profile":lang==="de"?"Profil aktualisieren":"Profiel bijwerken"}
                     </button>
                   </div>
