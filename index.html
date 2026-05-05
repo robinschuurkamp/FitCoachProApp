@@ -5057,7 +5057,7 @@ function ProPaywall({onClose,lang,isDark}){
           ))}
         </div>
         <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
-          <a href={STRIPE_YEARLY_URL} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
+          <a href={`${STRIPE_YEARLY_URL}?client_reference_id=${sbUser?.id}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
             <div style={{background:"linear-gradient(135deg,#FF6B2B,#ff8c5a)",borderRadius:16,padding:"16px 20px",position:"relative"}}>
               <div style={{position:"absolute",top:10,right:12,background:"#fff",color:"#FF6B2B",fontSize:10,fontWeight:900,padding:"3px 8px",borderRadius:20}}>
                 {lang==="en"?"BEST VALUE":lang==="de"?"BESTES ANGEBOT":"BESTE KEUZE"}
@@ -5074,7 +5074,7 @@ function ProPaywall({onClose,lang,isDark}){
               </div>
             </div>
           </a>
-          <a href={STRIPE_MONTHLY_URL} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
+          <a href={`${STRIPE_MONTHLY_URL}?client_reference_id=${sbUser?.id}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
             <div style={{border:"1.5px solid rgba(255,107,43,0.3)",borderRadius:16,padding:"14px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
               <div>
                 <div style={{fontSize:13,fontWeight:700,color:txt}}>{lang==="en"?"Monthly":lang==="de"?"Monatlich":"Maandelijks"}</div>
