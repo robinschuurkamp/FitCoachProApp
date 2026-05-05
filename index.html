@@ -4155,7 +4155,6 @@ function Onboarding({onComplete,lang="nl"}){
 }
 
 function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setLang,sbUser}){ const T=TRANSLATIONS[lang]||TRANSLATIONS.nl;
-  const S=makeS(CARD_BG,BORDER,TEXT3);
   const [p,setP]=useState({...profile});
   const [subPage,setSubPage]=useState(null); // null=main menu
   const [pwMsg,setPwMsg]=useState("");
