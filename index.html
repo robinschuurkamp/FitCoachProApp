@@ -1119,8 +1119,8 @@ function getFPVoorLevel(level){
 }
 
 function getSplitLabel(label,lang){
-  const en={"Hardlopen":"Running","Wandelen":"Walking",(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"):(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"),(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"):"Swimming","Kracht":"Strength","Push":"Push","Pull":"Pull","Benen":"Legs","Schouders":"Shoulders","Rug":"Back","Borst":"Chest","Armen":"Arms","Buik":"Abs","Billen":"Glutes"};
-  const de={"Hardlopen":"Laufen","Wandelen":"Gehen",(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"):(lang==="en"?"Spinning":lang==="de"?"Spinning":"Spinning"),(lang==="en"?"Swimming":lang==="de"?"Schwimmen":"Zwemmen"):"Schwimmen","Kracht":"Kraft","Push":"Drücken","Pull":"Ziehen","Benen":"Beine","Schouders":"Schultern","Rug":"Rücken","Borst":"Brust","Armen":"Arme","Buik":"Bauch","Billen":"Gesäss"};
+  const en={"Hardlopen":"Running","Wandelen":"Walking","Spinning":"Spinning","Zwemmen":"Swimming","Kracht":"Strength","Push":"Push","Pull":"Pull","Benen":"Legs","Schouders":"Shoulders","Rug":"Back","Borst":"Chest","Armen":"Arms","Buik":"Abs","Billen":"Glutes"};
+  const de={"Hardlopen":"Laufen","Wandelen":"Gehen","Spinning":"Spinning","Zwemmen":"Schwimmen","Kracht":"Kraft","Push":"Drücken","Pull":"Ziehen","Benen":"Beine","Schouders":"Schultern","Rug":"Rücken","Borst":"Brust","Armen":"Arme","Buik":"Bauch","Billen":"Gesäss"};
   if(lang==="en")return en[label]||label;
   if(lang==="de")return de[label]||label;
   return label;
