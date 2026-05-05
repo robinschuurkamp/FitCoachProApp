@@ -5055,9 +5055,7 @@ function ProPaywall({onClose,lang,isDark}){
   const LIME="#C8F138";
 
   const features=[
-    lang==="en"?["🤖","Unlimited Roan AI chats","Onbeperkt Roan AI-chats","Unbegrenzte Roan KI-Chats"]:
-    lang==="de"?["🤖","Unlimited Roan AI chats","Onbeperkt Roan AI-chats","Unbegrenzte Roan KI-Chats"]:
-    ["🤖","Onbeperkt Roan AI-chats","Onbeperkt Roan AI-chats","Unbegrenzte Roan KI-Chats"],
+    ["🤖", lang==="en"?"Unlimited Roan AI chats":lang==="de"?"Unbegrenzte Roan KI-Chats":"Onbeperkt Roan AI-chats"],
     ["📋", lang==="en"?"Custom plan (Roan)":lang==="de"?"Maßgeschneiderter Plan (Roan)":"Schema op maat (Roan)"],
     ["🍽️", lang==="en"?"Week menu generator":lang==="de"?"Wochenmenü-Generator":"Weekmenu generator"],
     ["🏆", lang==="en"?"All challenges":lang==="de"?"Alle Challenges":"Alle challenges"],
@@ -5086,7 +5084,7 @@ function ProPaywall({onClose,lang,isDark}){
           {features.map(([icon,label],i)=>(
             <div key={i} style={{display:"flex",alignItems:"center",gap:12}}>
               <span style={{fontSize:18,width:28,textAlign:"center"}}>{icon}</span>
-              <span style={{fontSize:14,color:txt,fontWeight:500}}>{Array.isArray(label)?label[0]:label}</span>
+              <span style={{fontSize:14,color:txt,fontWeight:500}}>{label}</span>
               <span style={{marginLeft:"auto",fontSize:16,color:LIME}}>✓</span>
             </div>
           ))}
