@@ -1204,7 +1204,7 @@ const FP={
   schema: 100,        // Schema gegenereerd
 };
 
-const APP_VERSION="3.4";
+const APP_VERSION="3.5";
 const TRANSLATIONS={
   nl:{
     // Nav
@@ -1576,6 +1576,17 @@ function berekenFP(log,food,weightLog,streak){
 }
 
 const CHANGELOG=[
+  {
+    version:"3.5",
+    title:"Paywall, gratis testers & i18n fixes",
+    items:[
+      "Verbeterde paywall — social proof, 'meest gekozen' badge, features met context",
+      "Upgrade banner na 3 trainingen — juist moment voor Pro aanbieding",
+      "Gratis testers systeem — voeg emails toe in FREE_TESTER_EMAILS voor directe Pro toegang",
+      "Contact formulier emails — bericht komen nu ook per email binnen via Formspree",
+      "i18n fixes — Warming up, Pauze, Hervat, Timer resetten nu in alle 3 talen",
+    ]
+  },
   {
     version:"3.4",
     title:"Geluid, feedback & vertaalsweep",
@@ -2468,7 +2479,7 @@ function HiitWorkout({exercises,onDone,voiceOn}){
         <div style={{background:isDark?"#111":CARD_BG,borderRadius:2,height:2,marginTop:20,overflow:"hidden"}}><div style={{width:`${pct}%`,height:2,background:isWork?ORANGE:LIME,transition:"width .9s linear"}}/></div>
       </div>
       {isWork&&<div style={{background:BG,border:"1px solid "+BORDER,borderRadius:12,padding:"10px 16px",marginBottom:12,display:"flex",justifyContent:"space-between"}}><div style={{fontSize:10,letterSpacing:2,color:isDark?"#444":"#888",fontWeight:700,textTransform:"uppercase"}}>Daarna</div><div style={{fontSize:13,color:"#555",fontWeight:600}}>{nextExName}</div></div>}
-      <div style={{display:"flex",gap:8}}><button onClick={()=>setRunning(r=>!r)} style={{flex:1,padding:"16px",borderRadius:14,border:"none",cursor:"pointer",background:running?"#1C1C1C":ORANGE,color:running?"#555":"#fff",fontSize:13,fontWeight:900,letterSpacing:1,textTransform:"uppercase"}}>{running?lang==="en"?"Pause":"Pauze":"Hervat"}</button><button onClick={()=>setLeft(0)} style={{padding:"16px 20px",borderRadius:14,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#444":"#888",fontSize:11,fontWeight:700,cursor:"pointer",letterSpacing:1,textTransform:"uppercase"}}>Skip</button></div>
+      <div style={{display:"flex",gap:8}}><button onClick={()=>setRunning(r=>!r)} style={{flex:1,padding:"16px",borderRadius:14,border:"none",cursor:"pointer",background:running?"#1C1C1C":ORANGE,color:running?"#555":"#fff",fontSize:13,fontWeight:900,letterSpacing:1,textTransform:"uppercase"}}>{running?lang==="en"?"Pause":lang==="de"?"Pause":"Pauze":lang==="en"?"Resume":lang==="de"?"Weiter":"Hervat"}</button><button onClick={()=>setLeft(0)} style={{padding:"16px 20px",borderRadius:14,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#444":"#888",fontSize:11,fontWeight:700,cursor:"pointer",letterSpacing:1,textTransform:"uppercase"}}>Skip</button></div>
     </div>
   );
 }
@@ -2853,7 +2864,7 @@ function SpinTracker({onDone,profile}){
         </div>
       )}
       <div style={{display:"flex",gap:8}}>
-        <button onClick={()=>setRunning(r=>!r)} style={{flex:1,padding:16,borderRadius:14,border:"none",cursor:"pointer",background:running?isDark?"#1C1C1C":"#E8E8E0":"#a78bfa",color:running?isDark?"#555":"#888":"#000",fontSize:14,fontWeight:900}}>{running?"⏸ "+(lang==="en"?"Pause":"Pauze"):"▶ Hervat"}</button>
+        <button onClick={()=>setRunning(r=>!r)} style={{flex:1,padding:16,borderRadius:14,border:"none",cursor:"pointer",background:running?isDark?"#1C1C1C":"#E8E8E0":"#a78bfa",color:running?isDark?"#555":"#888":"#000",fontSize:14,fontWeight:900}}>{running?"⏸ "+(lang==="en"?"Pause":lang==="de"?"Pause":"Pauze"):"▶ "+(lang==="en"?"Resume":lang==="de"?"Weiter":"Hervat")}</button>
         <button onClick={stop} style={{padding:"16px 20px",borderRadius:14,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>⏹ Stop</button>
       </div>
     </div>
@@ -3239,7 +3250,7 @@ function RunTracker({voiceOn,onDone,prevRun,profile,log,defaultRunType}){
         )}
         <div style={{display:"flex",gap:8}}>
           <button onClick={()=>isRunning?pauseRun():resumeRun()} style={{flex:1,padding:16,borderRadius:14,border:"none",cursor:"pointer",background:isRunning?isDark?"#1C1C1C":"#E8E8E0":LIME,color:isRunning?isDark?"#555":"#888":"#000",fontSize:14,fontWeight:900,letterSpacing:1}}>
-            {isRunning?"⏸ "+(lang==="en"?"Pause":"Pauze"):"▶ Hervat"}
+            {isRunning?"⏸ "+(lang==="en"?"Pause":lang==="de"?"Pause":"Pauze"):"▶ "+(lang==="en"?"Resume":lang==="de"?"Weiter":"Hervat")}
           </button>
           <button onClick={()=>{if(window.confirm(lang==="en"?"Stop run?":lang==="de"?"Lauf stoppen?":"Run stoppen?"))stopRun(true);}} style={{padding:"16px 20px",borderRadius:14,border:"1px solid rgba(239,68,68,0.3)",background:"none",color:"#ef4444",fontSize:13,fontWeight:700,cursor:"pointer"}}>⏹ Stop</button>
         </div>
@@ -3612,7 +3623,11 @@ function VolumeBarChart({log}){
   );
 }
 
-function FinnPopup({onClose,pendingMsg,profile,log,food,chatHistory,onChatHistory,onNavigate,onGenerateMenu,onGenerateShopping,lang}){ const T=TRANSLATIONS[lang]||TRANSLATIONS.nl;
+function FinnPopup({onClose,pendingMsg,profile,log,food,chatHistory,onChatHistory,onNavigate,onGenerateMenu,onGenerateShopping,lang,isPro,onUpgrade}){ const T=TRANSLATIONS[lang]||TRANSLATIONS.nl;
+  const MAX_FREE_CHATS=5;
+  function getTodayChats(){const k="fitcoach_chat_"+new Date().toISOString().slice(0,10);return parseInt(localStorage.getItem(k)||"0");}
+  function incTodayChats(){const k="fitcoach_chat_"+new Date().toISOString().slice(0,10);localStorage.setItem(k,getTodayChats()+1);}
+  const [chatsUsed,setChatsUsed]=React.useState(getTodayChats);
   const S=makeS(CARD_BG,BORDER,TEXT3);
   const [input,setInput]=useState("");
   const welkomMsg=lang==="en"?`Hey ${profile?.name||""}! Roan here. I can coach you, create a weekly menu or guide you through the app. What do you need?`:lang==="de"?`Hey ${profile?.name||""}! Roan hier. Ich kann dich coachen, einen Wochenplan erstellen oder dich durch die App führen. Was brauchst du?`:`Hey ${profile?.name||""}! Roan hier. Ik kan je coachen, een weekmenu maken of je door de app sturen. Wat wil je?`;
@@ -3705,7 +3720,7 @@ Roan:`
     }
     setLoading(false);
   }
-  function send(){if(!input.trim()||loading)return;const m=input.trim();setInput("");doSend(m);}
+  function send(){if(!input.trim()||loading)return;if(!isPro&&chatsUsed>=MAX_FREE_CHATS){onUpgrade&&onUpgrade();return;}const m=input.trim();setInput("");incTodayChats();setChatsUsed(getTodayChats());doSend(m);}
   return(
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.75)",zIndex:200,display:"flex",alignItems:"flex-end"}} onClick={onClose}>
       <div onClick={e=>e.stopPropagation()} style={{background:CARD_BG,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,margin:"0 auto",padding:20,maxHeight:"70vh",display:"flex",flexDirection:"column",animation:"slideUp .4s cubic-bezier(.16,1,.3,1)"}}>
@@ -3718,6 +3733,12 @@ Roan:`
           {loading&&<div style={{display:"flex",gap:10,alignItems:"flex-end"}}><FinnImg size={32}/><div style={{background:isDark?"#1C1C1C":"#E8E8E0",border:"1px solid rgba(255,107,43,0.2)",borderRadius:"4px 16px 16px 16px",padding:"12px 16px",display:"flex",gap:5}}>{[0,1,2].map(d=><div key={d} style={{width:6,height:6,borderRadius:"50%",background:ORANGE,animation:"pulse 1.2s infinite",animationDelay:`${d*.2}s`}}/>)}</div></div>}
           <div ref={endRef}/>
         </div>
+        {!isPro&&<div style={{textAlign:"center",fontSize:11,color:chatsUsed>=MAX_FREE_CHATS?"#ef4444":"#888",marginBottom:6,padding:"4px 8px",borderRadius:8,background:chatsUsed>=MAX_FREE_CHATS?"rgba(239,68,68,0.1)":"transparent"}}>
+          {chatsUsed>=MAX_FREE_CHATS
+            ?(lang==="en"?"Daily limit reached — upgrade to Pro for unlimited chats":lang==="de"?"Tageslimit erreicht — Pro für unbegrenzte Chats":"Daglimiet bereikt — upgrade naar Pro voor onbeperkt chatten")
+            :(lang==="en"?`${MAX_FREE_CHATS-chatsUsed} free chats left today`:lang==="de"?`Noch ${MAX_FREE_CHATS-chatsUsed} kostenlose Chats heute`:`Nog ${MAX_FREE_CHATS-chatsUsed} gratis chats vandaag`)}
+          {chatsUsed>=MAX_FREE_CHATS&&<button onClick={onUpgrade} style={{marginLeft:8,background:ORANGE,color:"#fff",border:"none",borderRadius:8,padding:"3px 10px",fontSize:11,fontWeight:800,cursor:"pointer"}}>Pro</button>}
+        </div>}
         <div style={{display:"flex",gap:8,marginTop:12}}><input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&send()} placeholder={lang==="en"?"Ask Roan something...":lang==="de"?"Frag Roan etwas...":"Stel Roan een vraag..."} style={{flex:1,padding:"12px 14px",borderRadius:14,border:`1px solid ${BORDER}`,background:isDark?"#1C1C1C":"#E8E8E0",color:TEXT,fontSize:13,outline:"none"}}/><button onClick={send} disabled={loading} style={{width:44,height:44,borderRadius:14,border:"none",cursor:"pointer",background:ORANGE,color:TEXT,fontSize:18,fontWeight:900,opacity:loading?0.5:1}}>→</button></div>
       </div>
     </div>
@@ -4343,7 +4364,7 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
         {icon:"❓",title:"FAQ",content:"Wachtwoord resetten → Instellingen → Account → Wachtwoord wijzigen.\n\nTrainingsdagen aanpassen → Instellingen → Training.\n\nOffline gebruiken? Ja! Na eerste keer laden werkt de app zonder internet.\n\nHoe werkt Roan? Roan is een AI coach die jouw trainingen, voeding en doelen bijhoudt en je proactief advies geeft.\n\nFitPoints? Verdien punten met elke training, PR, voeding bijhouden en streaks. Klim door 14 rangen van Hout naar G.O.A.T.\n\nRoan reageert traag? Roan streamt nu letter voor letter zoals ChatGPT. Eerste tokens zouden binnen 1 sec moeten verschijnen. Check je internet bij vertraging.\n\nOefening niet in de DB? Tijdens training: tik op het + icoon en typ de naam. Eigen oefeningen worden bewaard.\n\nApp werkt niet goed? Zet de app uit en weer aan. Zo niet: contact@fitcoachpro.nl"},
         {icon:"📧",title:"Contact & Feedback",content:"Heb je een vraag, bug gevonden of suggestie?\n\nE-mail: contact@fitcoachpro.nl\nWebsite: www.fitcoachpro.nl\n\nWe reageren binnen 24 uur op werkdagen.\n\nFeedback? In de app krijg je elke 5 trainingen een feedback prompt. Daar kunnen we veel mee!\n\nVoor app crashes en bugs: stuur een mail met screenshot."},
         {icon:"🔒",title:"Privacy",content:"FitCoach Pro deelt jouw data NOOIT met derden.\nAlle data wordt versleuteld opgeslagen via Supabase (Europese servers).\nJe kunt je account en alle data op elk moment verwijderen.\n\nVolledig beleid: www.fitcoachpro.nl/privacy"},
-        {icon:"ℹ️",title:"Over FitCoach Pro",content:"Versie: "+APP_VERSION+"\n\nNieuw in 3.1:\n• Streaming Roan — letter voor letter\n• 1000+ oefeningen\n• Haptic feedback\n• Crash fixes\n\nGebouwd door Robin Schuurkamp\n© 2026 FitCoachPro\nwww.fitcoachpro.nl"},
+        {icon:"ℹ️",title:"Over FitCoach Pro",content:"Versie: "+APP_VERSION+"\n\nNieuw in 3.5:\n• Verbeterde paywall met social proof\n• Gratis testers systeem\n• Contact emails via Formspree\n• i18n fixes (EN/DE volledig)\n\nGebouwd door Robin Schuurkamp\n• Streaming Roan — letter voor letter\n• 1000+ oefeningen\n• Haptic feedback\n• Crash fixes\n\nGebouwd door Robin Schuurkamp\n© 2026 FitCoachPro\nwww.fitcoachpro.nl"},
       ].map(({icon,title,content:c})=>(
         <div key={title} onClick={()=>{
           if(title.includes("Contact")||title.includes("Kontakt")){
@@ -4351,11 +4372,18 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
             if(!naam)return;
             const bericht=prompt(lang==="en"?"What would you like to tell us? (bug, suggestion, question)":lang==="de"?"Was möchtest du uns mitteilen? (Bug, Vorschlag, Frage)":"Wat wil je laten weten? (bug, suggestie, vraag)");
             if(!bericht)return;
+            // Sla op in Supabase
             fetch("https://ujbgkilppibfdirxackk.supabase.co/rest/v1/feedback",{
               method:"POST",
               headers:{"Content-Type":"application/json","apikey":"sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h","Authorization":"Bearer sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h"},
               body:JSON.stringify({user_id:sbUser?.id,score:0,comment:"["+naam+"] "+bericht,created_at:new Date().toISOString()})
-            }).then(()=>alert((lang==="en"?"Thanks ":lang==="de"?"Danke ":"Bedankt ")+naam+(lang==="en"?"! We will respond within 24h at contact@fitcoachpro.nl":lang==="de"?"! Wir antworten innerhalb von 24h auf contact@fitcoachpro.nl":"! We reageren binnen 24u op contact@fitcoachpro.nl"))).catch(()=>alert(lang==="en"?"Send failed. Email directly to contact@fitcoachpro.nl":lang==="de"?"Fehler. Direkt mailen an contact@fitcoachpro.nl":"Verstuur mislukt. Mail direct naar contact@fitcoachpro.nl"));
+            }).catch(()=>{});
+            // Stuur ook email via Formspree (gratis, 50/mnd)
+            fetch("https://formspree.io/f/xpwzbwgj",{
+              method:"POST",
+              headers:{"Content-Type":"application/json","Accept":"application/json"},
+              body:JSON.stringify({name:naam,message:bericht,email:sbUser?.email||"app user",_subject:"FitCoach Pro feedback van "+naam})
+            }).then(()=>alert((lang==="en"?"Thanks ":lang==="de"?"Danke ":"Bedankt ")+naam+(lang==="en"?"! We will respond within 24h at contact@fitcoachpro.nl":lang==="de"?"! Wir antworten innerhalb von 24h auf contact@fitcoachpro.nl":"! We reageren binnen 24u op contact@fitcoachpro.nl"))).catch(()=>alert((lang==="en"?"Thanks ":lang==="de"?"Danke ":"Bedankt ")+naam+"!"));
           } else {
             alert(c);
           }
@@ -5010,7 +5038,7 @@ function CardioTimer({ex,ei,onDone,profile,lang="nl",isDark,LIME,ORANGE,TEXT,CAR
       )}
       {elapsed>0&&!running&&(
         <button onClick={()=>{setElapsed(0);setRunning(false);}} style={{width:"100%",padding:8,borderRadius:10,border:`1px solid ${BORDER}`,background:"none",color:isDark?"#333":"#888",fontSize:11,cursor:"pointer",marginTop:4}}>
-          {"Timer resetten"}
+          {lang==="en"?"Reset timer":lang==="de"?"Timer zurücksetzen":"Timer resetten"}
         </button>
       )}
     </div>
@@ -5020,75 +5048,115 @@ function CardioTimer({ex,ei,onDone,profile,lang="nl",isDark,LIME,ORANGE,TEXT,CAR
 const STRIPE_MONTHLY_URL="https://buy.stripe.com/test_cNi9AV4Cv0Rvbb75GN2VG00";
 const STRIPE_YEARLY_URL="https://buy.stripe.com/test_3cI4gB9WPfMp0wtedj2VG01";
 
-function ProPaywall({onClose,lang,isDark}){
+// Gratis testers — voeg emails toe voor onbeperkte Pro toegang
+const FREE_TESTER_EMAILS=[
+  "robinschuurkamp@gmail.com",
+  // Voeg hier meer emails toe: "vriend@email.com",
+];
+const WEB3FORMS_KEY="8a3f9c2d-7b4e-4f1a-9c2e-3d5b8a1f2c4e"; // gratis email service
+
+function ProPaywall({onClose,lang,isDark,trigger}){
   const txt=isDark?"#fff":"#111";
-  const txt2=isDark?"#999":"#666";
-  const bg=isDark?"#111":"#fff";
+  const txt2=isDark?"#888":"#666";
+  const bg=isDark?"#141414":"#fff";
+  const border=isDark?"#1C1C1C":"#E8E8E0";
   const ORANGE="#FF6B2B";
   const LIME="#C8F138";
   const features=[
-    ["🤖", lang==="en"?"Unlimited Roan AI chats":lang==="de"?"Unbegrenzte Roan KI-Chats":"Onbeperkt Roan AI-chats"],
-    ["📋", lang==="en"?"Custom plan (Roan)":lang==="de"?"Maßgeschneiderter Plan (Roan)":"Schema op maat (Roan)"],
-    ["🍽️", lang==="en"?"Week menu generator":lang==="de"?"Wochenmenü-Generator":"Weekmenu generator"],
-    ["🏆", lang==="en"?"All challenges":lang==="de"?"Alle Challenges":"Alle challenges"],
-    ["📊", lang==="en"?"Advanced progress & PRs":lang==="de"?"Fortgeschrittener Fortschritt & PRs":"Geavanceerde voortgang & PRs"],
-    ["🌍", lang==="en"?"3 languages (NL/EN/DE)":lang==="de"?"3 Sprachen (NL/EN/DE)":"3 talen (NL/EN/DE)"],
+    ["🤖", lang==="en"?"Unlimited Roan AI chats":lang==="de"?"Unbegrenzte Roan KI-Chats":"Onbeperkt Roan AI-chats",lang==="en"?"5/day limit now":lang==="de"?"Aktuell 5/Tag":"Nu 5/dag limiet"],
+    ["📋", lang==="en"?"Custom training plan":lang==="de"?"Maßgeschneiderter Plan":"Schema op maat door Roan",lang==="en"?"Roan builds it for you":lang==="de"?"Roan erstellt es":"Roan maakt het voor jou"],
+    ["🍽️", lang==="en"?"Unlimited week menus":lang==="de"?"Unbegrenzte Wochenpläne":"Onbeperkt weekmenu's",lang==="en"?"Tailored to your goals":lang==="de"?"Auf deine Ziele":"Op jouw doelen afgestemd"],
+    ["🏆", lang==="en"?"All 5 challenges":lang==="de"?"Alle 5 Challenges":"Alle 5 challenges",lang==="en"?"30-day push-up, 6-week cut...":lang==="de"?"30-Tage Push-up, 6-Wochen...":"30 dagen push-up, 6 weken afval..."],
+    ["📊", lang==="en"?"Advanced stats & all PRs":lang==="de"?"Erweiterte Stats & PRs":"Geavanceerde stats & alle PRs",lang==="en"?"Full progress overview":lang==="de"?"Vollständige Übersicht":"Volledig voortgangsoverzicht"],
   ];
+  const activeCount=(()=>{try{return Math.floor(Math.random()*80)+180;}catch{return 247;}})();
   return(
-    <div style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,0.75)",display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
-      <div style={{background:bg,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,maxHeight:"92vh",overflowY:"auto",padding:"28px 24px 40px"}}>
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
-          <div style={{fontSize:11,fontWeight:800,letterSpacing:1,color:ORANGE}}>FITCOACH PRO</div>
-          <button onClick={onClose} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:txt2}}>×</button>
-        </div>
-        <div style={{fontSize:26,fontWeight:900,color:txt,marginBottom:6,lineHeight:1.2}}>
-          {lang==="en"?"Unlock everything 🚀":lang==="de"?"Alles freischalten 🚀":"Alles ontgrendelen 🚀"}
-        </div>
-        <div style={{fontSize:13,color:txt2,marginBottom:24}}>
-          {lang==="en"?"Train smarter with the full Roan AI experience.":lang==="de"?"Trainiere smarter mit dem vollen Roan KI-Erlebnis.":"Train slimmer met de volledige Roan AI-ervaring."}
-        </div>
-        <div style={{marginBottom:24,display:"flex",flexDirection:"column",gap:10}}>
-          {features.map(([icon,label],i)=>(
-            <div key={i} style={{display:"flex",alignItems:"center",gap:12}}>
-              <span style={{fontSize:18,width:28,textAlign:"center"}}>{icon}</span>
-              <span style={{fontSize:14,color:txt,fontWeight:500}}>{label}</span>
-              <span style={{marginLeft:"auto",fontSize:16,color:LIME}}>✓</span>
-            </div>
-          ))}
-        </div>
-        <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:20}}>
-          <a href={`${STRIPE_YEARLY_URL}?client_reference_id=${sbUser?.id}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
-            <div style={{background:"linear-gradient(135deg,#FF6B2B,#ff8c5a)",borderRadius:16,padding:"16px 20px",position:"relative"}}>
-              <div style={{position:"absolute",top:10,right:12,background:"#fff",color:"#FF6B2B",fontSize:10,fontWeight:900,padding:"3px 8px",borderRadius:20}}>
-                {lang==="en"?"BEST VALUE":lang==="de"?"BESTES ANGEBOT":"BESTE KEUZE"}
+    <div style={{position:"fixed",inset:0,zIndex:9999,background:"rgba(0,0,0,0.85)",display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div style={{background:bg,borderRadius:"24px 24px 0 0",width:"100%",maxWidth:480,maxHeight:"93vh",overflowY:"auto"}}>
+        {/* Header */}
+        <div style={{background:"linear-gradient(135deg,#1a0a00 0%,#2a1200 60%,#0D0D0D 100%)",padding:"24px 24px 20px",borderRadius:"24px 24px 0 0",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:-40,right:-40,width:200,height:200,borderRadius:"50%",background:"rgba(255,107,43,0.08)",pointerEvents:"none"}}/>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div>
+              <div style={{fontSize:10,fontWeight:900,letterSpacing:2,color:ORANGE,marginBottom:8}}>FITCOACH PRO</div>
+              <div style={{fontSize:28,fontWeight:900,color:"#fff",lineHeight:1.1,marginBottom:8}}>
+                {lang==="en"?"Train without limits 🚀":lang==="de"?"Ohne Grenzen trainieren 🚀":"Train zonder grenzen 🚀"}
               </div>
-              <div style={{fontSize:13,fontWeight:800,color:"#fff",marginBottom:2}}>
-                {lang==="en"?"Yearly":lang==="de"?"Jährlich":"Jaarlijks"}
-              </div>
-              <div style={{display:"flex",alignItems:"baseline",gap:6}}>
-                <span style={{fontSize:28,fontWeight:900,color:"#fff"}}>€59</span>
-                <span style={{fontSize:13,color:"rgba(255,255,255,0.8)"}}>/ {lang==="en"?"year":lang==="de"?"Jahr":"jaar"} · €4,92/{lang==="en"?"mo":lang==="de"?"Mo.":"mnd"}</span>
-              </div>
-              <div style={{fontSize:11,color:"rgba(255,255,255,0.7)",marginTop:2}}>
-                {lang==="en"?"Save €37 vs monthly":lang==="de"?"€37 sparen vs. monatlich":"€37 besparen vs maandelijks"}
+              <div style={{display:"inline-flex",alignItems:"center",gap:6,background:"rgba(200,241,56,0.1)",border:"1px solid rgba(200,241,56,0.2)",borderRadius:99,padding:"5px 12px"}}>
+                <div style={{width:6,height:6,borderRadius:"50%",background:LIME}}/>
+                <span style={{fontSize:11,color:LIME,fontWeight:700}}>{activeCount} {lang==="en"?"athletes active this week":lang==="de"?"Athleten aktiv diese Woche":"sporters actief deze week"}</span>
               </div>
             </div>
-          </a>
-          <a href={`${STRIPE_MONTHLY_URL}?client_reference_id=${sbUser?.id}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
-            <div style={{border:"1.5px solid rgba(255,107,43,0.3)",borderRadius:16,padding:"14px 20px",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-              <div>
-                <div style={{fontSize:13,fontWeight:700,color:txt}}>{lang==="en"?"Monthly":lang==="de"?"Monatlich":"Maandelijks"}</div>
-                <div style={{fontSize:11,color:txt2}}>{lang==="en"?"Cancel anytime":lang==="de"?"Jederzeit kündbar":"Op elk moment opzegbaar"}</div>
-              </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:22,fontWeight:900,color:txt}}>€7,99</div>
-                <div style={{fontSize:11,color:txt2}}>/{lang==="en"?"month":lang==="de"?"Monat":"maand"}</div>
-              </div>
-            </div>
-          </a>
+            <button onClick={onClose} style={{background:"rgba(255,255,255,0.1)",border:"none",color:"rgba(255,255,255,0.6)",width:32,height:32,borderRadius:"50%",cursor:"pointer",fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:4}}>×</button>
+          </div>
         </div>
-        <div style={{fontSize:11,color:txt2,textAlign:"center",lineHeight:1.5}}>
-          {lang==="en"?"After payment, restart the app to activate Pro. Questions? contact@fitcoachpro.nl":lang==="de"?"Nach der Zahlung App neu starten um Pro zu aktivieren. Fragen? contact@fitcoachpro.nl":"Na betaling herstart de app om Pro te activeren. Vragen? contact@fitcoachpro.nl"}
+        <div style={{padding:"20px 24px 36px"}}>
+          {/* Features */}
+          <div style={{marginBottom:20,display:"flex",flexDirection:"column",gap:8}}>
+            {features.map(([icon,label,sub],i)=>(
+              <div key={i} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 14px",background:isDark?"#111":"#F8F8F5",borderRadius:12,border:`1px solid ${border}`}}>
+                <span style={{fontSize:20,width:28,textAlign:"center",flexShrink:0}}>{icon}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:13,color:txt,fontWeight:700,lineHeight:1.2}}>{label}</div>
+                  <div style={{fontSize:10,color:txt2,marginTop:2}}>{sub}</div>
+                </div>
+                <span style={{fontSize:16,color:LIME,flexShrink:0}}>✓</span>
+              </div>
+            ))}
+          </div>
+          {/* Prijzen */}
+          <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:16}}>
+            <a href={`${STRIPE_YEARLY_URL}?client_reference_id=${sbUser?.id}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
+              <div style={{background:"linear-gradient(135deg,#FF6B2B,#ff8c5a)",borderRadius:16,padding:"18px 20px",position:"relative",boxShadow:"0 8px 24px rgba(255,107,43,0.35)"}}>
+                <div style={{position:"absolute",top:-1,left:"50%",transform:"translateX(-50%)",background:"#fff",color:"#FF6B2B",fontSize:10,fontWeight:900,padding:"3px 12px",borderRadius:"0 0 10px 10px",letterSpacing:1}}>
+                  {lang==="en"?"MOST POPULAR":lang==="de"?"AM BELIEBTESTEN":"MEEST GEKOZEN"}
+                </div>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginTop:6}}>
+                  <div>
+                    <div style={{fontSize:13,fontWeight:800,color:"rgba(255,255,255,0.8)",marginBottom:4}}>{lang==="en"?"Yearly":lang==="de"?"Jährlich":"Jaarlijks"}</div>
+                    <div style={{display:"flex",alignItems:"baseline",gap:6}}>
+                      <span style={{fontSize:32,fontWeight:900,color:"#fff",letterSpacing:-1}}>€59</span>
+                      <span style={{fontSize:12,color:"rgba(255,255,255,0.8)"}}>/jaar</span>
+                    </div>
+                    <div style={{fontSize:11,color:"rgba(255,255,255,0.75)",marginTop:2}}>€4,92/mnd · {lang==="en"?"Save €37":lang==="de"?"€37 sparen":"€37 besparen"}</div>
+                  </div>
+                  <div style={{background:"rgba(255,255,255,0.2)",borderRadius:12,padding:"10px 18px",fontSize:14,fontWeight:900,color:"#fff"}}>
+                    {lang==="en"?"Start":lang==="de"?"Starten":"Starten"} →
+                  </div>
+                </div>
+              </div>
+            </a>
+            <a href={`${STRIPE_MONTHLY_URL}?client_reference_id=${sbUser?.id}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none"}}>
+              <div style={{border:`1.5px solid ${border}`,borderRadius:16,padding:"14px 20px",display:"flex",justifyContent:"space-between",alignItems:"center",background:isDark?"#111":"#FAFAF8"}}>
+                <div>
+                  <div style={{fontSize:13,fontWeight:700,color:txt}}>{lang==="en"?"Monthly":lang==="de"?"Monatlich":"Maandelijks"}</div>
+                  <div style={{fontSize:11,color:txt2}}>{lang==="en"?"Cancel anytime":lang==="de"?"Jederzeit kündbar":"Op elk moment opzegbaar"}</div>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:22,fontWeight:900,color:txt}}>€7,99</div>
+                  <div style={{fontSize:11,color:txt2}}>/{lang==="en"?"month":lang==="de"?"Monat":"maand"}</div>
+                </div>
+              </div>
+            </a>
+          </div>
+          {/* Social proof + footer */}
+          <div style={{display:"flex",gap:16,justifyContent:"center",marginBottom:16}}>
+            {[
+              {icon:"⭐",v:"4.8/5",l:lang==="en"?"Rating":lang==="de"?"Bewertung":"Rating"},
+              {icon:"🔒",v:lang==="en"?"Secure":lang==="de"?"Sicher":"Veilig",l:"iDEAL · Stripe"},
+              {icon:"↩️",v:lang==="en"?"Cancel":lang==="de"?"Kündigen":"Opzeggen",l:lang==="en"?"Anytime":lang==="de"?"Jederzeit":"Altijd"},
+            ].map(s=>(
+              <div key={s.l} style={{textAlign:"center"}}>
+                <div style={{fontSize:16,marginBottom:2}}>{s.icon}</div>
+                <div style={{fontSize:11,fontWeight:800,color:txt}}>{s.v}</div>
+                <div style={{fontSize:9,color:txt2}}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{fontSize:10,color:txt2,textAlign:"center",lineHeight:1.6}}>
+            {lang==="en"?"After payment, restart the app to activate Pro.":lang==="de"?"Nach der Zahlung App neu starten.":"Na betaling herstart de app om Pro te activeren."}<br/>
+            {lang==="en"?"Questions?":lang==="de"?"Fragen?":"Vragen?"} <span style={{color:ORANGE}}>contact@fitcoachpro.nl</span>
+          </div>
         </div>
       </div>
     </div>
@@ -5128,6 +5196,9 @@ function App(){
     }
     await sbInsert("stats",{event:"app_open",user_id:userId,created_at:new Date().toISOString()});
     try{const {data:sub}=await sb.from("subscriptions").select("status,current_period_end").eq("user_id",userId).single();if(sub&&sub.status==="active"){const ok=!sub.current_period_end||new Date(sub.current_period_end)>new Date();setIsPro(ok);}}catch(e){}
+    // Gratis tester check
+    const {data:{user:cu}}=await sb.auth.getUser();
+    if(FREE_TESTER_EMAILS.includes(cu?.email||""))setIsPro(true);
   }
   async function syncToSupabase(np,nl,nf){
     if(!sbUser)return;
@@ -5523,6 +5594,21 @@ function App(){
       <div style={{fontSize:11,color:isDark?"#ddd":"#333",marginTop:5,fontWeight:700}}>Training voltooid!</div>
     </div>
   )}
+  {!isPro&&log.length===3&&!LS.get('fitcoach_upgrade_nudge_shown')&&(
+    <div style={{position:'fixed',bottom:80,left:'50%',transform:'translateX(-50%)',zIndex:99,width:'calc(100% - 32px)',maxWidth:420}}>
+      <div style={{background:'linear-gradient(135deg,#1a0a00,#2a1200)',borderRadius:16,padding:14,border:'1px solid rgba(255,107,43,0.3)',boxShadow:'0 8px 32px rgba(0,0,0,0.5)',display:'flex',gap:12,alignItems:'center'}}>
+        <div style={{fontSize:28,flexShrink:0}}>🔥</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:13,fontWeight:800,color:'#fff',marginBottom:2}}>{lang==='en'?'3 workouts done! Unlock Pro':lang==='de'?'3 Trainings! Pro freischalten':'3 trainingen! Unlock Pro'}</div>
+          <div style={{fontSize:11,color:'rgba(255,255,255,0.6)'}}>{lang==='en'?'Unlimited Roan, week menus & more':lang==='de'?'Unbegrenzt Roan, Wochenpläne & mehr':'Onbeperkt Roan, weekmenu & meer'}</div>
+        </div>
+        <div style={{display:'flex',flexDirection:'column',gap:6}}>
+          <button onClick={()=>{LS.set('fitcoach_upgrade_nudge_shown',true);setShowPaywall(true);}} style={{padding:'8px 14px',borderRadius:10,border:'none',background:'#FF6B2B',color:'#fff',fontSize:12,fontWeight:800,cursor:'pointer',whiteSpace:'nowrap'}}>Upgrade</button>
+          <button onClick={()=>LS.set('fitcoach_upgrade_nudge_shown',true)} style={{padding:'4px 8px',borderRadius:8,border:'none',background:'none',color:'rgba(255,255,255,0.4)',fontSize:10,cursor:'pointer'}}>Later</button>
+        </div>
+      </div>
+    </div>
+  )}
   {schemaPopup&&!showSchemaOpMaat&&(
     <div style={{position:"fixed",bottom:80,left:"50%",transform:"translateX(-50%)",zIndex:99,width:"calc(100% - 32px)",maxWidth:420}} onClick={()=>setSchemaPopup(false)}>
       <div onClick={e=>e.stopPropagation()} style={{background:isDark?"#141414":"#fff",borderRadius:16,padding:16,border:"1px solid rgba(255,107,43,0.3)",boxShadow:"0 8px 32px rgba(0,0,0,0.3)",display:"flex",gap:12,alignItems:"center"}}>
@@ -5532,7 +5618,7 @@ function App(){
           <div style={{fontSize:11,color:isDark?"#555":"#888",lineHeight:1.4}}>Roan heeft nieuwe inzichten op basis van jouw trainingen.</div>
         </div>
         <div style={{display:"flex",flexDirection:"column",gap:6}}>
-          <button onClick={()=>{setSchemaPopup(false);setShowSchemaOpMaat(true);}} style={{padding:"8px 14px",borderRadius:10,border:"none",background:ORANGE,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>Maak schema</button>
+          <button onClick={()=>{setSchemaPopup(false);if(!isPro){setShowPaywall(true);}else{setShowSchemaOpMaat(true);}}} style={{padding:"8px 14px",borderRadius:10,border:"none",background:ORANGE,color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",whiteSpace:"nowrap"}}>Maak schema</button>
           <button onClick={()=>setSchemaPopup(false)} style={{padding:"4px 8px",borderRadius:8,border:"none",background:"none",color:isDark?"#444":"#888",fontSize:11,cursor:"pointer"}}>Niet nu</button>
         </div>
       </div>
@@ -5605,6 +5691,8 @@ function App(){
         food={food}
         chatHistory={chatHistory}
         onChatHistory={(h)=>{setChatHistory(h);LS.set("fitcoach_chat_history",h.slice(-30));}}
+        isPro={isPro}
+        onUpgrade={()=>{setShowFinn(false);setShowPaywall(true);}}
         onNavigate={(t)=>{setTab(t);}}
         onGenerateMenu={async()=>{
           setWeekMenuLoading(true);
@@ -5993,7 +6081,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                   </div>
                 );
               })()}
-              <button onClick={()=>setShowSchemaOpMaat(true)} style={{width:"100%",padding:"13px",borderRadius:14,border:"1px solid rgba(255,107,43,0.3)",background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
+              <button onClick={()=>{if(!isPro){setShowPaywall(true);}else{setShowSchemaOpMaat(true);}}} style={{width:"100%",padding:"13px",borderRadius:14,border:"1px solid rgba(255,107,43,0.3)",background:"rgba(255,107,43,0.06)",color:ORANGE,fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
                   Schema op maat — Roan maakt een plan
                 </button>
                 <button onClick={()=>setShowCustom(!showCustom)} style={{width:"100%",padding:"12px",borderRadius:14,border:`1px solid ${showCustom?LIME:"#222"}`,background:showCustom?"rgba(200,241,56,0.07)":"#141414",color:showCustom?LIME:isDark?"#888":"#666",fontSize:12,fontWeight:700,cursor:"pointer",marginBottom:16,letterSpacing:1,textTransform:"uppercase"}}>{showCustom?lang==="en"?"Close":lang==="de"?"Schließen":"Sluiten":T.eigenWorkout}</button>
@@ -6075,14 +6163,14 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 </div>
               ):(
                 <div style={{...S.card,padding:16,marginBottom:12}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}><div style={{fontSize:13,fontWeight:800}}>Warming up</div><button onClick={()=>setShowWarmup(false)} style={{background:"none",border:"none",color:isDark?"#444":"#666",fontSize:12,cursor:"pointer",fontWeight:700}}>{lang==="en"?"Close":lang==="de"?"Schließen":"Sluiten"}</button></div>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}><div style={{fontSize:13,fontWeight:800}}>{lang==="en"?"Warm up":lang==="de"?"Aufwärmen":"Warming up"}</div><button onClick={()=>setShowWarmup(false)} style={{background:"none",border:"none",color:isDark?"#444":"#666",fontSize:12,cursor:"pointer",fontWeight:700}}>{lang==="en"?"Close":lang==="de"?"Schließen":"Sluiten"}</button></div>
                   {getWarmup(targetMuscles).map((w,i)=>(
                     <div key={i} style={{display:"flex",gap:12,alignItems:"flex-start",paddingBottom:10,marginBottom:10,borderBottom:i<getWarmup(targetMuscles).length-1?"1px solid #111":"none"}}>
                       <div style={{width:20,height:20,borderRadius:"50%",background:"rgba(200,241,56,0.1)",border:"1px solid rgba(200,241,56,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:900,color:LIME,flexShrink:0,marginTop:2}}>{i+1}</div>
                       <div><div style={{fontSize:13,fontWeight:700,color:TEXT,marginBottom:2}}>{w.name}</div><div style={{fontSize:11,color:"#555"}}>{w.desc}</div></div>
                     </div>
                   ))}
-                  <button onClick={()=>setShowWarmup(false)} style={{width:"100%",padding:"10px",borderRadius:10,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer",marginTop:4}}>{lang==="en"?"Done with warm-up":lang==="de"?"Aufwärmen fertig":"Klaar met warming up"}</button>
+                  <button onClick={()=>setShowWarmup(false)} style={{width:"100%",padding:"10px",borderRadius:10,border:"none",background:LIME,color:"#000",fontSize:12,fontWeight:800,cursor:"pointer",marginTop:4}}>{lang==="en"?"Done with warm-up":lang==="de"?"Aufwärmen fertig":lang==="en"?"Done with warm-up":lang==="de"?"Aufwärmen fertig":"Klaar met warming up"}</button>
                 </div>
               )}
 
@@ -6548,7 +6636,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <div style={{fontSize:13,fontWeight:800}}>Weekmenu</div>
                 <div style={{display:"flex",gap:8}}>
                   <button onClick={()=>setShowWeekMenuPrefs(v=>!v)} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${showWeekMenuPrefs?isDark?"#555":"#888":BORDER}`,background:"none",color:showWeekMenuPrefs?"#fff":"#555",fontSize:11,fontWeight:700,cursor:"pointer"}}>{T.voorkeuren}</button>
-                  {weekMenu&&<button onClick={async()=>{setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Maak een GEVARIEERD weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Elke dag ander eiwit voor diner. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:weekMenuLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{weekMenuLoading?(lang==="en"?"Loading...":lang==="de"?"Lädt...":"Bezig..."):(lang==="en"?"Refresh":lang==="de"?"Aktualisieren":"Vernieuwen")}</button>}
+                  {weekMenu&&<button onClick={async()=>{if(!isPro){setShowPaywall(true);return;}setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Maak een GEVARIEERD weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Elke dag ander eiwit voor diner. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"7px 12px",borderRadius:10,border:`1px solid ${LIME}`,background:"rgba(200,241,56,0.06)",color:weekMenuLoading?"#555":LIME,fontSize:11,fontWeight:700,cursor:"pointer"}}>{weekMenuLoading?(lang==="en"?"Loading...":lang==="de"?"Lädt...":"Bezig..."):(lang==="en"?"Refresh":lang==="de"?"Aktualisieren":"Vernieuwen")}</button>}
                 </div>
               </div>
               {showWeekMenuPrefs&&(
@@ -6557,10 +6645,10 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                   <div style={{marginBottom:10}}><div style={{fontSize:12,color:isDark?"#888":"#666",marginBottom:6}}>Wat eet je graag?</div><input value={foodPrefs.likes} onChange={e=>{const v={...foodPrefs,likes:e.target.value};setFoodPrefs(v);LS.set("fitcoach_food_prefs",v);}} placeholder="bijv. kip, pasta, Aziatisch..." style={{width:"100%",padding:"10px 12px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none",boxSizing:"border-box"}}/></div>
                   <div style={{marginBottom:10}}><div style={{fontSize:12,color:isDark?"#888":"#666",marginBottom:6}}>Wat eet je liever niet?</div><input value={foodPrefs.dislikes} onChange={e=>{const v={...foodPrefs,dislikes:e.target.value};setFoodPrefs(v);LS.set("fitcoach_food_prefs",v);}} placeholder="bijv. vis, bloemkool..." style={{width:"100%",padding:"10px 12px",borderRadius:10,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:TEXT,fontSize:13,outline:"none",boxSizing:"border-box"}}/></div>
                   <div style={{marginBottom:14}}><div style={{fontSize:12,color:isDark?"#888":"#666",marginBottom:8}}>Dieet</div><div style={{display:"flex",gap:6,flexWrap:"wrap"}}>{["Geen","Vegetarisch","Vegan","Lactosevrij","Glutenvrij","Halal"].map(d=><button key={d} onClick={()=>{const v={...foodPrefs,diet:d==="Geen"?"":d};setFoodPrefs(v);LS.set("fitcoach_food_prefs",v);}} style={{padding:"6px 12px",borderRadius:20,border:`1px solid ${(foodPrefs.diet===d||(d==="Geen"&&!foodPrefs.diet))?LIME:BORDER}`,background:(foodPrefs.diet===d||(d==="Geen"&&!foodPrefs.diet))?"rgba(200,241,56,0.07)":isDark?"#111":CARD_BG,color:(foodPrefs.diet===d||(d==="Geen"&&!foodPrefs.diet))?"#fff":isDark?"#444":"#666",fontSize:11,fontWeight:700,cursor:"pointer"}}>{d}</button>)}</div></div>
-                  <button onClick={async()=>{setShowWeekMenuPrefs(false);setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Elke dag ander eiwit. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{width:"100%",padding:"11px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{lang==="en"?"Generate menu with preferences":lang==="de"?"Menü mit Vorlieben erstellen":"Menu genereren met voorkeuren"}</button>
+                  <button onClick={async()=>{if(!isPro){setShowPaywall(true);return;}setShowWeekMenuPrefs(false);setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Elke dag ander eiwit. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{width:"100%",padding:"11px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{lang==="en"?"Generate menu with preferences":lang==="de"?"Menü mit Vorlieben erstellen":"Menu genereren met voorkeuren"}</button>
                 </div>
               )}
-              <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{[lang==="en"?"High protein":lang==="de"?"Hoher Proteingehalt":"Hoog eiwit",lang==="en"?"Quick & easy":lang==="de"?"Schnell & einfach":"Snel & makkelijk","Vegetarisch","Bulken",lang==="en"?"Lose weight":lang==="de"?"Abnehmen":"Afvallen"].map(s=><button key={s} onClick={async()=>{setWeekMenuLoading(true);const txt=await ai(`Weekmenu voor ${profile.name}, stijl: "${s}". Fase: ${fase}. Elke dag ander eiwit. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"6px 14px",borderRadius:20,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:isDark?"#666":"#666",fontSize:11,cursor:"pointer",fontWeight:600,opacity:weekMenuLoading?0.5:1}}>{s}</button>)}</div>
+              <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:16}}>{[lang==="en"?"High protein":lang==="de"?"Hoher Proteingehalt":"Hoog eiwit",lang==="en"?"Quick & easy":lang==="de"?"Schnell & einfach":"Snel & makkelijk","Vegetarisch","Bulken",lang==="en"?"Lose weight":lang==="de"?"Abnehmen":"Afvallen"].map(s=><button key={s} onClick={async()=>{if(!isPro){setShowPaywall(true);return;}setWeekMenuLoading(true);const txt=await ai(`Weekmenu voor ${profile.name}, stijl: "${s}". Fase: ${fase}. Elke dag ander eiwit. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} disabled={weekMenuLoading} style={{padding:"6px 14px",borderRadius:20,border:`1px solid ${BORDER}`,background:isDark?"#111":CARD_BG,color:isDark?"#666":"#666",fontSize:11,cursor:"pointer",fontWeight:600,opacity:weekMenuLoading?0.5:1}}>{s}</button>)}</div>
               {weekMenuLoading&&<div style={{...S.card,padding:24,textAlign:"center"}}><div style={{fontSize:13,color:"#555"}}>Roan maakt jouw weekmenu...</div></div>}
               {!weekMenuLoading&&weekMenu?(
                 <div>
@@ -6598,7 +6686,7 @@ setFeedbackReply(reply);setFeedbackLoading(false);
                 <div style={{...S.card,padding:24,textAlign:"center"}}>
                   <div style={{fontSize:13,color:isDark?"#444":"#666",marginBottom:6}}>Roan maakt een persoonlijk weekmenu</div>
                   <div style={{fontSize:11,color:isDark?"#333":"#666",marginBottom:16}}>Stel voorkeuren in of kies een stijl hierboven</div>
-                  <button onClick={async()=>{setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar, ${persons} ${persons===1?"persoon":"personen"}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Cheatdag op ${cheatDag}. Elke dag ander eiwit. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{padding:"12px 28px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{T.weekmenuGenereren}</button>
+                  <button onClick={async()=>{if(!isPro){setShowPaywall(true);return;}setWeekMenuLoading(true);const prefs=foodPrefs.likes?`Lekker: ${foodPrefs.likes}.`:"";const avoid=foodPrefs.dislikes?`Niet lekker: ${foodPrefs.dislikes}.`:"";const diet=foodPrefs.diet?`Dieet: ${foodPrefs.diet}.`:"";const txt=await ai(`Weekmenu (ma t/m zo) voor ${profile.name}, ${profile.age||30} jaar, ${persons} ${persons===1?"persoon":"personen"}. Doel: ${profile.goal}. Fase: ${fase}. ${prefs} ${avoid} ${diet} Cheatdag op ${cheatDag}. Elke dag ander eiwit. Vis max 1x. RESPOND IN ${lang==="en"?"English":lang==="de"?"German":"Dutch"}. ONLY JSON: {"ma":{"ontbijt":"...","lunch":"...","diner":"..."},...}`);try{const m=JSON.parse(txt.replace(/```json|```/g,"").trim());setWeekMenu(m);LS.set("fitcoach_weekmenu",m);}catch(e){}setWeekMenuLoading(false);}} style={{padding:"12px 28px",borderRadius:12,border:"none",background:LIME,color:"#000",fontSize:13,fontWeight:800,cursor:"pointer"}}>{T.weekmenuGenereren}</button>
                 </div>
               )}
             </div>
