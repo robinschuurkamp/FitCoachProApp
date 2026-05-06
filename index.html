@@ -4378,12 +4378,21 @@ function SettingsModal({profile,onSave,onClose,onLogout,theme,setTheme,lang,setL
               headers:{"Content-Type":"application/json","apikey":"sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h","Authorization":"Bearer sb_publishable_h7-NQSZyGFMDgMm14SrTyQ_lWZocH-h"},
               body:JSON.stringify({user_id:sbUser?.id,score:0,comment:"["+naam+"] "+bericht,created_at:new Date().toISOString()})
             }).catch(()=>{});
-            // Stuur ook email via Formspree (gratis, 50/mnd)
-            fetch("https://formspree.io/f/xpwzbwgj",{
+            // Stuur email via Formspree → contact@fitcoachpro.nl
+            fetch("https://formspree.io/f/xaqvbqwa",{
               method:"POST",
               headers:{"Content-Type":"application/json","Accept":"application/json"},
-              body:JSON.stringify({name:naam,message:bericht,email:sbUser?.email||"app user",_subject:"FitCoach Pro feedback van "+naam})
-            }).then(()=>alert((lang==="en"?"Thanks ":lang==="de"?"Danke ":"Bedankt ")+naam+(lang==="en"?"! We will respond within 24h at contact@fitcoachpro.nl":lang==="de"?"! Wir antworten innerhalb von 24h auf contact@fitcoachpro.nl":"! We reageren binnen 24u op contact@fitcoachpro.nl"))).catch(()=>alert((lang==="en"?"Thanks ":lang==="de"?"Danke ":"Bedankt ")+naam+"!"));
+              body:JSON.stringify({
+                name:naam,
+                email:sbUser?.email||"onbekend",
+                message:bericht,
+                _subject:"FitCoach Pro: bericht van "+naam,
+                _replyto:sbUser?.email||"noreply@fitcoachpro.nl"
+              })
+            }).then(r=>{
+              if(r.ok){alert((lang==="en"?"Thanks ":lang==="de"?"Danke ":"Bedankt ")+naam+(lang==="en"?"! We will respond within 24h.":lang==="de"?"! Wir melden uns innerhalb von 24h.":"! We reageren binnen 24u op contact@fitcoachpro.nl"));}
+              else{alert(lang==="en"?"Could not send. Email us at contact@fitcoachpro.nl":lang==="de"?"Fehler. Mail an contact@fitcoachpro.nl":"Kon niet versturen. Mail naar contact@fitcoachpro.nl");}
+            }).catch(()=>alert(lang==="en"?"No connection. Email contact@fitcoachpro.nl":lang==="de"?"Keine Verbindung. Mail an contact@fitcoachpro.nl":"Geen verbinding. Mail naar contact@fitcoachpro.nl"));
           } else {
             alert(c);
           }
