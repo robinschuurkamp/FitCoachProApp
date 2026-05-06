@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "nl.fitcoachpro.app.twa",
+        "sha256_cert_fingerprints": ["66:FE:73:83:33:AC:80:A3:5B:D2:2B:87:7B:2A:DC:96:AC:E3:E9:AB:57:58:C1:21:E9:95:4C:4F:3C:A4:A3:AA"]
+      }
+    }]
